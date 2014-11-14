@@ -58,7 +58,7 @@ Class  EE_People_Addon extends EE_Addon {
 					),
 				'capabilities' => array(
 					'administrator' => array(
-						'ee_edit_people', 'ee_read_people', 'ee_delete_people', 'ee_edit_peoples', 'ee_edit_others_peoples', 'ee_publish_peoples', 'ee_read_private_peoples', 'ee_delete_peoples', 'ee_delete_private_peoples', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_edit_private_peoples', 'ee_edit_published_peoples'
+						'ee_edit_people', 'ee_read_people', 'ee_delete_people', 'ee_edit_peoples', 'ee_edit_others_peoples', 'ee_publish_peoples', 'ee_read_private_peoples', 'ee_delete_peoples', 'ee_delete_private_peoples', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_edit_private_peoples', 'ee_edit_published_peoples', 'ee_manage_people_types', 'ee_edit_people_type', 'ee_delete_people_type', 'ee_assign_people_type', 'ee_manage_people_categories', 'ee_edit_people_category', 'ee_delete_people_category', 'ee_assign_people_category'
 						),
 					),
 				'capability_maps' => array(
@@ -69,7 +69,73 @@ Class  EE_People_Addon extends EE_Addon {
 				'class_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_classes',
 				'model_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_models',
 				'class_extension_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_class_extensions',
-				'model_extension_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_model_extensions'
+				'model_extension_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_model_extensions',
+				'custom_post_types' => array(
+					'espresso_people' => array(
+						'singular_name' => __('Person', 'event_espresso'),
+						'plural_name' => __('People', 'event_espresso' ),
+						'singular_slug' => __('person', 'event_espresso' ),
+						'plural_slug' => __('people', 'event_espresso' ),
+						'class_name'  => 'EE_People',
+						'args' => array(
+							'public' => true,
+							'show_in_nav_menus' => true,
+							'capability_type' => 'people',
+							'capabilities' => array(
+								'edit_post' => 'ee_edit_people',
+								'read_post' => 'ee_read_people',
+								'delete_post' => 'ee_delete_people',
+								'edit_posts' => 'ee_edit_peoples',
+								'edit_others_posts' => 'ee_edit_others_peoples',
+								'publish_posts' => 'ee_publish_peoples',
+								'read_private_posts' => 'ee_read_private_peoples',
+								'delete_posts' => 'ee_delete_peoples',
+								'delete_private_posts' => 'ee_delete_private_peoples',
+								'delete_published_posts' => 'ee_delete_published_peoples',
+								'delete_others_posts' => 'ee_delete_others_peoples',
+								'edit_private_posts' => 'ee_edit_private_peoples',
+								'edit_published_posts' => 'ee_edit_published_peoples'
+								),
+							'taxonomies' => array(
+								'espresso_people_type',
+								'espresso_people_categories'
+								)
+							)
+						)
+					),
+				'custom_taxonomies' => array(
+					'espresso_people_type' => array(
+						'singular_name' => __('People Type', 'event_espresso'),
+						'plural_name'  => __('People Types', 'event_espresso' ),
+						'args' => array(
+							'public' => true,
+							'show_in_nav_menus' => true,
+							'capabilities' => array(
+								'manage_terms' => 'ee_manage_people_types',
+								'edit_terms' => 'ee_edit_people_type',
+								'delete_terms' => 'ee_delete_people_type',
+								'assign_terms' => 'ee_assign_people_type'
+								),
+							'rewrite' => array( 'slug' => __('people-type', 'event_espresso' ) )
+							)
+						),
+					'espresso_people_categories' => array(
+						'public' => true,
+							'show_in_nav_menus' => true,
+							'capabilities' => array(
+								'manage_terms' => 'ee_manage_people_categories',
+								'edit_terms' => 'ee_edit_people_category',
+								'delete_terms' => 'ee_delete_people_category',
+								'assign_terms' => 'ee_assign_people_category'
+								),
+							'rewrite' => array( 'slug' => __('people-type', 'event_espresso' ) )
+						)
+					),
+				'default_terms' => array(
+						'espresso_people_type' => array(
+							'staff' => array( 'espresso_people' )
+							)
+					)
 			)
 		);
 	}

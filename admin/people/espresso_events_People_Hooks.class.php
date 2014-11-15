@@ -26,8 +26,101 @@
  */
 class espresso_events_People_Hooks extends EE_Admin_Hooks {
 
+	/**
+	 * Just a property for caching all EE_Person objects retrieved from the DB
+	 *
+	 * @var EE_Person[]
+	 */
+	protected $_all_people = array();
+
 	protected function _set_hooks_properties() {
 		$this->_name = 'people';
+
+		//capability check
+		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_assign_people_type', 'people_type_meta_boxes_in_event_editor' ) ) {
+			return;
+		}
+
+
+		//there is a metabox PER peopel type.  So first thing we need to do is get all people types.
+		$people_types = EE_Registry::instance()->load_model( 'Term_Taxonomy' )->get_all( array( array( 'taxonomy' => 'espresso_people_type' ) ) );
+
+		//setup metabox args
+		foreach ( $people_types as $people_type ) {
+			$term_name = $people_type->get_first_related( 'Term' )->get( 'name' );
+			$this->_metaboxes[] = array(
+				'page_route' => array( 'edit', 'create_new' ),
+				'callback_args' => array( 'people_type' => $people_type ),
+				'func' => 'people_type_metabox',
+				'label' => sprintf( __( 'Assign %s', 'event_espresso'), $term_name ),
+				'priority' => 'default',
+				'context' => 'side',
+				'id' => 'people_type_metabox_' . $people_type->get('term_taxonomy_id')
+				);
+		}
+
+		add_filter( 'FHEE__Events_Admin_Page___insert_update_cpt_item__event_update_callbacks', array( $this, 'people_type_updates' ) );
+
+	}
+
+
+
+
+	/**
+	 * Handles attaching people to event relationships
+	 *
+	 * @param EE_Event $evtobj
+	 * @param array $data   incoming data
+	 *
+	 * @return bool
+	 */
+	public function people_to_event_updates( $evtobj, $data ) {
+
+	}
+
+
+
+
+
+	protected function _get_people() {
+		if ( ! empty( $this->_all_people ) ) {
+			return $this->_all_people;
+		}
+
+		$this->_all_people = EE_Registry::instance()->load_model( 'Person' )->get_all( array( array( 'status' => 'publish' ) ) );
+		return $this->_all_people;
+	}
+
+
+
+
+	/**
+	 * Callback for setting up the people type metaboxes.
+	 *
+	 * @param WP_Post $post
+	 * @param array       $metabox_args
+	 *
+	 * @return string Metabox Content
+	 */
+	public function people_type_metabox( $post, $metabox_args ) {
+
+		$incoming_args = $metabox_args['args'];
+		$people_type = $incoming_args['people_type'];
+		//if we don't have a valid people type then get out early!
+		if ( ! $people_type instanceof EE_Term_Taxonomy ) {
+			return;
+		}
+
+		EE_Registry::instance()->load_helper( 'Template' );
+
+		$template_args = array(
+			'people_type' => $people_type,
+			'type' => $people_type->get_first_related( 'Term' ),
+			'people' => $this->_get_people(),
+			'assigned_people' => EE_Registry::instance()->load_model('Person')->get_people_for_event_and_type( $post->ID, $people_type->get('term_taxonomy_id') )
+			);
+		$template = EEA_PEOPLE_ADDON_PATH . 'admin/people/templates/people_type_event_metabox_details.template.php';
+		EEH_Template::display_template( $template, $template_args );
 	}
 
 }

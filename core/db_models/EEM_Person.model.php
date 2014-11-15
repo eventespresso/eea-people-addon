@@ -58,6 +58,7 @@ class EEM_Person extends EEM_CPT_Base{
 			));
 		$this->_model_relations = array(
 			'Event' => new EE_HABTM_Relation('Person_Event'), //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
+			'Person_Event' => new EE_Has_Many_Relation(),
 			'State' => new EE_Belongs_To_Relation(),
 			'Country' => new EE_Belongs_To_Relation()
 		);
@@ -96,6 +97,26 @@ class EEM_Person extends EEM_CPT_Base{
 	public static function reset(){
 		self::$_instance = NULL;
 		return self::instance();
+	}
+
+
+
+
+
+	/**
+	 * This returns an array of EE_Person objects that are attached to the given event and people type.
+	 *
+	 * @param int $evt_id   EE_Event id.
+	 * @param int $type_id Term_Taxonomy id.
+	 *
+	 * @return EE_Person[]
+	 */
+	public function get_people_for_event_and_type( $evt_id, $type_id ) {
+		$where['Event.EVT_ID'] = $evt_id;
+		$where['Person_Event.PT_ID'] = $type_id;
+
+		$query = array( $where, 'order_by' => array( 'Person_Event.PER_EVT_order' => 'ASC' ) );
+		return $this->get_all( $query);
 	}
 }
 

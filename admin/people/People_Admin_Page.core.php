@@ -365,8 +365,8 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'count' => 0,
 				'bulk_action' => array()
 				),
-			'published' => array(
-				'slug' => 'published',
+			'publish' => array(
+				'slug' => 'publish',
 				'label' => __('Published', 'event_espresso'),
 				'count' => 0,
 				'bulk_action' => array()
@@ -391,7 +391,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 			$this->_views['all']['bulk_action'] = array(
 					'trash_people' => __( 'Move to Trash', 'event_espresso' )
 				);
-			$this->_views['published']['bulk_action'] = array(
+			$this->_views['publish']['bulk_action'] = array(
 					'trash_people' => __( 'Move to Trash', 'event_espresso' )
 				);
 			$this->_views['draft']['bulk_action'] = array(

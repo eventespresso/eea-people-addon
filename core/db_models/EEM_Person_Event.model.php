@@ -33,7 +33,7 @@ class EEM_Person_Event extends EEM_Base{
 				'PER_ID' => new EE_Foreign_Key_Int_Field( 'PER_ID', __('Person Primary ID', 'event_espresso' ), false, 0, 'Person' ),
 				'EVT_ID' => new EE_Foreign_Key_Int_Field( 'POST_ID', __('Event ID', 'event_espresso' ), false, 0, 'Event' ),
 				'PER_EVT_order' => new EE_Integer_Field( 'P2P_Order', __('Person to Event Order', 'event_Espresso'), false, 0 ),
-				'PT_ID' => new EE_Foreign_Key_Int_Field( 'PT_ID', __('People Type ID', 'event_espresso' ), 'Term_Taxonomy' )
+				'PT_ID' => new EE_Foreign_Key_Int_Field( 'PT_ID', __('People Type ID', 'event_espresso' ), false, 0, 'Term_Taxonomy' )
 				)
 			);
 		$this->_model_relations = array(

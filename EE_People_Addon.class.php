@@ -99,7 +99,8 @@ Class  EE_People_Addon extends EE_Addon {
 								'espresso_people_type',
 								'espresso_people_categories'
 								)
-							)
+							),
+						'supports' => array( 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
 						)
 					),
 				'custom_taxonomies' => array(

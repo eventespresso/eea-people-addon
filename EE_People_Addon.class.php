@@ -75,7 +75,7 @@ Class  EE_People_Addon extends EE_Addon {
 						'plural_name' => __('People', 'event_espresso' ),
 						'singular_slug' => __('person', 'event_espresso' ),
 						'plural_slug' => __('people', 'event_espresso' ),
-						'class_name'  => 'EE_People',
+						'class_name'  => 'EE_Person',
 						'args' => array(
 							'public' => true,
 							'show_in_nav_menus' => true,

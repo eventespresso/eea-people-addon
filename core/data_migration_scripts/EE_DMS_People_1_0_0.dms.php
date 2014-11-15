@@ -44,12 +44,12 @@ class EE_DMS_People_1_0_0 extends EE_Data_Migration_Script_Base{
 	public function schema_changes_before_migration() {
 		$this->_table_is_new_in_this_version('esp_people_to_post', '
 			PTP_ID bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			PPL_ID bigint(20) unsigned NOT NULL DEFAULT 0,
+			PER_ID bigint(20) unsigned NOT NULL DEFAULT 0,
 			POST_ID bigint(20) unsigned NOT NULL DEFAULT 0,
 			P2P_Order tinyint(3) NOT NULL DEFAULT 0,
 			PT_ID bigint(20) unsigned NOT NULL DEFAULT 0,
 			PRIMARY KEY  (PTP_ID),
-			KEY PPL_ID (PPL_ID),
+			KEY PER_ID (PPL_ID),
 			KEY POST_ID (POST_ID),
 			KEY PT_ID (PT_ID)'
 				);

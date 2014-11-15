@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains the class for the People Event Model object
+ * This file contains the class for the Person Model
  *
  * @since 1.0.0
  * @package  EE People Addon
@@ -9,32 +9,36 @@
 if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed');
 /**
  *
- * People Event model object class
+ * Person model class
  *
  * @since 1.0.0
  *
- * @package		EE People Addon
+ * @package		EE Person Addon
  * @subpackage	models
  * @author 		Darren Ethier
  *
  * ------------------------------------------------------------------------
  */
-class EE_People_Event extends EE_Base_Class {
+class EE_Person extends EE_CPT_Base {
 	/**
 	 *
 	 * @param type $props_n_values
-	 * @return EE_People_Event
+	 * @return EE_Person
 	 */
 	public static function new_instance( $props_n_values = array() ) {
 		$classname = __CLASS__;
 		$has_object = parent::_check_for_object( $props_n_values, $classname );
-		 return $has_object ? $has_object : new self( $props_n_values );
+		$obj = $has_object ? $has_object : new self( $props_n_values );
+		$obj->set_timezone( $obj->timezone_string() );
+		return $obj;
 	}
 
 
 	public static function new_instance_from_db ( $props_n_values = array() ) {
-		return  new self( $props_n_values, TRUE );
+		$obj =  new self( $props_n_values, TRUE );
+		$obj->set_timezone( $obj->timezone_string() );
+		return $obj;
 	}
 }
 
-// End of file EE_People_Event.class.php
+// End of file EE_Person.class.php

@@ -24,15 +24,11 @@
  *
  * ------------------------------------------------------------------------
  */
-class espresso_events_eea-people-addon_Hooks extends EE_Admin_Hooks {
+class espresso_events_People_Hooks extends EE_Admin_Hooks {
 
 	protected function _set_hooks_properties() {
-        $this->_name = 'eea-people-addon';
-    }
-
-	public function _redirect_action_early_update_category( $redirection_query_args ) { }
-
-	public function _redirect_action_early_insert_category( $redirection_query_args ) { }
+		$this->_name = 'people';
+	}
 
 }
 // End of file espresso_events_eea-people-addon_Hooks.class.php

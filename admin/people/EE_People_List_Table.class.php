@@ -75,16 +75,16 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 
 
 	protected function _add_view_counts() {
-		$orig_status = isset( $this->req_data['status'] ) ? $this->_req_data['status'] : null;
+		$orig_status = isset( $this->_req_data['status'] ) ? $this->_req_data['status'] : null;
 		$this->_req_data['status'] = 'published';
 		$this->_views['published']['count'] = EE_Registry::instance()->load_model('Person')->count();
 		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_peoples', 'espresso_people_delete_people' ) ) {
 			$this->_views['trash']['count'] = EE_Registry::instance()->load_model('Person')->count_deleted();
 		}
-		$this->_request_data['status'] = 'draft';
+		$this->_req_data['status'] = 'draft';
 		$this->_views['draft']['count'] = EE_Registry::instance()->load_model('Person')->count( array( array( 'status' => 'draft' ) ) );
 		$this->_req_data['status'] = 'all';
-		$this->_views['all']['count'] = EE_Registry::instance()->load_model('Person')->count( array( arraY( 'status' => array( 'NOT_IN', array( 'trash' ) ) ) ) );
+		$this->_views['all']['count'] = EE_Registry::instance()->load_model('Person')->count( array( array( 'status' => array( 'NOT_IN', array( 'trash' ) ) ) ) );
 		$this->_req_data['status'] = $orig_status;
 	}
 

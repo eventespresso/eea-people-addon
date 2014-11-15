@@ -22,12 +22,12 @@ class EEME_eea-people-addon_Attendee extends EEME_Base{
 		$this->_extra_fields = array('eea-people-addon_Attendee_Meta'=>array(
 			'NATT_ID'=> new EE_DB_Only_Int_Field('NATT_ID', __('eea-people-addon Attendee Meta Row ID','event_espresso'), false),
 			'NATT_ID_fk'=>new EE_DB_Only_Int_Field('ATT_ID', __("Foreign Key to Attendee in Post Table", "event_espresso"), false),
-			'ATT_foobar'=>new EE_Foreign_Key_Int_Field('ATT_foobar', __("Foobar", 'event_espresso'), true,0,'eea-people-addon_Thing')));
-		$this->_extra_relations = array('eea-people-addon_Thing'=>new EE_Belongs_To_Relation());
+			'ATT_foobar'=>new EE_Foreign_Key_Int_Field('ATT_foobar', __("Foobar", 'event_espresso'), true,0,'People_CPT')));
+		$this->_extra_relations = array('People_CPT'=>new EE_Belongs_To_Relation());
 		parent::__construct();
 	}
 	function ext_get_all_new_things( $arg1 = FALSE ){
-		return $this->_->get_all(array(array('eea-people-addon_Thing.NEW_ID'=>$arg1)));
+		return $this->_->get_all(array(array('People_CPT.NEW_ID'=>$arg1)));
 	}
 }
 

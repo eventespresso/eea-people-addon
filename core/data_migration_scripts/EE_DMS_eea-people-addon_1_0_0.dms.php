@@ -70,7 +70,7 @@ class EE_DMS_eea-people-addon_1_0_0 extends EE_Data_Migration_Script_Base{
 	}
 
 	public function schema_changes_before_migration() {
-		$this->_table_is_new_in_this_version('esp_eea-people-addon_thing', '
+		$this->_table_is_new_in_this_version('posts', '
 			NEW_ID int(10) unsigned NOT NULL AUTO_INCREMENT,
 			NEW_name VARCHAR(10) NOT NULL,
 			PRIMARY KEY  (NEW_ID)'

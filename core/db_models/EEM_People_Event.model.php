@@ -52,7 +52,7 @@ class EEM_People_Event extends EEM_Base{
 	 * @since 1.0.0
 	 * @return EEM_People_Event instance
 	 */
-	public static function instance(){
+	public static function instance( $timezone = null ){
 
 		// check if instance of EEM_People_Event already exists
 		if ( self::$_instance === NULL ) {

@@ -98,9 +98,9 @@ Class  EE_People extends EE_Addon {
 							'taxonomies' => array(
 								'espresso_people_type',
 								'espresso_people_categories'
-								)
+								),
+							'supports' => array( 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
 							),
-						'supports' => array( 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
 						)
 					),
 				'custom_taxonomies' => array(

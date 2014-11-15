@@ -24,13 +24,13 @@ define( 'EEA_PEOPLE_ADDON_BASENAME', plugin_basename( EEA_PEOPLE_ADDON_PLUGIN_FI
 define( 'EEA_PEOPLE_ADDON_PATH', plugin_dir_path( __FILE__ ));
 define( 'EEA_PEOPLE_ADDON_URL', plugin_dir_url( __FILE__ ));
 define( 'EEA_PEOPLE_ADDON_ADMIN', EEA_PEOPLE_ADDON_PATH . 'admin' . DS . 'people' . DS );
-Class  EE_People_Addon extends EE_Addon {
+Class  EE_People extends EE_Addon {
 
 
 	public static function register_addon() {
 		// register addon via Plugin API
 		EE_Register_Addon::register(
-			'People_Addon',
+			'People',
 			array(
 				'version' 			=> EEA_PEOPLE_ADDON_VERSION,
 				'min_core_version' => '4.5.0.dev.000',
@@ -38,9 +38,9 @@ Class  EE_People_Addon extends EE_Addon {
 				'admin_path' 			=> EEA_PEOPLE_ADDON_ADMIN,
 				'admin_callback'		=> 'additional_admin_hooks',
 				'config_class' 			=> 'EE_People_Config',
-				'config_name' 		=> 'EE_People_Addon',
+				'config_name' 		=> 'EE_People',
 				'autoloader_paths' => array(
-					'EE_People_Addon'  => EEA_PEOPLE_ADDON_PATH . 'EE_People_Addon.class.php',
+					'EE_People'  => EEA_PEOPLE_ADDON_PATH . 'EE_People.class.php',
 					'EE_People_Config'  => EEA_PEOPLE_ADDON_PATH . 'EE_People_Config.php',
 					'People_Admin_Page'  => EEA_PEOPLE_ADDON_ADMIN . 'People_Admin_Page.core.php',
 					'People_Admin_Page_Init' => EEA_PEOPLE_ADDON_ADMIN . 'People_Admin_Page_Init.core.php',
@@ -58,13 +58,13 @@ Class  EE_People_Addon extends EE_Addon {
 					),
 				'capabilities' => array(
 					'administrator' => array(
-						'ee_edit_people', 'ee_read_people', 'ee_delete_people', 'ee_edit_peoples', 'ee_edit_others_peoples', 'ee_publish_peoples', 'ee_read_private_peoples', 'ee_delete_peoples', 'ee_delete_private_peoples', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_edit_private_peoples', 'ee_edit_published_peoples', 'ee_manage_people_types', 'ee_edit_people_type', 'ee_delete_people_type', 'ee_assign_people_type', 'ee_manage_people_categories', 'ee_edit_people_category', 'ee_delete_people_category', 'ee_assign_people_category'
+						'ee_edit_people', 'ee_read_people', 'ee_read_peoples', 'ee_delete_people', 'ee_edit_peoples', 'ee_edit_others_peoples', 'ee_publish_peoples', 'ee_read_private_peoples', 'ee_delete_peoples', 'ee_delete_private_peoples', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_edit_private_peoples', 'ee_edit_published_peoples', 'ee_manage_people_types', 'ee_edit_people_type', 'ee_delete_people_type', 'ee_assign_people_type', 'ee_manage_people_categories', 'ee_edit_people_category', 'ee_delete_people_category', 'ee_assign_people_category'
 						),
 					),
 				'capability_maps' => array(
-					'EE_Meta_Capability_Map_Edit', array( 'ee_edit_people', array( 'People', 'ee_edit_published_peoples', 'ee_edit_others_peoples', 'ee_edit_private_peoples' ) ),
-					'EE_Meta_Capability_Map_Read', array( 'ee_read_people', array( 'People', '', 'ee_read_others_peoples', 'ee_read_private_peoples' ) ),
-					'EE_Meta_Capability_Map_Delete', array( 'ee_delete_people', array( 'People', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_delete_private_peoples' ) ),
+					'EE_Meta_Capability_Map_Edit' => array( 'ee_edit_people', array( 'People', 'ee_edit_published_peoples', 'ee_edit_others_peoples', 'ee_edit_private_peoples' ) ),
+					'EE_Meta_Capability_Map_Read' => array( 'ee_read_people', array( 'People', '', 'ee_read_others_peoples', 'ee_read_private_peoples' ) ),
+					'EE_Meta_Capability_Map_Delete' => array( 'ee_delete_people', array( 'People', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_delete_private_peoples' ) ),
 					),
 				'class_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_classes',
 				'model_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_models',
@@ -120,7 +120,10 @@ Class  EE_People_Addon extends EE_Addon {
 							)
 						),
 					'espresso_people_categories' => array(
-						'public' => true,
+						'singular_name' => __('People Category', 'event_espresso'),
+						'plural_name' => __('People Categories', 'event_espresso' ),
+						'args' => array(
+							'public' => true,
 							'show_in_nav_menus' => true,
 							'capabilities' => array(
 								'manage_terms' => 'ee_manage_people_categories',
@@ -129,6 +132,7 @@ Class  EE_People_Addon extends EE_Addon {
 								'assign_terms' => 'ee_assign_people_category'
 								),
 							'rewrite' => array( 'slug' => __('people-type', 'event_espresso' ) )
+							)
 						)
 					),
 				'default_terms' => array(

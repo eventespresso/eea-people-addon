@@ -41,8 +41,8 @@ define( 'EEA_PEOPLE_ADDON_PLUGIN_FILE',  __FILE__ );
 function load_espresso_eea_people_addon() {
 	if ( class_exists( 'EE_Addon' )) {
 		// eea-people-addon version
-		require_once ( plugin_dir_path( __FILE__ ) . 'EE_People_Addon.class.php' );
-		EE_People_Addon::register_addon();
+		require_once ( plugin_dir_path( __FILE__ ) . 'EE_People.class.php' );
+		EE_People::register_addon();
 	}
 }
 add_action( 'AHEE__EE_System__load_espresso_addons', 'load_espresso_eea_people_addon' );

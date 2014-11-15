@@ -19,7 +19,7 @@ if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed'
  *
  * ------------------------------------------------------------------------
  */
-class EEM_People extends EEM_Base{
+class EEM_People extends EEM_CPT_Base{
 	// private instance of the EEM_People object
 	private static $_instance = NULL;
 
@@ -57,7 +57,7 @@ class EEM_People extends EEM_Base{
 				'PPL_phone'=>new EE_Plain_Text_Field('PPL_phone', __('Phone','event_espresso'), true, '')
 			));
 		$this->_model_relations = array(
-			'Event' => new EE_HABTM_Relation('People_To_Event') //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
+			'Event' => new EE_HABTM_Relation('People_Event') //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
 		);
 		$this->_default_where_conditions_strategy = new EE_CPT_Where_Conditions( 'espresso_people', 'PPLM_ID' );
 		parent::__construct($timezone);
@@ -81,7 +81,7 @@ class EEM_People extends EEM_Base{
 		}
 
 		//we might have a timezone set, let set_timezone decide what to do with it
-		self::$_instance->set_teimzone( $timezone );
+		self::$_instance->set_timezone( $timezone );
 
 		// EEM_People object
 		return self::$_instance;

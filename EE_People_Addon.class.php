@@ -68,7 +68,6 @@ Class  EE_People_Addon extends EE_Addon {
 					),
 				'class_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_classes',
 				'model_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_models',
-				'class_extension_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_class_extensions',
 				'model_extension_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_model_extensions',
 				'custom_post_types' => array(
 					'espresso_people' => array(

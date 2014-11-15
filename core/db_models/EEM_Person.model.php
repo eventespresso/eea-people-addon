@@ -37,7 +37,7 @@ class EEM_Person extends EEM_CPT_Base{
 				'PER_created'=>new EE_Datetime_Field('post_date', __("Time Person Created", "event_espresso"), false, current_time('timestamp')),
 				'PER_short_bio'=>new EE_Simple_HTML_Field('post_excerpt', __("Person's Short Biography", "event_espresso"), true, __("No Biography Provided", "event_espresso")),
 				'PER_modified'=>new EE_Datetime_Field('post_modified', __("Time Person Last Modified", "event_espresso"), true, current_time('timestamp')),
-				'PER_author'=>new EE_Integer_Field('post_author', __("WP User that Created this Person", "event_espresso"), false, get_current_user_id() ),
+				'PER_wp_user'=>new EE_Integer_Field('post_author', __("WP User that Created this Person", "event_espresso"), false, get_current_user_id() ),
 				'PER_parent'=>new EE_Integer_Field('post_parent', __("Parent Person", "event_espresso"), true),
 				'post_type'=>new EE_WP_Post_Type_Field('espresso_people'),
 				'status' => new EE_WP_Post_Status_Field('post_status', __('Person\'s Status', 'event_espresso'), false, 'publish')

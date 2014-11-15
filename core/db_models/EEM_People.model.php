@@ -57,7 +57,9 @@ class EEM_People extends EEM_CPT_Base{
 				'PPL_phone'=>new EE_Plain_Text_Field('PPL_phone', __('Phone','event_espresso'), true, '')
 			));
 		$this->_model_relations = array(
-			'Event' => new EE_HABTM_Relation('People_Event') //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
+			'Event' => new EE_HABTM_Relation('People_Event'), //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
+			'State' => new EE_Belongs_To_Relation(),
+			'Country' => new EE_Belongs_To_Relation()
 		);
 		$this->_default_where_conditions_strategy = new EE_CPT_Where_Conditions( 'espresso_people', 'PPLM_ID' );
 		parent::__construct($timezone);

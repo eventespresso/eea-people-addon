@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains the class for extending EEM Event to add people relationships
+ * This file contains the class for extending EEM_State to add people relationships
  *
  * @since 1.0.0
  * @package  EE People Addon
@@ -9,7 +9,7 @@
 if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed');
 /**
  *
- * EEME_People_Event class
+ * EEME_People_State class
  *
  * @since 1.0.0
  *
@@ -19,12 +19,12 @@ if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed'
  *
  * ------------------------------------------------------------------------
  */
-class EEME_People_Event extends EEME_Base{
+class EEME_People_State extends EEME_Base{
 	function __construct() {
-		$this->_model_name_extended = 'Event';
-		$this->_extra_relations = array('People'=>new EE_HABTM_Relation('People_Event' ) );
+		$this->_model_name_extended = 'State';
+		$this->_extra_relations = array('People'=>new EE_Has_Many_Relation() );
 		parent::__construct();
 	}
 }
 
-// End of file EEME_People_Event.model_ext.php
+// End of file EEME_People_State.model_ext.php

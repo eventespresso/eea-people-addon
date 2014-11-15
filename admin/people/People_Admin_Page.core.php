@@ -187,6 +187,15 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _add_feature_pointers() {}
 	public function load_scripts_styles() {}
 
+	public function load_scripts_styles_add_new_person() {
+		$this->load_scripts_styles_edit_person();
+	}
+
+	public function load_scripts_styles_edit_person() {
+		wp_register_style( 'eea-person-admin-css', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.css', array('ee-admin-css'), EEA_PEOPLE_ADDON_VERSION );
+		wp_enqueue_style( 'eea-person-admin-css' );
+	}
+
 	public function admin_init() {}
 	public function admin_notices() {}
 	public function admin_footer_scripts() {}

@@ -1,0 +1,49 @@
+#titlediv .title-prompt-text {
+	color     : #BBB;
+	position  : absolute;
+	font-size : 1.7em;
+	padding   : 11px 10px;
+}
+
+#title-wrap .title-prompt-text {
+	font-size : 1.3em;
+	padding   : 5px 8px;
+}
+
+#titlediv .smaller-text-field, #titlediv .main-text-field {
+	padding     : 3px 8px;
+	font-size   : 1.7em;
+	line-height : 100%;
+	height      : 1.7em;
+	width       : 49.2%;
+	outline     : none;
+	margin      : 1px 6px 1px 0;
+	float       : left;
+}
+
+#titlediv .main-text-field {
+	width : 100%;
+	float : none;
+}
+
+.espresso-question-group-wrap table th {
+	width     : inherit;
+	min-width : 200px;
+}
+
+#person_details_address label.espresso-form-input-lbl {
+	display : block;
+}
+
+#person_details_address input.all-options {
+	width : 100%;
+}
+
+#person_details_address #PER_zip {
+	width     : 10%;
+	min-width : 150px;
+}
+
+#person_contact_info input {
+	width: 99%;
+}

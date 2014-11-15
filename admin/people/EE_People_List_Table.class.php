@@ -110,7 +110,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 
 		// edit attendee link
 		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit_person', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
-		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people' ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->lname() . '</a>' : $item->lname();
+		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->lname() . '</a>' : $item->lname();
 		return $name_link;
 
 	}
@@ -123,19 +123,19 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 		//Build row actions
 		$actions = array();
 		// edit person link
-		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people' ) ) {
+		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ) {
 			$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit_person', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 			$actions['edit'] = '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . __( 'Edit', 'event_espresso' ) . '</a>';
 		}
 
 		if ( $this->_view == 'published'  || $this->_view == 'all' || $this->_view == 'draft' ) {
 			// trash person link
-			if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_people', 'eea-people-addon_trash_people' ) ) {
+			if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_people', 'eea-people-addon_trash_people', $item->ID() ) ) {
 				$trash_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'trash_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 				$actions['trash'] = '<a href="'.$trash_lnk_url.'" title="' . __( 'Move Person to Trash', 'event_espresso' ) . '">' . __( 'Trash', 'event_espresso' ) . '</a>';
 			}
 		} else {
-			if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_people', 'eea-people-addon_restore_people' ) ) {
+			if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_people', 'eea-people-addon_restore_people', $item->ID()) ) {
 				// restore person link
 				$restore_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'restore_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 				$actions['restore'] = '<a href="'.$restore_lnk_url.'" title="' . __( 'Restore Person', 'event_espresso' ) . '">' . __( 'Restore', 'event_espresso' ) . '</a>';
@@ -143,7 +143,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 		}
 
 		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit_person', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
-		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people' ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->fname() . '</a>' : $item->fname();
+		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->fname() . '</a>' : $item->fname();
 
 		//Return the name contents
 		return sprintf('%1$s %2$s', $name_link, $this->row_actions($actions) );

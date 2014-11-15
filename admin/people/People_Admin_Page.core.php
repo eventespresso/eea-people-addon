@@ -75,7 +75,8 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'edit' => __( 'Add Person', 'event_espresso' )
 				),
 			'publishbox' => array(
-				'edit_person' => __( 'Update Person Record', 'event_espresso' )
+				'edit_person' => __( 'Update Person Record', 'event_espresso' ),
+				'add_new_person' => __( 'Save Person Record', 'event_espresso' )
 				)
 		);
 
@@ -161,7 +162,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'order' => 15,
 					'persistent' => false
 					),
-				'metaboxes' => array( '_publish_post_box' ),
+				'metaboxes' => array( '_publish_post_box', 'people_editor_metaboxes' ),
 				'require_nonce' => false
 			),
 			'edit_person' => array(
@@ -171,7 +172,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'persistent' => false,
 					'url' => isset($this->_req_data['post']) ? add_query_arg(array('post' => $this->_req_data['post'] ), $this->_current_page_view_url )  : $this->_admin_base_url
 					),
-				'metaboxes' => array('people_editor_metaboxes'),
+				'metaboxes' => array('people_editor_metaboxes', '_publish_post_box'),
 				'require_nonce' => false
 				)
 		);
@@ -213,7 +214,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				)
 			);
 
-		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_peoples', 'espresso_people_trash_people' ) ) {
+		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_peoples', 'eea-people-addon_trash_people' ) ) {
 			$this->_views['trash'] = array(
 				'slug' => 'trash',
 				'label' => __('Trash', 'event_espresso'),
@@ -242,6 +243,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	 */
 	protected function _people_list_table() {
 		$this->_search_btn_label = __('People', 'event_espresso');
+		$this->_admin_page_title .= $this->get_action_link_or_button('add_new_person', 'add-person', array(), 'add-new-h2');
 		$this->display_admin_list_table_page_with_no_sidebar();
 	}
 

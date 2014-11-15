@@ -23,7 +23,7 @@ class EE_People extends EE_CPT_Base {
 	/**
 	 *
 	 * @param type $props_n_values
-	 * @return EE_Attendee
+	 * @return EE_People
 	 */
 	public static function new_instance( $props_n_values = array() ) {
 		$classname = __CLASS__;
@@ -41,4 +41,4 @@ class EE_People extends EE_CPT_Base {
 	}
 }
 
-// End of file EE_Base_Class_Mock.class.php
+// End of file EE_People.class.php

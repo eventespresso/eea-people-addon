@@ -695,14 +695,50 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	 * @since 1.0.0
 	 * @todo   Add paging.
 	 * @todo   Add filters.
-	 * @todo   Right now this shows just event relationships.  Eventually we need to show all relationship types.
 	 *
 	 * @param WP_Post $post
 	 *
 	 * @return string
 	 */
 	public function person_to_cpt_details( $post ) {
-		//get all people_
+		//get all relationships for the given person
+		$person_relationships = EEM_Person_Post::instance()->get_all( array( array( 'PER_ID' => $post->ID ) ) );
+
+		//let's setup the row data for the rows.
+		$row_data = array();
+		foreach ( $person_relationships as $person_relationship ) {
+			$cpt_obj = EE_Registry::instance()->load_model( $person_relationship->get('OBJ_type') )->get_one_by_ID( $person_relationship->get( 'OBJ_ID' ) );
+			if ( ! isset( $row_data[$cpt_obj->ID()] ) ) {
+				switch( get_class( $cpt_obj ) ) {
+					case 'EE_Event' :
+						$css_class = 'dashicons dashicons-calendar-alt';
+						break;
+					case 'EE_Venue' :
+						$css_class = 'ee-icon ee-icon-venue';
+						break;
+					case 'EE_Attendee' :
+						$css_class = 'dashicons dashicons-admin-users';
+						break;
+					default :
+						$css_class = '';
+						break;
+				}
+				$row_data[$cpt_obj->ID()] = array(
+					'css_class' => $css_class,
+					'cpt_type' => strtolower( $person_relationship->get('OBJ_type') ),
+					'cpt_obj' => $cpt_obj,
+					'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) ) )
+				);
+			} else {
+				//add other person types.
+				$row_data[$cpt_obj->ID()]['ct_obj'][] = EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) );
+			}
+		}
+
+		//now we have row data so we can send that to the template
+		$template_args = array( 'row_data' => $row_data );
+		$template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'person_to_cpt_details_metabox_content.template.php';
+		EEH_Template::display_template( $template, $template_args );
 	}
 
 

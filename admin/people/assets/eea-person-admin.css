@@ -47,3 +47,51 @@
 #person_contact_info input {
 	width: 99%;
 }
+
+/** person to cpt details metabox **/
+.person-to-cpt-details-table {
+	width: 100%;
+	border-spacing: 0px;
+}
+
+.person-to-cpt-details-table th {
+	text-align: left;
+	padding: 5px;
+}
+
+.person-to-cpt-details-table thead {
+	background-color: #eee;
+}
+
+.person-to-cpt-details-table td:first-child, .person-to-cpt-details-table th:first-child {
+	max-width: 20px;
+	width: 2%;
+	font-size: 18px;
+}
+
+.person-to-cpt-details-table td:nth-child(2), .person-to-cpt-details-table th:nth-child(2) {
+	width: 50%;
+}
+
+.person-to-cpt-details-tabletd:last-child, .person-to-cpt-details-table th:last-child {
+	width: 48%;
+}
+
+.person-to-cpt-people-type-list {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+.person-to-cpt-people-type-list li {
+	display: inline-block;
+	margin-right: 3px;
+	background-color: #666;
+	color: #fff;
+	padding: 2px 5px;
+	font-size: .8em;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+}

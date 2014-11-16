@@ -6,7 +6,7 @@
  * @package  EE People Addon
  * @subpackage view, helper
  */
-if ( ! defined('Person_ESPRESSO_VERSION')) exit('No direct script access allowed');
+if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed');
  /**
  *
  * EEH_People_View Helper class

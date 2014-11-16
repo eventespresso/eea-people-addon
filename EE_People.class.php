@@ -27,6 +27,13 @@ define( 'EEA_PEOPLE_ADDON_ADMIN', EEA_PEOPLE_ADDON_PATH . 'admin' . DS . 'people
 Class  EE_People extends EE_Addon {
 
 
+	public function __construct() {
+		//filter extra paths
+		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
+		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
+	}
+
+
 	public static function register_addon() {
 		// register addon via Plugin API
 		EE_Register_Addon::register(
@@ -99,7 +106,7 @@ Class  EE_People extends EE_Addon {
 								'espresso_people_type',
 								'espresso_people_categories'
 								),
-							'supports' => array( 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
+							'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
 							),
 						)
 					),
@@ -142,10 +149,6 @@ Class  EE_People extends EE_Addon {
 					)
 			)
 		);
-
-		//filter extra paths
-		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
-		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
 	}
 
 
@@ -206,6 +209,7 @@ Class  EE_People extends EE_Addon {
 	 */
 	public function add_extra_helper_paths( $helper_paths ) {
 		$helper_paths[] = EEA_PEOPLE_ADDON_PATH . 'core/helpers/';
+		return $helper_paths;
 	}
 
 

@@ -50,6 +50,16 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 			'espresso_people' => 'edit_person'
 			);
 		add_action( 'edit_form_after_title', array( $this, 'after_title_form_fields'), 10 );
+		add_filter( 'FHEE__EE_Admin_Page_CPT___edit_cpt_item__create_new_action', array( $this, 'map_cpt_route'), 10, 2 );
+	}
+
+
+
+	public function map_cpt_route( $route, EE_Admin_Page $adminpage ) {
+		if ( $adminpage->page_slug == $this->page_slug && $route == 'create_new' ) {
+			return 'add_new_person';
+		}
+		return $route;
 	}
 
 
@@ -87,6 +97,9 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'add_type' => __('Add New Type', 'event_espresso'),
 				'edit_type' => __('Edit Type', 'event_espresso'),
 				'delete_type' => __('Delete Type', 'event_espresso')
+				),
+			'editor_title' => array(
+				'espresso_people' => __('Enter Full Name here', 'event_espresso')
 				),
 			'publishbox' => array(
 				'edit_person' => __( 'Update Person Record', 'event_espresso' ),

@@ -20,7 +20,7 @@
 			?>
 			<li>
 				<label class="selectit">
-					<input value="<?php echo $assigned_person->ID(); ?>" type="checkbox" name="people_to_event[<?php echo $people_type->get('term_taxonomy_id'); ?>][]" id="people-to-event-<?php echo $people_type->get('term_taxonomy_id'); ?>"> <?php echo $assigned_person->full_name(); ?>
+					<input value="<?php echo $assigned_person->ID(); ?>" type="checkbox" name="people_to_event[<?php echo $people_type->get('term_taxonomy_id'); ?>][]" id="people-to-event-<?php echo $people_type->get('term_taxonomy_id'); ?>" checked="checked"> <?php echo $assigned_person->full_name(); ?>
 				</label>
 			</li>
 			<?php $assigned_people_ids[] = $assigned_person->ID();  endforeach; ?>

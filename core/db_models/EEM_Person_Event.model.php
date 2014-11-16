@@ -64,7 +64,6 @@ class EEM_Person_Event extends EEM_Base{
 	}
 
 
-
 	/**
 	 * resets the model and returns it
 	 * @return EEM_Person_Event
@@ -72,6 +71,22 @@ class EEM_Person_Event extends EEM_Base{
 	public static function reset(){
 		self::$_instance = NULL;
 		return self::instance();
+	}
+
+
+
+
+	public function get_all_people_ids_for_event_and_type( $evt_id, $type_id ) {
+		$_where = array(
+			'EVT_ID' => $evt_id,
+			'PT_ID' => $type_id
+			);
+		$pes = $this->get_all( array( $_where ) );
+		$ids = array();
+		foreach ( $pes as $pe ) {
+			$ids[] = $pe->get('PER_ID');
+		}
+		return $ids;
 	}
 
 

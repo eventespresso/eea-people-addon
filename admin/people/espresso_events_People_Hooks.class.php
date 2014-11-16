@@ -59,11 +59,16 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 				);
 		}
 
-		add_filter( 'FHEE__Events_Admin_Page___insert_update_cpt_item__event_update_callbacks', array( $this, 'people_type_updates' ) );
+		add_filter( 'FHEE__Events_Admin_Page___insert_update_cpt_item__event_update_callbacks', array( $this, 'people_to_event_callback' ), 10 );
 
 	}
 
 
+
+	public function people_to_event_callback( $update_callbacks ) {
+		$update_callbacks[] = array( $this, 'people_to_event_updates' );
+		return $update_callbacks;
+	}
 
 
 	/**
@@ -75,7 +80,44 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	 * @return bool
 	 */
 	public function people_to_event_updates( $evtobj, $data ) {
+		$saved_people = array();
+		//loop through data and set things up for save.
+		foreach ( $data['people_to_event'] as $type_id => $people_ids ) {
+			$existing_people = EE_Registry::instance()->load_model( 'Person_Event' )->get_all_people_ids_for_event_and_type( $evtobj->ID(), $type_id );
+			foreach( $people_ids as $people_id ) {
+				if ( in_array( $people_id, $existing_people ) ) {
+					$saved_people[$type_id][] = (int) $people_id;
+					continue;
+				}
+				$values_to_save = array(
+					'PER_ID' => $people_id,
+					'EVT_ID' => $evtobj->ID(),
+					'PT_ID' => $type_id
+					);
+				$new_rel = EE_Person_Event::new_instance( $values_to_save );
+				$new_rel->save();
+				$saved_people[$type_id][] = (int) $people_id;
+			}
 
+			//now let's grab the changes between the tow and we'll know that's what got removed.
+			$rel_to_remove = array_diff( $existing_people, $saved_people[$type_id] );
+			foreach( $rel_to_remove as $rel_per_id ) {
+				$remove_where = array(
+					'EVT_ID' => $evtobj->ID(),
+					'PT_ID' => $type_id,
+					'PER_ID' => $rel_per_id
+					);
+				EE_Registry::instance()->load_model('Person_Event')->delete( array( $remove_where ) );
+			}
+		}
+		//its entirely possible that all the people_event relationships for a particular type were removed.  So we need to account for that
+		$types_for_evt = EE_Registry::instance()->load_model( 'Person_Event' )->get_all( array( array( 'EVT_ID' => $evtobj->ID() ) ) );
+		foreach ( $types_for_evt as $type_for_evt ) {
+			if ( ! isset( $saved_people[$type_for_evt->get('PT_ID')] ) ) {
+				$type_for_evt->delete_permanently();
+			}
+		}
+		return true;
 	}
 
 

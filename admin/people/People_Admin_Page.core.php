@@ -617,6 +617,9 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 		add_meta_box('person_contact_info', __('Contact Info', 'event_espresso'), array( $this, 'person_contact_info'), $this->_cpt_routes[$this->_req_action], 'side', 'core' );
 		add_meta_box('person_details_address', __('Address Details', 'event_espresso'), array($this, 'person_address_details'), $this->_cpt_routes[$this->_req_action], 'normal', 'core' );
+
+		//add event editor relationship
+		add_meta_box('person_to_cpt_relationship', __('Where is this person assigned?', 'event_espresso'), array( $this, 'person_to_cpt_details' ), $this->_cpt_routes[$this->_req_action], 'normal', 'core' );
 	}
 
 
@@ -682,6 +685,24 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		$template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'people_address_details_metabox_content.template.php';
 		EEH_Template::display_template($template, $this->_template_args );
 
+	}
+
+
+
+	/**
+	 * Displays al lthe person relationships for this user.
+	 *
+	 * @since 1.0.0
+	 * @todo   Add paging.
+	 * @todo   Add filters.
+	 * @todo   Right now this shows just event relationships.  Eventually we need to show all relationship types.
+	 *
+	 * @param WP_Post $post
+	 *
+	 * @return string
+	 */
+	public function person_to_cpt_details( $post ) {
+		//get all people_
 	}
 
 

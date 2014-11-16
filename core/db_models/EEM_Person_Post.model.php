@@ -19,20 +19,20 @@ if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed'
  *
  * ------------------------------------------------------------------------
  */
-class EEM_Person_Event extends EEM_Base{
+class EEM_Person_Post extends EEM_Base{
 	// private instance of the EEM_Person object
 	private static $_instance = NULL;
 
 	public function __construct($timezone = NULL) {
 		$this->_tables = array(
-			'Person_Event' => new EE_Primary_Table( 'esp_people_to_post', 'PTP_ID' )
+			'Person_Post' => new EE_Primary_Table( 'esp_people_to_post', 'PTP_ID' )
 			);
 		$this->_fields = array(
-			'Person_Event' => array(
+			'Person_Post' => array(
 				'PTP_ID' => new EE_Primary_Key_Int_Field( 'PTP_ID', __('Person to Event Link ID', 'event_espresso' ) ),
 				'PER_ID' => new EE_Foreign_Key_Int_Field( 'PER_ID', __('Person Primary ID', 'event_espresso' ), false, 0, 'Person' ),
-				'EVT_ID' => new EE_Foreign_Key_Int_Field( 'POST_ID', __('Event ID', 'event_espresso' ), false, 0, 'Event' ),
-				'PER_EVT_order' => new EE_Integer_Field( 'P2P_Order', __('Person to Event Order', 'event_Espresso'), false, 0 ),
+				'OBJ_ID' => new EE_Foreign_Key_Int_Field( 'POST_ID', __('Event ID', 'event_espresso' ), false, 0, array( 'Event' ) ),
+				'PER_OBJ_order' => new EE_Integer_Field( 'P2P_Order', __('Person to Event Order', 'event_Espresso'), false, 0 ),
 				'PT_ID' => new EE_Foreign_Key_Int_Field( 'PT_ID', __('People Type ID', 'event_espresso' ), false, 0, 'Term_Taxonomy' )
 				)
 			);
@@ -47,26 +47,26 @@ class EEM_Person_Event extends EEM_Base{
 
 
 	/**
-	 * This function is a singleton method used to instantiate the EEM_Person_Event object
+	 * This function is a singleton method used to instantiate the EEM_Person_Post object
 	 *
 	 * @since 1.0.0
-	 * @return EEM_Person_Event instance
+	 * @return EEM_Person_Post instance
 	 */
 	public static function instance( $timezone = null ){
 
-		// check if instance of EEM_Person_Event already exists
+		// check if instance of EEM_Person_Post already exists
 		if ( self::$_instance === NULL ) {
 			// instantiate Espresso_model
 			self::$_instance = new self();
 		}
-		// EEM_Person_Event object
+		// EEM_Person_Post object
 		return self::$_instance;
 	}
 
 
 	/**
 	 * resets the model and returns it
-	 * @return EEM_Person_Event
+	 * @return EEM_Person_Post
 	 */
 	public static function reset(){
 		self::$_instance = NULL;
@@ -76,9 +76,9 @@ class EEM_Person_Event extends EEM_Base{
 
 
 
-	public function get_all_people_ids_for_event_and_type( $evt_id, $type_id ) {
+	public function get_all_people_ids_for_post_and_type( $post_id, $type_id ) {
 		$_where = array(
-			'EVT_ID' => $evt_id,
+			'OBJ_ID' => $post_id,
 			'PT_ID' => $type_id
 			);
 		$pes = $this->get_all( array( $_where ) );
@@ -90,4 +90,4 @@ class EEM_Person_Event extends EEM_Base{
 	}
 
 
-} //end EEM_Person_Event model
+} //end EEM_Person_Post model

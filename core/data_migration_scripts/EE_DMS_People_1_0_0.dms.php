@@ -42,16 +42,18 @@ class EE_DMS_People_1_0_0 extends EE_Data_Migration_Script_Base{
 	public function schema_changes_after_migration() {}
 
 	public function schema_changes_before_migration() {
-		$this->_table_is_new_in_this_version('esp_people_to_post', '
+		$this->_table_is_new_in_this_version('esp_people_to_post', "
 			PTP_ID bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			PER_ID bigint(20) unsigned NOT NULL DEFAULT 0,
-			POST_ID bigint(20) unsigned NOT NULL DEFAULT 0,
+			OBJ_ID bigint(20) unsigned NOT NULL DEFAULT 0,
+			OBJ_type varchar(50) unsigned NOT NULL DEFAULT 'Event',
 			P2P_Order tinyint(3) NOT NULL DEFAULT 0,
 			PT_ID bigint(20) unsigned NOT NULL DEFAULT 0,
 			PRIMARY KEY  (PTP_ID),
 			KEY PER_ID (PER_ID),
-			KEY POST_ID (POST_ID),
-			KEY PT_ID (PT_ID)'
+			KEY OBJ_ID (OBJ_ID),
+			KEY OBJ_type (OBJ_type),
+			KEY PT_ID (PT_ID)"
 				);
 	}
 }

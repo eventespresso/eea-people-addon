@@ -31,14 +31,15 @@ class EEM_Person_Post extends EEM_Base{
 			'Person_Post' => array(
 				'PTP_ID' => new EE_Primary_Key_Int_Field( 'PTP_ID', __('Person to Event Link ID', 'event_espresso' ) ),
 				'PER_ID' => new EE_Foreign_Key_Int_Field( 'PER_ID', __('Person Primary ID', 'event_espresso' ), false, 0, 'Person' ),
-				'OBJ_ID' => new EE_Foreign_Key_Int_Field( 'POST_ID', __('Event ID', 'event_espresso' ), false, 0, array( 'Event' ) ),
+				'OBJ_ID' => new EE_Foreign_Key_Int_Field( 'OBJ_ID', __('Event ID', 'event_espresso' ), false, 0, array( 'Event' ) ),
+				'OBJ_type' => new EE_Any_Foreign_Model_Name_Field( 'OBJ_type', __('Model Person Related to', 'event_espresso'), false, 'Event', array( 'Event' ) ),
 				'PER_OBJ_order' => new EE_Integer_Field( 'P2P_Order', __('Person to Event Order', 'event_Espresso'), false, 0 ),
 				'PT_ID' => new EE_Foreign_Key_Int_Field( 'PT_ID', __('People Type ID', 'event_espresso' ), false, 0, 'Term_Taxonomy' )
 				)
 			);
 		$this->_model_relations = array(
 			'Person' => new EE_Belongs_To_Relation(),
-			'Event' => new EE_Belongs_To_Relation(),
+			'Event' => new EE_Belongs_To_Any_Relation(),
 			'Term_Taxonomy' => new EE_Belongs_to_Relation()
 			);
 		parent::__construct();

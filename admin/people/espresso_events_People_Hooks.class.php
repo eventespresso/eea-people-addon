@@ -95,7 +95,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 		$saved_people = array();
 		//loop through data and set things up for save.
 		foreach ( $data['people_to_cpt'] as $type_id => $people_values ) {
-			$existing_people = EE_Registry::instance()->load_model( 'Person_Event' )->get_all_people_ids_for_event_and_type( $evtobj->ID(), $type_id );
+			$existing_people = EE_Registry::instance()->load_model( 'Person_Post' )->get_all_people_ids_for_post_and_type( $evtobj->ID(), $type_id );
 			$order_count = count( $people_values ) + 1;
 			foreach( $people_values as $person_value ) {
 				if ( ! isset( $person_value['PER_ID'] ) ) {
@@ -107,11 +107,11 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 				}
 				$values_to_save = array(
 					'PER_ID' => $person_value['PER_ID'],
-					'EVT_ID' => $evtobj->ID(),
+					'OBJ_ID' => $evtobj->ID(),
 					'PT_ID' => $type_id,
-					'PER_EVT_order' => isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count
+					'PER_OBJ_order' => isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count
 					);
-				$new_rel = EE_Person_Event::new_instance( $values_to_save );
+				$new_rel = EE_Person_Post::new_instance( $values_to_save );
 				$new_rel->save();
 				$saved_people[$type_id][] = (int) $person_value['PER_ID'];
 				$order_count ++;
@@ -121,15 +121,15 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 			$rel_to_remove = empty( $saved_people[$type_id] ) ? $existing_people : array_diff( $existing_people, $saved_people[$type_id] );
 			foreach( $rel_to_remove as $rel_per_id ) {
 				$remove_where = array(
-					'EVT_ID' => $evtobj->ID(),
+					'OBJ_ID' => $evtobj->ID(),
 					'PT_ID' => $type_id,
 					'PER_ID' => $rel_per_id
 					);
-				EE_Registry::instance()->load_model('Person_Event')->delete( array( $remove_where ) );
+				EE_Registry::instance()->load_model('Person_Post')->delete( array( $remove_where ) );
 			}
 		}
 		//its entirely possible that all the people_event relationships for a particular type were removed.  So we need to account for that
-		$types_for_evt = EE_Registry::instance()->load_model( 'Person_Event' )->get_all( array( array( 'EVT_ID' => $evtobj->ID() ) ) );
+		$types_for_evt = EE_Registry::instance()->load_model( 'Person_Post' )->get_all( array( array( 'OBJ_ID' => $evtobj->ID() ) ) );
 		foreach ( $types_for_evt as $type_for_evt ) {
 			if ( ! isset( $saved_people[$type_for_evt->get('PT_ID')] ) ) {
 				$type_for_evt->delete_permanently();

@@ -57,8 +57,8 @@ class EEM_Person extends EEM_CPT_Base{
 				'PER_phone'=>new EE_Plain_Text_Field('ATT_phone', __('Phone','event_espresso'), true, '')
 			));
 		$this->_model_relations = array(
-			'Event' => new EE_HABTM_Relation('Person_Event'), //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
-			'Person_Event' => new EE_Has_Many_Relation(),
+			'Event' => new EE_HABTM_Relation('Person_Post'), //note this will use the same people_to_post table that will eventually be shared with People_To_Venue, and People_To_Attendee relations.
+			'Person_Post' => new EE_Has_Many_Relation(),
 			'State' => new EE_Belongs_To_Relation(),
 			'Country' => new EE_Belongs_To_Relation()
 		);
@@ -104,19 +104,19 @@ class EEM_Person extends EEM_CPT_Base{
 
 
 	/**
-	 * This returns an array of EE_Person objects that are attached to the given event and people type ordered by
+	 * This returns an array of EE_Person objects that are attached to the given post and people type ordered by
 	 * the relationship order field.
 	 *
-	 * @param int $evt_id   EE_Event id.
+	 * @param int $post_id   CPT post id.
 	 * @param int $type_id Term_Taxonomy id.
 	 *
 	 * @return EE_Person[]
 	 */
-	public function get_people_for_event_and_type( $evt_id, $type_id ) {
-		$where['Event.EVT_ID'] = $evt_id;
-		$where['Person_Event.PT_ID'] = $type_id;
+	public function get_people_for_event_and_type( $post_id, $type_id ) {
+		$where['Person_Post.OBJ_ID'] = $post_id;
+		$where['Person_Post.PT_ID'] = $type_id;
 
-		$query = array( $where, 'order_by' => array( 'Person_Event.PER_EVT_order' => 'ASC' ) );
+		$query = array( $where, 'order_by' => array( 'Person_Post.PER_OBJ_order' => 'ASC' ) );
 		return $this->get_all( $query);
 	}
 }

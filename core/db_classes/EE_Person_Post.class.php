@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains the class for the Person Event Model object
+ * This file contains the class for the Person Post Model object
  *
  * @since 1.0.0
  * @package  EE People Addon
@@ -9,7 +9,7 @@
 if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed');
 /**
  *
- * Person Event model object class
+ * Person Post model object class
  *
  * @since 1.0.0
  *
@@ -19,11 +19,11 @@ if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed'
  *
  * ------------------------------------------------------------------------
  */
-class EE_Person_Event extends EE_Base_Class {
+class EE_Person_Post extends EE_Base_Class {
 	/**
 	 *
 	 * @param type $props_n_values
-	 * @return EE_Person_Event
+	 * @return EE_Person_Post
 	 */
 	public static function new_instance( $props_n_values = array() ) {
 		$classname = __CLASS__;
@@ -37,4 +37,4 @@ class EE_Person_Event extends EE_Base_Class {
 	}
 }
 
-// End of file EE_Person_Event.class.php
+// End of file EE_Person_Post.class.php

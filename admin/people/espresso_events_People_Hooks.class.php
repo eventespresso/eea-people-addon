@@ -108,6 +108,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 				$values_to_save = array(
 					'PER_ID' => $person_value['PER_ID'],
 					'OBJ_ID' => $evtobj->ID(),
+					'OBJ_type' => str_replace( 'EE_', '', get_class( $evtobj ) ),
 					'PT_ID' => $type_id,
 					'PER_OBJ_order' => isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count
 					);

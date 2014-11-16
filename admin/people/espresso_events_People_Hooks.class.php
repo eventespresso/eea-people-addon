@@ -59,6 +59,18 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 				);
 		}
 
+		$this->_scripts_styles = array(
+			'registers' => array(
+				'ee-cpt-people-css' => array(
+					'url' => EEA_PEOPLE_ADDON_URL . 'admin/people/assets/cpt-to-people.css',
+					'type' => 'css'
+					)
+				),
+			'enqueues' => array(
+				'ee-cpt-people-css' => array( 'edit', 'create_new' )
+				)
+			);
+
 		add_filter( 'FHEE__Events_Admin_Page___insert_update_cpt_item__event_update_callbacks', array( $this, 'people_to_event_callback' ), 10 );
 
 	}
@@ -82,25 +94,31 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	public function people_to_event_updates( $evtobj, $data ) {
 		$saved_people = array();
 		//loop through data and set things up for save.
-		foreach ( $data['people_to_event'] as $type_id => $people_ids ) {
+		foreach ( $data['people_to_cpt'] as $type_id => $people_values ) {
 			$existing_people = EE_Registry::instance()->load_model( 'Person_Event' )->get_all_people_ids_for_event_and_type( $evtobj->ID(), $type_id );
-			foreach( $people_ids as $people_id ) {
-				if ( in_array( $people_id, $existing_people ) ) {
-					$saved_people[$type_id][] = (int) $people_id;
+			$order_count = count( $people_values ) + 1;
+			foreach( $people_values as $person_value ) {
+				if ( ! isset( $person_value['PER_ID'] ) ) {
+					continue;
+				}
+				if ( in_array( $person_value['PER_ID'], $existing_people ) ) {
+					$saved_people[$type_id][] = (int) $person_value['PER_ID'];
 					continue;
 				}
 				$values_to_save = array(
-					'PER_ID' => $people_id,
+					'PER_ID' => $person_value['PER_ID'],
 					'EVT_ID' => $evtobj->ID(),
-					'PT_ID' => $type_id
+					'PT_ID' => $type_id,
+					'PER_EVT_order' => isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count
 					);
 				$new_rel = EE_Person_Event::new_instance( $values_to_save );
 				$new_rel->save();
-				$saved_people[$type_id][] = (int) $people_id;
+				$saved_people[$type_id][] = (int) $person_value['PER_ID'];
+				$order_count ++;
 			}
 
 			//now let's grab the changes between the tow and we'll know that's what got removed.
-			$rel_to_remove = array_diff( $existing_people, $saved_people[$type_id] );
+			$rel_to_remove = empty( $saved_people[$type_id] ) ? $existing_people : array_diff( $existing_people, $saved_people[$type_id] );
 			foreach( $rel_to_remove as $rel_per_id ) {
 				$remove_where = array(
 					'EVT_ID' => $evtobj->ID(),

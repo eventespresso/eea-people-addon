@@ -1,0 +1,15 @@
+/**
+ * Contains css for people to ee cpt edit/create_new views
+ */
+.people-to-cpt-table th input[type=text], .people-to-cpt-table td input[type=text] {
+    width: 40px;
+    text-align: right;
+}
+
+.people-to-cpt-table th:first-child, .people-to-cpt-table td:first-child {
+    width: 85%;
+}
+
+.people-to-cpt-table th:last-child, .people-to-cpt-table td:last-child {
+    width: 15%;
+}

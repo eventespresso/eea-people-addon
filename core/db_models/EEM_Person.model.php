@@ -104,7 +104,8 @@ class EEM_Person extends EEM_CPT_Base{
 
 
 	/**
-	 * This returns an array of EE_Person objects that are attached to the given event and people type.
+	 * This returns an array of EE_Person objects that are attached to the given event and people type ordered by
+	 * the relationship order field.
 	 *
 	 * @param int $evt_id   EE_Event id.
 	 * @param int $type_id Term_Taxonomy id.

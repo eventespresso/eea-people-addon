@@ -142,6 +142,10 @@ Class  EE_People extends EE_Addon {
 					)
 			)
 		);
+
+		//filter extra paths
+		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
+		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
 	}
 
 
@@ -178,6 +182,31 @@ Class  EE_People extends EE_Addon {
 	}
 
 
+
+	/**
+	 * Add our cpt strategy path to the core paths array.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $core_paths incoming array of paths
+	 */
+	public function add_extra_core_paths( $core_paths ) {
+		$core_paths[] = EEA_PEOPLE_ADDON_PATH . 'core/CPTs/';
+		return $core_paths;
+	}
+
+
+
+	/**
+	 * Adds extra helper paths for when EE_Registry::instance()->load_helper() is called.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $helper_paths
+	 */
+	public function add_extra_helper_paths( $helper_paths ) {
+		$helper_paths[] = EEA_PEOPLE_ADDON_PATH . 'core/helpers/';
+	}
 
 
 

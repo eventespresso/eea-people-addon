@@ -60,4 +60,42 @@ class EEH_People_View extends EEH_Base {
 		}
 		return EEH_People_View::$_person;
 	}
+
+
+
+
+	/**
+	 * This returns all the people attached to an event grouped by the people type.
+	 *
+	 * @param int $EVT_ID   If provided then return for specific event.  If not provided, attempt to use the $post
+	 *                      	     global for the post.
+	 *
+	 * Array is returned in this format:
+	 * @type array {
+	 *       'people_type_name' => EE_Person[]
+	 * }
+	 *
+	 * @return array
+	 */
+	public static function get_people_for_event( $EVT_ID = 0 ) {
+		$people = array();
+		if ( empty( $EVT_ID ) ) {
+			global $post;
+			$EVT_ID = $post instanceof WP_Post ? $post->ID : $EVT_ID;
+		}
+
+		//still empty?  return empty array()
+		if ( empty( $EVT_ID ) ) {
+			return $people;
+		}
+
+		$event_people = EEM_Person_Post::instance()->get_all( array( array( 'OBJ_ID' => $EVT_ID ), 'order_by' => array( 'PER_OBJ_order' => 'ASC' ) ) );
+
+		foreach ( $event_people as $event_person ) {
+			$term_name =  EEM_Term_Taxonomy::instance()->get_one_by_ID( $event_person->get( 'PT_ID' ) )->get_first_related( 'Term' )->get( 'name' );
+			$people[$term_name][] = $event_person->get_first_related( 'Person' );
+		}
+
+		return $people;
+	}
 } //end EEH_People_View

@@ -31,6 +31,9 @@ Class  EE_People extends EE_Addon {
 		//filter extra paths
 		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
 		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
+
+		//include our public "templates" file.
+		require_once EEA_PEOPLE_ADDON_PATH . 'public/template_hooks.php';
 	}
 
 

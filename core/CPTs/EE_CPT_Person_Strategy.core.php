@@ -102,22 +102,6 @@ class EE_CPT_Person_Strategy {
 	}
 
 
-
-	/**
-	 *    get_EE_post_type_metadata
-	 *
-	 * @access    public
-	 * @param null $meta_value
-	 * @param      $post_id
-	 * @param      $meta_key
-	 * @param      $single
-	 * @return    string
-	 */
-	public function get_EE_post_type_metadata( $meta_value = NULL, $post_id, $meta_key, $single ) {
-		return $meta_value;
-	}
-
-
 }
 // End of file EE_CPT_Person_Strategy.core.php
 // Location: /core/CPTs/EE_CPT_Person_Strategy.core.php

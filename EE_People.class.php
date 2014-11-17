@@ -56,7 +56,7 @@ Class  EE_People extends EE_Addon {
 					'People_Admin_Page_Init' => EEA_PEOPLE_ADDON_ADMIN . 'People_Admin_Page_Init.core.php',
 				),
 				'dms_paths' 			=> array( EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'data_migration_scripts' . DS ),
-				'module_paths' 		=> array( EEA_PEOPLE_ADDON_PATH . 'EED_People.module.php' ),
+				'module_paths' 		=> array( EEA_PEOPLE_ADDON_PATH . 'EED_People_Single.module.php' ),
 				'shortcode_paths' 	=> array( EEA_PEOPLE_ADDON_PATH . 'EES_Espresso_People.shortcode.php' ),
 				//'widget_paths' 		=> array( EEA_PEOPLE_ADDON_PATH . 'EEW_eea-people-addon.widget.php' ),
 				// if plugin update engine is being used for auto-updates. not needed if PUE is not being used.

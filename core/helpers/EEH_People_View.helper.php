@@ -68,7 +68,7 @@ class EEH_People_View extends EEH_Base {
 	 * This returns all the people attached to an event grouped by the people type.
 	 *
 	 * @param int $EVT_ID   If provided then return for specific event.  If not provided, attempt to use the $post
-	 *                      	     global for the post.
+	 *                      	     global for the event.
 	 *
 	 * Array is returned in this format:
 	 * @type array {
@@ -78,24 +78,71 @@ class EEH_People_View extends EEH_Base {
 	 * @return array
 	 */
 	public static function get_people_for_event( $EVT_ID = 0 ) {
-		$people = array();
-		if ( empty( $EVT_ID ) ) {
+		return self::_get_rel_objects( $EVT_ID );
+	}
+
+
+
+
+	/**
+	 * This returns all the events attached to a person grouped by the people type.
+	 *
+	 * @param int $PER_ID   If provided then return for specific person.  If not provided, attempt to use the $post
+	 *                      	     global for the person.
+	 *
+	 * Array is returned in this format:
+	 * @type array {
+	 *       'people_type_name' => EE_Event[]
+	 * }
+	 *
+	 * @return array
+	 */
+	public static function get_events_for_person( $PER_ID = 0 ) {
+		return self::_get_rel_objects( $PER_ID, 'Event');
+	}
+
+
+
+
+	/**
+	 * Utility function used to get various items from the Person_Post model depending on the given params.
+	 * When no obj_id is provided, we use what is set as the $post id if present.
+	 *
+	 * @param int         $obj_id              What the obj_id is for comparing against.
+	 * @param string    $primary_obj_type What it is being retrieved.
+	 *
+	 * @return EE_Base_Class[]  (what is returned depends on what the primary_obj_type is)
+	 */
+	protected static function _get_rel_objects( $obj_id = 0,  $primary_obj_type = 'Person' ) {
+		$objects = array();
+		if ( empty( $obj_id ) ) {
 			global $post;
-			$EVT_ID = $post instanceof WP_Post ? $post->ID : $EVT_ID;
+			$obj_id = $post instanceof WP_Post ? $post->ID : $obj_id;
 		}
 
-		//still empty?  return empty array()
-		if ( empty( $EVT_ID ) ) {
-			return $people;
+		//still empty? return empty array
+		if ( empty( $obj_id ) ) return array();
+
+		if ( $primary_obj_type !=  'Person' ) {
+			$where = array( 'PER_ID' => $obj_id, 'OBJ_type' => $primary_obj_type );
+			$query = array( $where );
+		} else {
+			$where = array( 'OBJ_ID' => $obj_id );
+			$query = array( $where, 'order_by' => array( 'PER_OBJ_order' => 'ASC' ) );
 		}
 
-		$event_people = EEM_Person_Post::instance()->get_all( array( array( 'OBJ_ID' => $EVT_ID ), 'order_by' => array( 'PER_OBJ_order' => 'ASC' ) ) );
 
-		foreach ( $event_people as $event_person ) {
-			$term_name =  EEM_Term_Taxonomy::instance()->get_one_by_ID( $event_person->get( 'PT_ID' ) )->get_first_related( 'Term' )->get( 'name' );
-			$people[$term_name][] = $event_person->get_first_related( 'Person' );
+		$object_items = EEM_Person_Post::instance()->get_all( $query );
+		$term_name_cache = array();
+
+		foreach ( $object_items as $object_item ) {
+			if ( ! isset( $term_name_cache[$object_item->get('PT_ID')] )  || ! isset( $objects[$term_name][$object_item->ID()] ) ) {
+				$term_name =  EEM_Term_Taxonomy::instance()->get_one_by_ID( $object_item->get( 'PT_ID' ) )->get_first_related( 'Term' )->get( 'name' );
+				$objects[$term_name][$object_item->ID()] = $object_item->get_first_related( $primary_obj_type );
+				$term_name_cache[$object_item->get('PT_ID')] = $term_name;
+			}
 		}
 
-		return $people;
+		return $objects;
 	}
 } //end EEH_People_View

@@ -22,14 +22,7 @@
  *
  * ------------------------------------------------------------------------
  */
-class EED_People extends EED_Module {
-
-	/**
-	 * @var 		bool
-	 * @access 	public
-	 */
-	public static $shortcode_active = FALSE;
-
+class EED_People_Single extends EED_Module {
 
 
 	/**
@@ -48,7 +41,7 @@ class EED_People extends EED_Module {
 	  *  @return 	void
 	  */
 	 public static function set_hooks() {
-		 EE_Config::register_route( 'eea-people-addon', 'EED_People', 'run' );
+		 EE_Config::register_route( 'person', 'People_Single', 'run' );
 	 }
 
 	 /**
@@ -73,6 +66,8 @@ class EED_People extends EED_Module {
 	  * @return    void
 	  */
 	 public function run( $WP ) {
+	 	add_filter( 'template_include', array( $this, 'template_include' ), 999 );
+	 	EE_Registry::instance()->load_helper( 'People_View' );
 	 }
 
 
@@ -89,6 +84,44 @@ class EED_People extends EED_Module {
 	public function enqueue_scripts() {
 	}
 
+
+
+	/**
+	 * deciding what template to include for person details.
+	 *
+	 * @param string $template Template being included
+	 *
+	 * @return string new template
+	 */
+	public function template_include( $template ) {
+		global $post;
+
+		// not a custom template?
+		if ( EE_Front_Controller::instance()->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
+			EEH_Template::load_espresso_theme_functions();
+			//add extra people data
+			add_filter( 'the_content', array( 'EED_People_Single', 'person_details' ), 100 );
+		}
+		return $template;
+	}
+
+
+
+
+	/**
+	 * hooking into the person details content of a template
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public static function person_details( $content ) {
+		global $post;
+		if ( is_single() && $post->post_type == 'espresso_people' && ! post_password_required() ) {
+			$content .= EEH_Template::locate_template( 'content-espresso_people-details.php' );
+		}
+		return $content;
+	}
 
 
 

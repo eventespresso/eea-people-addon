@@ -2,14 +2,14 @@
 /**
  * Define constants needed by test suite.
  *
- * @since 		0.0.1.dev.002
- * @package 		EE4 Addon Skeleton
+ * @since 		1.0.0
+ * @package 		EE People Addon
  * @subpackage 	Tests
  */
 
 define( 'EE_PLUGIN_DIR', dirname( dirname( dirname( dirname(__FILE__ ) ) ) ) . '/event-espresso-core/');
-define( 'EEADDON_TESTS_DIR', dirname( dirname( __FILE__ ) ) . '/'  );
-define( 'EEADDON_PLUGIN_DIR' , dirname( dirname( dirname(__FILE__)  ) ). '/' );
+define( 'EEA_PEOPLE_ADDON_TESTS_DIR', dirname( dirname( __FILE__ ) ) . '/'  );
+define( 'EEA_PEOPLE_ADDON_PLUGIN_DIR' , dirname( dirname( dirname(__FILE__)  ) ). '/' );
 
 if ( ! defined( 'EE_TESTS_DIR' ) ) {
 	define( 'EE_TESTS_DIR', EE_PLUGIN_DIR .  'tests/' );

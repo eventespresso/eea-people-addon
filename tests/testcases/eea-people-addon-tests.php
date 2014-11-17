@@ -12,7 +12,7 @@
  * Test class for eea-people-addon.php
  *
  * @since 		1.0.0
- * @package 		EE4 Addon Skeleton
+ * @package 		EE People Addon
  * @subpackage 	tests
  */
 class eea_people_addon_tests extends EE_UnitTestCase {

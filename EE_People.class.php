@@ -72,9 +72,9 @@ Class  EE_People extends EE_Addon {
 						),
 					),
 				'capability_maps' => array(
-					'EE_Meta_Capability_Map_Edit' => array( 'ee_edit_people', array( 'People', 'ee_edit_published_peoples', 'ee_edit_others_peoples', 'ee_edit_private_peoples' ) ),
-					'EE_Meta_Capability_Map_Read' => array( 'ee_read_people', array( 'People', '', 'ee_read_others_peoples', 'ee_read_private_peoples' ) ),
-					'EE_Meta_Capability_Map_Delete' => array( 'ee_delete_people', array( 'People', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_delete_private_peoples' ) ),
+					'EE_Meta_Capability_Map_Edit' => array( 'ee_edit_people', array( 'Person', 'ee_edit_published_peoples', 'ee_edit_others_peoples', 'ee_edit_private_peoples' ) ),
+					'EE_Meta_Capability_Map_Read' => array( 'ee_read_people', array( 'Person', '', 'ee_read_others_peoples', 'ee_read_private_peoples' ) ),
+					'EE_Meta_Capability_Map_Delete' => array( 'ee_delete_people', array( 'Person', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_delete_private_peoples' ) ),
 					),
 				'class_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_classes',
 				'model_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_models',

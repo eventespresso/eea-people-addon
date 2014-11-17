@@ -1,7 +1,8 @@
-New EE4 Add-on Starter Template
+EE People Addon
 =========
 
-A set of files and classes to use as a template for creating a New Event Espresso  Add-on
+This addon for Event Espresso adds the people post type.   This initially allows for relationships between people and events but eventually (in later iterations) will allow for relationships between people and venues, and even people and attendees (contacts)!
 
-This plugin/addon needs to be uploaded to the "/wp-content/plugins/" directory on your server or installed using the WordPress plugins installer.
+### What are "people"?
+People are whatever you want them to be!  People could be "sponsors", speakers", they could be "staff", or even "volunteers".  This addon puts the power in your hands to classify people and easily attach them to events.
 

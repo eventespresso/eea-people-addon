@@ -46,7 +46,7 @@ class EE_DMS_People_1_0_0 extends EE_Data_Migration_Script_Base{
 			PTP_ID bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			PER_ID bigint(20) unsigned NOT NULL DEFAULT 0,
 			OBJ_ID bigint(20) unsigned NOT NULL DEFAULT 0,
-			OBJ_type varchar(50) unsigned NOT NULL DEFAULT 'Event',
+			OBJ_type varchar(50) NOT NULL DEFAULT 'Event',
 			P2P_Order tinyint(3) NOT NULL DEFAULT 0,
 			PT_ID bigint(20) unsigned NOT NULL DEFAULT 0,
 			PRIMARY KEY  (PTP_ID),

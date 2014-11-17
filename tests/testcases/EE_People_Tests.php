@@ -47,9 +47,38 @@ class EE_People_Tests extends EE_UnitTestCase {
 	 */
 	function test_register_addon() {
 
+		//verify config class
+		$this->assertInstanceOf( 'EE_People_Config', EE_Registry::instance()->CFG->addons->EE_People );
+
+		//verify module has been setup correctly
+		$this->assertTrue( isset( EE_Registry::instance()->modules->EED_People_Single ) );
+
+		//verify administrator has correct caps.
+		$mapped_caps_to_verify = array(
+			'ee_edit_people', 'ee_read_people', 'ee_delete_people',
+			);
+		$non_mapped_caps_to_verify = array(
+			'ee_read_peoples', 'ee_edit_peoples', 'ee_edit_others_peoples', 'ee_publish_peoples', 'ee_read_private_peoples', 'ee_delete_peoples', 'ee_delete_private_peoples', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_edit_private_peoples', 'ee_edit_published_peoples', 'ee_manage_people_types', 'ee_edit_people_type', 'ee_delete_people_type', 'ee_assign_people_type', 'ee_manage_people_categories', 'ee_edit_people_category', 'ee_delete_people_category', 'ee_assign_people_category'
+			);
+		$user = $this->factory->user->create_and_get();
+		$user->add_role( 'administrator' );
+
+		foreach( $non_mapped_caps_to_verify as $cap ) {
+			$can_user = EE_Capabilities::instance()->user_can( $user->ID, $cap, "testing_users", 1 );
+			$msg =  sprintf( 'User should have %s but they do not.', $cap);
+			$this->assertTrue( $can_user,$msg );
+		}
+
+		//note cannot test mapped_caps until https://core.trac.wordpress.org/ticket/16956 gets dealt with.
+
 		// test that the espresso_people cpt got loaded okay
 		$post_types = get_post_types();
 		$this->assertContains( 'espresso_people', $post_types );
+
+		//test that custom taxonomies got setup okay.
+		$this->assertTrue( taxonomy_exists( 'espresso_people_type' ) );
+		$this->assertTrue( taxonomy_exists( 'espresso_people_categories' ) );
+
 	}
 
 

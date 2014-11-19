@@ -90,6 +90,17 @@ class EEM_Person extends EEM_CPT_Base{
 		return self::$_instance;
 	}
 
+	/**
+	 * resets the model and returns it
+	 * @return EEM_Person
+	 */
+	public static function reset( $timezone = NULL ){
+		self::$_instance = NULL;
+		return self::instance( $timezone );
+	}
+
+
+
 
 
 	/**

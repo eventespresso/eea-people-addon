@@ -65,6 +65,16 @@ class EEM_Person_Post extends EEM_Base{
 	}
 
 
+	/**
+	 * resets the model and returns it
+	 * @return EEM_Person_Post
+	 */
+	public static function reset( $timezone = NULL ){
+		self::$_instance = NULL;
+		return self::instance( $timezone );
+	}
+
+
 
 
 	public function get_all_people_ids_for_post_and_type( $post_id, $type_id ) {

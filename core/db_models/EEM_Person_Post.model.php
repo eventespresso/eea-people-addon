@@ -58,7 +58,7 @@ class EEM_Person_Post extends EEM_Base{
 		// check if instance of EEM_Person_Post already exists
 		if ( self::$_instance === NULL ) {
 			// instantiate Espresso_model
-			self::$_instance = new self();
+			self::$_instance = new self( $timezone );
 		}
 		// EEM_Person_Post object
 		return self::$_instance;

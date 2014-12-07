@@ -27,7 +27,7 @@ class EE_People_Tests extends EE_UnitTestCase {
 	 */
 	function test_construct() {
 
-		$addon = EE_Registry::instance()->addons->EE_People;
+		$addon = EE_Registry::instance()->addons->People;
 		//filters should be present on load
 		$this->assertEquals( has_action('FHEE__EE_Registry__load_core__core_paths', array( $addon, 'add_extra_core_paths') ), 10 );
 		$this->assertEquals( has_action('FHEE__EE_Registry__load_helper__helper_paths', array( $addon, 'add_extra_helper_paths') ), 10 );
@@ -48,7 +48,7 @@ class EE_People_Tests extends EE_UnitTestCase {
 	function test_register_addon() {
 
 		//verify config class
-		$this->assertInstanceOf( 'EE_People_Config', EE_Registry::instance()->CFG->addons->EE_People );
+		$this->assertInstanceOf( 'EE_People_Config', EE_Registry::instance()->CFG->addons->People );
 
 		//verify module has been setup correctly
 		$this->assertTrue( isset( EE_Registry::instance()->modules->EED_People_Single ) );

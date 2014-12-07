@@ -139,6 +139,9 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 				// restore person link
 				$restore_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'restore_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 				$actions['restore'] = '<a href="'.$restore_lnk_url.'" title="' . __( 'Restore Person', 'event_espresso' ) . '">' . __( 'Restore', 'event_espresso' ) . '</a>';
+				$delete_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'delete_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
+				$actions['delete_permanently'] =  '<a href="'.$delete_lnk_url.'" title="' . __( 'Delete Permanently This Person.', 'event_espresso' ) . '">' . __( 'Delete Permanently', 'event_espresso' ) . '</a>';
+
 			}
 		}
 

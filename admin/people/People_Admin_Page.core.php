@@ -169,6 +169,19 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'capability' => 'ee_delete_peoples'
 			),
 
+			//delete permanently
+			'delete_person' => array(
+				'func' => '_delete_permanently_people',
+				'noheader' => true,
+				'capability' => 'ee_delete_people',
+				'obj_id' => $ppl_id
+				),
+			'delete_people' => array(
+				'func' => '_delete_permanently_people',
+				'noheader' => true,
+				'capability' => 'ee_delete_peoples',
+				),
+
 			//categories
 			'add_category' => array(
 				'func' => '_category_details',
@@ -400,7 +413,8 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'label' => __('Trash', 'event_espresso'),
 				'count' => 0,
 				'bulk_action' => array(
-					'restore_people' => __( 'Restore from Trash', 'event_espresso' )
+					'restore_people' => __( 'Restore from Trash', 'event_espresso' ),
+					'delete_people' => __('Delete Permanently', 'event_espresso' )
 					)
 				);
 			$this->_views['all']['bulk_action'] = array(
@@ -800,6 +814,63 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		$what = $success > 1 ? __( 'People', 'event_espresso' ) : __( 'Person', 'event_espresso' );
 		$action_desc = $trash ? __( 'moved to the trash', 'event_espresso' ) : __( 'restored', 'event_espresso' );
 		$this->_redirect_after_action( $success, $what, $action_desc, array( 'action' => 'default' ) );
+	}
+
+
+
+	/**
+	 * Delete's permanently people (or person).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	protected function _delete_permanently_people() {
+		$PERM = EE_Registry::instance()->load_model( 'Person' );
+		$PPST = EE_Registry::instance()->load_Model( 'Person_Post' );
+		$total_deleted = 0;
+		$total_not_deleted = 0;
+
+		if ( !empty( $this->_req_data['checkbox'] ) && is_array( $this->_req_data['checkbox'] ) ) {
+			$count = count( $this->_req_data['checkbox'] );
+			while ( list( $PER_ID, $value ) = each( $this->_req_data['checkbox'] ) ) {
+				//first delete any relationships with other posts for this id.
+				$PPST->delete( array( array( 'PER_ID' => $PER_ID ) ) );
+
+				//delete any term_taxonomy_relationships (gonna use wp core functions cause it's likely a bit faster)
+				wp_delete_object_term_relationships( $PER_ID, array( 'espresso_people_type', 'espresso_people_categories' ) );
+
+				//now should be able to delete permanently with no issues.
+				$deleted = $PERM->delete_permanently_by_ID( $PER_ID, false );
+				if ( $deleted ) {
+					$total_deleted++;
+				} else {
+					$total_not_deleted++;
+				}
+			}
+		} else {
+			$PER_ID = isset( $this->_req_data['PER_ID'] ) ? absint( $this->_req_data['PER_ID'] ) : 0;
+			if ( empty( $PER_ID ) ) {
+				EE_Error::add_error( __('Unable to delete permanently the selected Person because no ID was given.', 'event_espresso' ), __FILE__, __FUNCTION__, __LINE__ );
+				$total_not_deleted++;
+			}
+
+			$deleted = $PERM->delete_permanently_by_ID( $PER_ID );
+			if ( $deleted ) {
+				$total_deleted++;
+			} else {
+				$total_not_deleted++;
+			}
+		}
+
+		if ( $total_deleted > 0 ) {
+			EE_Error::add_success( sprintf( _n( '1 Person successfully deleted.', '%s People successfully deleted.', $total_deleted, 'event_espresso' ), $total_deleted ) );
+		}
+
+		if ( $total_not_deleted > 0 ) {
+			EE_Error::add_error( sprintf( _n( '1 Person not deleted.', '%d People not deleted', $total_not_deleted, 'event_espresso' ), $total_not_deleted ), __FILE__, __FUNCTION__, __LINE__ );
+		}
+		$this->_redirect_after_action( FALSE, '', '', array( 'action' => 'default' ), TRUE );
 	}
 
 

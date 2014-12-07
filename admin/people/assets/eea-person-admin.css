@@ -1,16 +1,16 @@
-#titlediv .title-prompt-text {
+#titlediv-people-addon .title-prompt-text {
 	color     : #BBB;
 	position  : absolute;
 	font-size : 1.7em;
 	padding   : 11px 10px;
 }
 
-#title-wrap .title-prompt-text {
+#title-wrap-people-addon .title-prompt-text {
 	font-size : 1.3em;
 	padding   : 5px 8px;
 }
 
-#titlediv .smaller-text-field, #titlediv .main-text-field {
+#titlediv-people-addon .smaller-text-field, #titlediv-people-addon .main-text-field {
 	padding     : 3px 8px;
 	font-size   : 1.7em;
 	line-height : 100%;
@@ -21,7 +21,7 @@
 	float       : left;
 }
 
-#titlediv .main-text-field {
+#titlediv-people-addon .main-text-field {
 	width : 100%;
 	float : none;
 }

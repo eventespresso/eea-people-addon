@@ -362,7 +362,9 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 	public function load_scripts_styles_edit_person() {
 		wp_register_style( 'eea-person-admin-css', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.css', array('ee-admin-css'), EEA_PEOPLE_ADDON_VERSION );
+		wp_register_script( 'eea-person-admin-js', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.js', array( 'post' ), EEA_PEOPLE_ADDON_VERSION );
 		wp_enqueue_style( 'eea-person-admin-css' );
+		wp_enqueue_script( 'eea-person-admin-js' );
 	}
 
 	public function admin_init() {}

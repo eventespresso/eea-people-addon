@@ -154,7 +154,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 			'restore_person' => array(
 				'func' => '_trash_or_restore_people',
-				'args' => array( 'trash', false ),
+				'args' => array( 'trash' => false ),
 				'noheader' => true,
 				'capability' => 'ee_delete_people',
 				'obj_id' => $ppl_id

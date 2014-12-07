@@ -45,4 +45,4 @@ test:
     - cd $event_espresso_core_dir; git checkout development; cd $plugin_tests_dir; phpunit -d display_errors=On
     - cd $event_espresso_core_dir; git checkout alpha; cd $plugin_tests_dir; phpunit -d display_errors=On
     - cd $event_espresso-core_dir; git checkout beta; cd $plugin_tests_dir; phpunit -d display_errors=On
-    - cd $event_espresso_core_dir; git checkout master; cd $plugin_tests_dir; phpunit -d display_errors=On
+    #- cd $event_espresso_core_dir; git checkout master; cd $plugin_tests_dir; phpunit -d display_errors=On

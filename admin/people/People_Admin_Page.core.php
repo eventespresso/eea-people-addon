@@ -855,7 +855,13 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				$total_not_deleted++;
 			}
 
-			$deleted = $PERM->delete_permanently_by_ID( $PER_ID );
+			//first delete any relationships with other posts for this id.
+			$PPST->delete( array( array( 'PER_ID' => $PER_ID ) ) );
+
+			//delete any term_taxonomy_relationships (gonna use wp core functions cause it's likely a bit faster)
+			wp_delete_object_term_relationships( $PER_ID, array( 'espresso_people_type', 'espresso_people_categories' ) );
+
+			$deleted = $PERM->delete_permanently_by_ID( $PER_ID, false );
 			if ( $deleted ) {
 				$total_deleted++;
 			} else {

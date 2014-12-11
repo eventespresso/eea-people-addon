@@ -101,7 +101,11 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 				if ( ! isset( $person_value['PER_ID'] ) ) {
 					continue;
 				}
+				$person_order = isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count;
 				if ( in_array( $person_value['PER_ID'], $existing_people ) ) {
+					$existing_person = EEM_Person_Post::instance()->get_one( array( array( 'PER_ID' => $person_value['PER_ID'], 'PT_ID' => $type_id, 'OBJ_ID' => $evtobj->ID() ) ) );
+					$existing_person->set( 'PER_OBJ_order', $person_order );
+					$existing_person->save();
 					$saved_people[$type_id][] = (int) $person_value['PER_ID'];
 					continue;
 				}
@@ -110,7 +114,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 					'OBJ_ID' => $evtobj->ID(),
 					'OBJ_type' => str_replace( 'EE_', '', get_class( $evtobj ) ),
 					'PT_ID' => $type_id,
-					'PER_OBJ_order' => isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count
+					'PER_OBJ_order' => $person_order
 					);
 				$new_rel = EE_Person_Post::new_instance( $values_to_save );
 				$new_rel->save();
@@ -143,12 +147,13 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 
 
 
-	protected function _get_people() {
-		if ( ! empty( $this->_all_people ) ) {
+	protected function _get_people( $query_args = array() ) {
+		if ( ! empty( $this->_all_people ) && empty( $array ) ) {
 			return $this->_all_people;
 		}
 
-		$this->_all_people = EE_Registry::instance()->load_model( 'Person' )->get_all( array( array( 'status' => 'publish' ) ) );
+		$query = array_merge( $query_args, array( 'status' => 'publish' ) );
+		$this->_all_people = EE_Registry::instance()->load_model( 'Person' )->get_all(  $query_args );
 		return $this->_all_people;
 	}
 
@@ -174,10 +179,12 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 
 		EE_Registry::instance()->load_helper( 'Template' );
 
+		$type_order_query= array( 'order_by' => 'Person_Post.PER_OBJ_order' );
+
 		$template_args = array(
 			'people_type' => $people_type,
 			'type' => $people_type->get_first_related( 'Term' ),
-			'people' => $this->_get_people(),
+			'people' => $this->_get_people( $type_order_query ),
 			'assigned_people' => EE_Registry::instance()->load_model('Person')->get_people_for_event_and_type( $post->ID, $people_type->get('term_taxonomy_id') )
 			);
 		$template = EEA_PEOPLE_ADDON_PATH . 'admin/people/templates/people_type_event_metabox_details.template.php';

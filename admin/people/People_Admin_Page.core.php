@@ -291,6 +291,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'metaboxes' => array( '_publish_post_box', 'people_editor_metaboxes' ),
 				'require_nonce' => false
 			),
+			'create_new' => array(),
 			'edit_person' => array(
 				'nav' => array(
 					'label' => __('Edit Person', 'event_espresso'),

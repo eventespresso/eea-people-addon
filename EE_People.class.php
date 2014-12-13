@@ -120,12 +120,21 @@ Class  EE_People extends EE_Addon {
 						'args' => array(
 							'public' => true,
 							'show_in_nav_menus' => true,
+							'labels' => array(
+								'name' => __('People Types', 'event_espresso'),
+								'singular_name' => __('People Type', 'event_espresso'),
+								'add_new_item' => __('Add New People Type', 'event_espresso' ),
+								'new_item_name' => __('New People Type Name', 'event_espresso' ),
+								'parent_item' => __('Parent People Type', 'event_espresso'),
+								'parent_item_colon' => __('Parent People Type:', 'event_espresso')
+							),
 							'capabilities' => array(
 								'manage_terms' => 'ee_manage_people_types',
 								'edit_terms' => 'ee_edit_people_type',
 								'delete_terms' => 'ee_delete_people_type',
 								'assign_terms' => 'ee_assign_people_type'
 								),
+							'meta_box_cb' => array( __CLASS__, 'people_type_metabox_content' ),
 							'rewrite' => array( 'slug' => __('people-type', 'event_espresso' ) )
 							)
 						),
@@ -152,6 +161,24 @@ Class  EE_People extends EE_Addon {
 					)
 			)
 		);
+	}
+
+
+
+	/**
+	 * Callback for the 'espresso_people_type' taxonomy metabox content.
+	 *
+	 * @param WP_Post $post
+	 * @param array       $box  metabox args
+	 *
+	 * @return string metabox content.
+	 */
+	public static function people_type_metabox_content( $post, $box ) {
+		?>
+		<div class="metabox-help-description">
+			<p class="description"><?php _e('When you assign a person to a people type here, it just indicates that this person fulfills that role in your organization and this person will be listed on the archive page for that person type.', 'event_espresso' ); ?></p>
+		</div>
+		<?php post_categories_meta_box( $post, $box );
 	}
 
 

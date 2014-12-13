@@ -637,8 +637,6 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		remove_meta_box('postexcerpt', __('Excerpt'), 'post_excerpt_meta_box', $this->_cpt_routes[$this->_req_action], 'normal', 'core');
 		remove_meta_box('commentstatusdiv', $this->_cpt_routes[$this->_req_action], 'normal', 'core');
 
-		remove_meta_box( 'espresso_people_typediv', $this->_cpt_routes[$this->_req_action], 'normal', 'core' );
-
 		if ( post_type_supports( 'espresso_people', 'excerpt') ) {
 			add_meta_box('postexcerpt', __('Short Biography', 'event_espresso'), 'post_excerpt_meta_box', $this->_cpt_routes[$this->_req_action], 'normal' );
 		}

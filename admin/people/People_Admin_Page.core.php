@@ -585,7 +585,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		$updated_fields = array(
 			'PER_fname' => $this->_req_data['PER_fname'],
 			'PER_lname' => $this->_req_data['PER_lname'],
-			'PER_full_name'=> $this->_req_data['PER_fname'] . ' ' . $this->_req_data['PER_lname'],
+			'PER_full_name'=> ! empty( $this->_req_data['post_title'] ) ? $this->_req_data['post_title'] : $this->_req_data['PER_fname'] . ' ' . $this->_req_data['PER_lname'],
 			'PER_address' => isset($this->_req_data['PER_address']) ? $this->_req_data['PER_address'] : '',
 			'PER_address2' => isset($this->_req_data['PER_address2']) ? $this->_req_data['PER_address2'] : '',
 			'PER_city' => isset( $this->_req_data['PER_city'] ) ? $this->_req_data['PER_city'] : '',

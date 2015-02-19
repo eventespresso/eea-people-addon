@@ -12,5 +12,7 @@
 	],
 	"github" : true,
 	"awsbucket" : "",
-	"awsregion" : ""
+	"awsregion" : "",
+	"srcBuildFolderName" : "eea-people-addon",
+	"textDomain" : "event_espresso"
 }

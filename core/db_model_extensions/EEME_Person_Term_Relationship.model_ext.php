@@ -33,7 +33,7 @@ class EEME_Person_Term_Relationship extends EEME_Base{
 	 * @param array $existing_fields array of existing fields
 	 */
 	public function add_extra_fields_on_filter( $existing_fields ) {
-		$object_id_foreign_keys = $existing_fields['Term_Relationship']['object_id'] instanceof EE_Foreign_Key_Int_Field ?  $existing_fields['Term_Relationship']['object_id']->get_model_name_pointed_to() : null;
+		$object_id_foreign_keys = $existing_fields['Term_Relationship']['object_id'] instanceof EE_Foreign_Key_Int_Field ?  $existing_fields['Term_Relationship']['object_id']->get_model_names_pointed_to() : null;
 		if ( ! empty( $object_id_foreign_keys ) ) {
 			$object_id_foreign_keys = (array) $object_id_foreign_keys;
 			$object_id_foreign_keys[] = 'Person';

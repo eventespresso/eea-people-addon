@@ -13,7 +13,8 @@ $people = EEH_People_View::get_people_for_event();
 			<ul class="eea-people-addon-people-list-ul">
 				<?php foreach ( $persons as $person ) : ?>
 					<li>
-						<a class="eea-people-addon-link-to-person" href="<?php echo get_permalink( $person->ID() ); ?>" title="<?php printf( __('Click here to view more info about %s', 'event_espresso' ), $person->full_name() ); ?>"><span class="eea-people-addon-person-full-name"><?php echo $person->full_name(); ?></span></a>
+						<a class="eea-people-addon-link-to-person" href="<?php echo get_permalink( $person->ID() ); ?>" title="<?php printf( __('Click here to view more info about %s', 'event_espresso' ), $person->full_name() ); ?>"><span class="eea-people-addon-person-full-name"><?php echo $person->full_name(); ?></span></a><br>
+						<span class="eea-people-addon-excerpt"><?php echo $person->get('PER_short_bio' ); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>

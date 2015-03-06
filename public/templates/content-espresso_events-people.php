@@ -9,7 +9,10 @@ $people = EEH_People_View::get_people_for_event();
 <div class="eea-people-addon-event-people-list-single">
 	<?php foreach ( $people as $type => $persons ) : ?>
 		<div class="eea-people-addon-people-type-container">
-			<h4 class="eea-people-addon-people-type-label"><?php echo $type; ?></h4>
+			<?php
+				$type_class = ' eea-people-addon-people-type-' . str_replace( ' ', '-', strtolower( $type ) );
+			?>
+			<h4 class="eea-people-addon-people-type-label<?php echo $type_class; ?>"><?php echo $type; ?></h4>
 			<ul class="eea-people-addon-people-list-ul">
 				<?php foreach ( $persons as $person ) : ?>
 					<li>

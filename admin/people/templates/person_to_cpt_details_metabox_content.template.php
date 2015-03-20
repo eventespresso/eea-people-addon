@@ -18,7 +18,7 @@
 		<?php foreach ( $row_data as $data ) : ?>
 			<tr>
 				<td><span class="<?php echo $data['css_class']; ?>"></span></td>
-				<td><span class="<?php echo $data['cpt_type'];?>-title"><?php echo $data['cpt_obj']->name(); ?></span></td>
+				<td><a href="<?php echo $data['edit_link']; ?>" title="<?php _e('Click here to edit', 'event_espresso'); ?>"><span class="<?php echo $data['cpt_type'];?>-title"><?php echo $data['cpt_obj']->name(); ?></span></a></td>
 				<td>
 					<ul class="person-to-cpt-people-type-list">
 						<?php foreach( $data['ct_obj'] as $ct ) : ?>

@@ -742,12 +742,27 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				switch( get_class( $cpt_obj ) ) {
 					case 'EE_Event' :
 						$css_class = 'dashicons dashicons-calendar-alt';
+						$edit_link = add_query_arg( array(
+							'page' => 'espresso_events',
+							'action' => 'edit',
+							'post' => $cpt_obj->ID()
+							), admin_url( 'admin.php' ) );
 						break;
 					case 'EE_Venue' :
 						$css_class = 'ee-icon ee-icon-venue';
+						$edit_link = add_query_arg( array(
+							'page' => 'espresso_venues',
+							'action' => 'edit',
+							'post' => $cpt_obj->ID()
+							), admin_url( 'admin.php' ) );
 						break;
 					case 'EE_Attendee' :
 						$css_class = 'dashicons dashicons-admin-users';
+						$edit_link = add_query_arg( array(
+							'page' => 'espresso_registrations',
+							'action' => 'edit_attendee',
+							'post' => $cpt_obj->ID()
+							), admin_url( 'admin.php' ) );
 						break;
 					default :
 						$css_class = '';
@@ -757,6 +772,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'css_class' => $css_class,
 					'cpt_type' => strtolower( $person_relationship->get('OBJ_type') ),
 					'cpt_obj' => $cpt_obj,
+					'edit_link' => $edit_link,
 					'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) ) )
 				);
 			} else {

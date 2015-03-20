@@ -43,6 +43,13 @@ class People_Admin_Page_Init extends EE_Admin_Page_CPT_Init  {
 
 	protected function _set_init_properties() {
 		$this->label = EEA_PEOPLE_LABEL;
+
+		//setup default term if it does not exist
+		$default_people_type_term_id = get_option( 'ee_people_addon_default_type_id', false );
+		if ( ! $default_people_type_term_id && ! term_exists( 'staff', 'espresso_people_type' ) ) {
+			$term = wp_insert_term( 'staff', 'espresso_people_type' );
+			update_option( 'ee_people_addon_default_type_id', $term['term_id'] );
+		}
 	}
 
 

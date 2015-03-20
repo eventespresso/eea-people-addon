@@ -153,11 +153,6 @@ Class  EE_People extends EE_Addon {
 							'rewrite' => array( 'slug' => __('people-type', 'event_espresso' ) )
 							)
 						)
-					),
-				'default_terms' => array(
-						'espresso_people_type' => array(
-							'staff' => array( 'espresso_people' )
-							)
 					)
 			)
 		);

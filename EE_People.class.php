@@ -209,7 +209,7 @@ Class  EE_People extends EE_Addon {
 	public function plugin_actions( $links, $file ) {
 		if ( $file == EEA_PEOPLE_ADDON_BASENAME ) {
 			// before other links
-			array_unshift( $links, '<a href="admin.php?page=eea-people-addon">' . __('Settings') . '</a>' );
+			array_unshift( $links, '<a href="admin.php?page=espresso_people">' . __('Start Adding Peoplel!', 'event_espresso') . '</a>' );
 		}
 		return $links;
 	}

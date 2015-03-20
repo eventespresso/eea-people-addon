@@ -27,7 +27,7 @@ class People_Admin_Page_Init extends EE_Admin_Page_CPT_Init  {
 	 */
 	public function __construct() {
 		define( 'EEA_PEOPLE_PG_SLUG', 'espresso_people' );
-		define( 'EEA_PEOPLE_LABEL', __( 'People Administration', 'event_espresso' ));
+		define( 'EEA_PEOPLE_LABEL', __( 'People Admin', 'event_espresso' ));
 		define( 'EEA_PEOPLE_ADDON_ADMIN_URL', admin_url( 'admin.php?page=' . EEA_PEOPLE_PG_SLUG ));
 		define( 'EEA_PEOPLE_ADDON_ADMIN_ASSETS_PATH', EEA_PEOPLE_ADDON_ADMIN . 'assets' . DS );
 		define( 'EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL', EEA_PEOPLE_ADDON_URL . 'admin' . DS . 'people' . DS . 'assets' . DS );

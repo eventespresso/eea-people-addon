@@ -241,7 +241,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				),
 
 			'delete_type' => array(
-				'func' => '_delete_categories',
+				'func' => '_delete_types',
 				'capability' => 'ee_delete_people_type',
 				'noheader' => TRUE
 				),
@@ -1059,7 +1059,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 		//doesn't matter what page we're coming from... we're going to the same place after delete.
 		$query_args = array(
-			'action' => $taxonomy == 'espresso_people_categories' ? 'category_list' : 'term_list'
+			'action' => $taxonomy == 'espresso_people_categories' ? 'category_list' : 'type_list'
 			);
 		$this->_redirect_after_action(0,'','',$query_args);
 	}

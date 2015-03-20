@@ -37,17 +37,17 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		$this->_admin_base_path = EEA_PEOPLE_ADDON_ADMIN;
 		$this->page_label = __('Manage People', 'event_espresso' );
 		$this->_cpt_routes = array(
-			'add_new_person' => 'espresso_people',
-			'edit_person' => 'espresso_people',
+			'create_new' => 'espresso_people',
+			'edit' => 'espresso_people',
 			'insert_person' => 'espresso_people',
 			'update_person' => 'espresso_people'
 			);
 		$this->_cpt_model_names = array(
-			'add_new_person' => 'EEM_Person',
-			'edit_person' => 'EEM_Person'
+			'create_new' => 'EEM_Person',
+			'edit' => 'EEM_Person'
 			);
 		$this->_cpt_edit_routes = array(
-			'espresso_people' => 'edit_person'
+			'espresso_people' => 'edit'
 			);
 		add_action( 'edit_form_after_title', array( $this, 'after_title_form_fields'), 10 );
 		add_filter( 'FHEE__EE_Admin_Page_CPT___edit_cpt_item__create_new_action', array( $this, 'map_cpt_route'), 10, 2 );
@@ -57,7 +57,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 	public function map_cpt_route( $route, EE_Admin_Page $adminpage ) {
 		if ( $adminpage->page_slug == $this->page_slug && $route == 'create_new' ) {
-			return 'add_new_person';
+			return 'create_new';
 		}
 		return $route;
 	}
@@ -102,8 +102,8 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'espresso_people' => __('Enter Full Name here', 'event_espresso')
 				),
 			'publishbox' => array(
-				'edit_person' => __( 'Update Person Record', 'event_espresso' ),
-				'add_new_person' => __( 'Save Person Record', 'event_espresso' ),
+				'edit' => __( 'Update Person Record', 'event_espresso' ),
+				'create_new' => __( 'Save Person Record', 'event_espresso' ),
 				'add_category' => __('Save New Category', 'event_espresso'),
 				'edit_category' => __('Update Category', 'event_espresso'),
 				'add_type' => __('Save New Type', 'event_espresso'),
@@ -124,12 +124,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'func' => '_people_list_table',
 				'capability' => 'ee_read_peoples'
 				),
-			'add_new_person' => array(
+			'create_new' => array(
 				'func' => '_create_new_cpt_item',
 				'args' => array( 'new_person' => true ),
 				'capability' => 'ee_edit_peoples'
 			),
-			'edit_person' => array(
+			'edit' => array(
 				'func' => '_edit_cpt_item',
 				'capability' => 'ee_edit_people',
 				'obj_id' => $ppl_id
@@ -282,7 +282,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'metaboxes' => array(),
 				'require_nonce' => false
 			),
-			'add_new_person' => array(
+			'create_new' => array(
 				'nav' => array(
 					'label' => __('Add Person', 'event_espresso'),
 					'order' => 10,
@@ -291,8 +291,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'metaboxes' => array( '_publish_post_box', 'people_editor_metaboxes' ),
 				'require_nonce' => false
 			),
-			'create_new' => array(),
-			'edit_person' => array(
+			'edit' => array(
 				'nav' => array(
 					'label' => __('Edit Person', 'event_espresso'),
 					'order' => 10,
@@ -370,11 +369,11 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _add_feature_pointers() {}
 	public function load_scripts_styles() {}
 
-	public function load_scripts_styles_add_new_person() {
-		$this->load_scripts_styles_edit_person();
+	public function load_scripts_styles_create_new() {
+		$this->load_scripts_styles_edit();
 	}
 
-	public function load_scripts_styles_edit_person() {
+	public function load_scripts_styles_edit() {
 		wp_register_style( 'eea-person-admin-css', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.css', array('ee-admin-css'), EEA_PEOPLE_ADDON_VERSION );
 		wp_register_script( 'eea-person-admin-js', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.js', array( 'post' ), EEA_PEOPLE_ADDON_VERSION );
 		wp_enqueue_style( 'eea-person-admin-css' );
@@ -472,7 +471,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	 */
 	protected function _people_list_table() {
 		$this->_search_btn_label = __('People', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('add_new_person', 'add-person', array(), 'add-new-h2');
+		$this->_admin_page_title .= $this->get_action_link_or_button('create_new', 'add-person', array(), 'add-new-h2');
 		$this->display_admin_list_table_page_with_no_sidebar();
 	}
 

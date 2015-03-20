@@ -109,7 +109,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 	function column_PER_lname($item) {
 
 		// edit attendee link
-		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit_person', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
+		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->lname() . '</a>' : $item->lname();
 		return $name_link;
 
@@ -124,7 +124,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 		$actions = array();
 		// edit person link
 		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ) {
-			$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit_person', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
+			$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 			$actions['edit'] = '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . __( 'Edit', 'event_espresso' ) . '</a>';
 		}
 
@@ -145,7 +145,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 			}
 		}
 
-		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit_person', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
+		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
 		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->fname() . '</a>' : $item->fname();
 
 		//Return the name contents

@@ -101,7 +101,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 				if ( ! isset( $person_value['PER_ID'] ) ) {
 					continue;
 				}
-				$person_order = isset( $person_value['PER_order'] ) ? $person_value['PER_order'] : $order_count;
+				$person_order = isset( $person_value['PER_order'] ) && $person_value['PER_order'] !== ''   ? $person_value['PER_order'] : $order_count;
 				if ( in_array( $person_value['PER_ID'], $existing_people ) ) {
 					$existing_person = EEM_Person_Post::instance()->get_one( array( array( 'PER_ID' => $person_value['PER_ID'], 'PT_ID' => $type_id, 'OBJ_ID' => $evtobj->ID() ) ) );
 					$existing_person->set( 'PER_OBJ_order', $person_order );

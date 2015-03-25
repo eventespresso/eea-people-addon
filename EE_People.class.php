@@ -150,7 +150,7 @@ Class  EE_People extends EE_Addon {
 								'delete_terms' => 'ee_delete_people_category',
 								'assign_terms' => 'ee_assign_people_category'
 								),
-							'rewrite' => array( 'slug' => __('people-type', 'event_espresso' ) )
+							'rewrite' => array( 'slug' => __('people-category', 'event_espresso' ) )
 							)
 						)
 					)

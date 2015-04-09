@@ -11,6 +11,7 @@
 		"src/readme.txt"
 	],
 	"github" : true,
+	"demoee" : true,
 	"awsbucket" : "",
 	"awsregion" : "",
 	"srcBuildFolderName" : "eea-people-addon",

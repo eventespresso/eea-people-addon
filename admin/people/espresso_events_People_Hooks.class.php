@@ -93,6 +93,10 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	 */
 	public function people_to_event_updates( $evtobj, $data ) {
 		$saved_people = array();
+		if ( ! isset( $data['people_to_cpt'] ) ) {
+			//no people in system yet or doing from a context where the people ui isn't present.
+			return true;
+		}
 		//loop through data and set things up for save.
 		foreach ( $data['people_to_cpt'] as $type_id => $people_values ) {
 			$existing_people = EE_Registry::instance()->load_model( 'Person_Post' )->get_all_people_ids_for_post_and_type( $evtobj->ID(), $type_id );

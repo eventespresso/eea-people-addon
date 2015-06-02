@@ -12,7 +12,7 @@
 ?>
 <div id="cpt_to_people_container_<?php echo $people_type->get('term_taxonomy_id'); ?>">
 	<p class="description"><?php echo $people_type->get('description'); ?></p>
-	<?php if ( empty( $assigned_people ) ) : ?>
+	<?php if ( empty( $people ) ) : ?>
 		<?php printf( __( 'There are no people in the system. Go ahead and %screate one now%s.', 'event_espresso' ), '<a href="' . $create_person_link . '" target="_blank">', '</a>' ); ?>
 	<?php else : ?>
 		<table class="people-to-cpt-table">

@@ -18,7 +18,7 @@
  *
  * @package			Event Espresso
  * @subpackage		eea-people-addon
- * @author 				Brent Christensen
+ * @author 				Darren Ethier
  *
  * ------------------------------------------------------------------------
  */
@@ -26,7 +26,7 @@ class EED_People_Single extends EED_Module {
 
 
 	/**
-	 * @return EED_People
+	 * @return EED_People_Single
 	 */
 	public static function instance() {
 		return parent::get_instance( __CLASS__ );
@@ -90,14 +90,22 @@ class EED_People_Single extends EED_Module {
 	 * deciding what template to include for person details.
 	 *
 	 * @param string $template Template being included
-	 *
 	 * @return string new template
+	 * @throws \EE_Error
 	 */
 	public function template_include( $template ) {
 		global $post;
 
 		// not a custom template?
-		if ( EE_Front_Controller::instance()->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
+		if ( EE_Registry::instance()->LIB->EE_Front_Controller instanceof EE_Front_Controller ) {
+			$front_controller = EE_Registry::instance()->LIB->EE_Front_Controller;
+		} elseif ( method_exists( 'EE_Front_Controller', 'instance' ) ) {
+			$front_controller = EE_Front_Controller::instance();
+		} else {
+			throw new EE_Error( __( 'It appears that the EE_Front_Controller has not be instantiated.', 'event_espresso' ) );
+		}
+
+		if ( $front_controller instanceof EE_Front_Controller && $front_controller->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
 			EEH_Template::load_espresso_theme_functions();
 			//add extra people data
 			add_filter( 'the_content', array( 'EED_People_Single', 'person_details' ), 100 );
@@ -107,12 +115,12 @@ class EED_People_Single extends EED_Module {
 
 
 
-
 	/**
 	 * hooking into the person details content of a template
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $content
 	 * @return string
 	 */
 	public static function person_details( $content ) {

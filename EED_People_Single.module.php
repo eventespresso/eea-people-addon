@@ -102,7 +102,10 @@ class EED_People_Single extends EED_Module {
 		} elseif ( method_exists( 'EE_Front_Controller', 'instance' ) ) {
 			$front_controller = EE_Front_Controller::instance();
 		} else {
-			throw new EE_Error( __( 'It appears that the EE_Front_Controller has not be instantiated.', 'event_espresso' ) );
+			if ( WP_DEBUG ) {
+				throw new EE_Error( __( 'It appears that the EE_Front_Controller has not be instantiated.', 'event_espresso' ) );
+			}
+			$front_controller = null;
 		}
 
 		if ( $front_controller instanceof EE_Front_Controller && $front_controller->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {

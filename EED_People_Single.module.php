@@ -97,18 +97,7 @@ class EED_People_Single extends EED_Module {
 		global $post;
 
 		// not a custom template?
-		if ( EE_Registry::instance()->LIB->EE_Front_Controller instanceof EE_Front_Controller ) {
-			$front_controller = EE_Registry::instance()->LIB->EE_Front_Controller;
-		} elseif ( method_exists( 'EE_Front_Controller', 'instance' ) ) {
-			$front_controller = EE_Front_Controller::instance();
-		} else {
-			if ( WP_DEBUG ) {
-				throw new EE_Error( __( 'It appears that the EE_Front_Controller has not be instantiated.', 'event_espresso' ) );
-			}
-			$front_controller = null;
-		}
-
-		if ( $front_controller instanceof EE_Front_Controller && $front_controller->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
+		if ( EE_Registry::instance()->load_core( 'Front_Controller', array(), false, true )->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
 			EEH_Template::load_espresso_theme_functions();
 			//add extra people data
 			add_filter( 'the_content', array( 'EED_People_Single', 'person_details' ), 100 );

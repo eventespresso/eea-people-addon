@@ -41,6 +41,7 @@ class EE_CPT_Person_Strategy {
 	public function __construct( $wp_query, $CPT = array() ) {
 
 		if ( $wp_query instanceof WP_Query ) {
+			$WP_Query = $wp_query;
 			$this->CPT = $CPT;
 		} else {
 			$WP_Query = isset( $wp_query[ 'WP_Query' ] ) ? $wp_query[ 'WP_Query' ] : null;

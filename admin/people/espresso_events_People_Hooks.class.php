@@ -93,6 +93,10 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	 */
 	public function people_to_event_updates( $evtobj, $data ) {
 		$saved_people = array();
+		if ( ! isset( $data['people_to_cpt'] ) ) {
+			//no people in system yet or doing from a context where the people ui isn't present.
+			return true;
+		}
 		//loop through data and set things up for save.
 		foreach ( $data['people_to_cpt'] as $type_id => $people_values ) {
 			$existing_people = EE_Registry::instance()->load_model( 'Person_Post' )->get_all_people_ids_for_post_and_type( $evtobj->ID(), $type_id );
@@ -169,7 +173,6 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	 * @return string Metabox Content
 	 */
 	public function people_type_metabox( $post, $metabox_args ) {
-
 		$incoming_args = $metabox_args['args'];
 		$people_type = $incoming_args['people_type'];
 		//if we don't have a valid people type then get out early!
@@ -178,6 +181,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 		}
 
 		EE_Registry::instance()->load_helper( 'Template' );
+		EE_Registry::instance()->load_helper( 'URL' );
 
 		$type_order_query= array( 'order_by' => 'Person_Post.PER_OBJ_order' );
 
@@ -185,7 +189,8 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 			'people_type' => $people_type,
 			'type' => $people_type->get_first_related( 'Term' ),
 			'people' => $this->_get_people( $type_order_query ),
-			'assigned_people' => EE_Registry::instance()->load_model('Person')->get_people_for_event_and_type( $post->ID, $people_type->get('term_taxonomy_id') )
+			'assigned_people' => EE_Registry::instance()->load_model('Person')->get_people_for_event_and_type( $post->ID, $people_type->get('term_taxonomy_id') ),
+			'create_person_link' => EEH_URL::add_query_args_and_nonce( array( 'action' => 'create_new' ), EEA_PEOPLE_ADDON_ADMIN_URL )
 			);
 		$template = EEA_PEOPLE_ADDON_PATH . 'admin/people/templates/people_type_event_metabox_details.template.php';
 		EEH_Template::display_template( $template, $template_args );

@@ -32,6 +32,9 @@ Class  EE_People extends EE_Addon {
 		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
 		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
 
+		//make sure people addonnavmenu metabox gets activated on fresh installs of wp
+		add_filter( 'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes', array( $this, 'activate_people_nav_menu_options' ), 10 );
+
 		//include our public "templates" file.
 		require_once EEA_PEOPLE_ADDON_PATH . 'public/template_hooks.php';
 	}
@@ -159,6 +162,19 @@ Class  EE_People extends EE_Addon {
 	}
 
 
+	/**
+	 * Callback for FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes to ensure that people addon
+	 * nav menu metabox selector is activated by default in "Appearance->Menus" WP admin page.
+	 *
+	 * @param array $existing_activation_array existing array of default menu boxes activated.
+	 * @return array
+	 */
+	public function activate_people_nav_menu_options( $existing_activation_array ) {
+		$existing_activation_array[] = 'add-espresso_people';
+		return $existing_activation_array;
+	}
+
+
 
 	/**
 	 * Callback for the 'espresso_people_type' taxonomy metabox content.
@@ -204,7 +220,7 @@ Class  EE_People extends EE_Addon {
 	public function plugin_actions( $links, $file ) {
 		if ( $file == EEA_PEOPLE_ADDON_BASENAME ) {
 			// before other links
-			array_unshift( $links, '<a href="admin.php?page=espresso_people">' . __('Start Adding Peoplel!', 'event_espresso') . '</a>' );
+			array_unshift( $links, '<a href="admin.php?page=espresso_people">' . __('Start Adding People!', 'event_espresso') . '</a>' );
 		}
 		return $links;
 	}

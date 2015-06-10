@@ -31,9 +31,8 @@ dependencies:
     # move plugin into tests/src
     - mv $plugin_loc $plugin_dir;
     #pull in event-espresso-core master branch
-    #pull in ee core and test against ee core master branch
+    #note the addon is being tested against the master branch of event-espresso-core.
     - git clone git@github.com:eventespresso/event-espresso-core.git $event_espresso_core_dir;
-    - cd $event_espresso_core_dir; git checkout master;
     # set up database
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot;
     # setup phpunit
@@ -42,4 +41,4 @@ dependencies:
 ##tests override.
 test:
   override:
-    - cd $plugin_tests_dir; phpunit -d display_errors=On
+    - cd $event_espresso_core_dir; git checkout master; cd $plugin_tests_dir; phpunit -d display_errors=On

@@ -30,7 +30,7 @@ Class  EE_People extends EE_Addon {
 	public function __construct() {
 		//setting this SUPER late because EventSmart runs it's deregisters later as well.  This ensures that we are
 		//running this hook well after any other plugins have possibly deregistered the addon.
-		add_action( 'AHEE__EE_System__load_core_configuration__begin', array( $this, 'load_early_hooks_when_registered' ), 1000 );
+		add_action( 'AHEE__EE_System___detect_if_activation_or_upgrade__begin', array( $this, 'load_early_hooks_when_registered' ), 1000 );
 	}
 
 

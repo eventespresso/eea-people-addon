@@ -28,15 +28,9 @@ Class  EE_People extends EE_Addon {
 
 
 	public function __construct() {
-		//filter extra paths
-		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
-		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
-
-		//make sure people addonnavmenu metabox gets activated on fresh installs of wp
-		add_filter( 'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes', array( $this, 'activate_people_nav_menu_options' ), 10 );
-
-		//include our public "templates" file.
-		require_once EEA_PEOPLE_ADDON_PATH . 'public/template_hooks.php';
+		//setting this SUPER late because EventSmart runs it's deregisters later as well.  This ensures that we are
+		//running this hook well after any other plugins have possibly deregistered the addon.
+		add_action( 'AHEE__EE_System___detect_if_activation_or_upgrade__begin', array( $this, 'load_early_hooks_when_registered' ), 1000 );
 	}
 
 
@@ -159,6 +153,29 @@ Class  EE_People extends EE_Addon {
 					)
 			)
 		);
+	}
+
+
+	/**
+	 * Callback for 'AHEE__EE_System__load_espresso_addons' hook registered in constructor.
+	 * This is to ensure that we load things necessary really early, but after this addon has been registered.  That way
+	 * It can be determined whether the addon was registered successfully or not (and not deregistered) before executing.
+	 */
+	public function load_early_hooks_when_registered() {
+
+		if ( ! isset( EE_Registry::instance()->addons->EE_People) ) {
+			return; //get out because the addon is not registered.
+		}
+
+		//filter extra paths
+		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
+		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
+
+		//make sure people addonnavmenu metabox gets activated on fresh installs of wp
+		add_filter( 'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes', array( $this, 'activate_people_nav_menu_options' ), 10 );
+
+		//include our public "templates" file.
+		require_once EEA_PEOPLE_ADDON_PATH . 'public/template_hooks.php';
 	}
 
 

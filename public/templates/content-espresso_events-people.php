@@ -5,6 +5,7 @@
 global $post;
 EE_Registry::instance()->load_helper( 'People_View' );
 $people = EEH_People_View::get_people_for_event();
+if ( $people ) :
 ?>
 <div class="eea-people-addon-event-people-list-single">
 	<?php foreach ( $people as $type => $persons ) : ?>
@@ -24,4 +25,4 @@ $people = EEH_People_View::get_people_for_event();
 		</div>
 	<?php endforeach; ?>
 </div>
-
+<?php endif; //end people check ?>

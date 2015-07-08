@@ -309,6 +309,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'order' => 10,
 					'persistent' => false,
 					),
+				'help_tabs' => array(
+					'add_category_help_tab' => array(
+						'title' => __( 'Add New People Category', 'event_espresso' ),
+						'filename' => 'people_add_category'
+					)
+				),
 				'metaboxes' => array( '_publish_post_box' )
 				),
 			'edit_category' => array(
@@ -318,6 +324,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'persistent' => FALSE,
 					'url' => isset($this->_req_data['PER_CAT_ID']) ? add_query_arg(array('PER_CAT_ID' => $this->_req_data['PER_CAT_ID'] ), $this->_current_page_view_url )  : $this->_admin_base_url
 					),
+				'help_tabs' => array(
+					'edit_category_help_tab' => array(
+						'title' => __('Edit People Category', 'event_espresso'),
+						'filename' => 'people_edit_category'
+					)
+				),
 				'metaboxes' => array( '_publish_post_box' )
 				),
 			'category_list' => array(
@@ -337,6 +349,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'order' => 10,
 					'persistent' => false
 					),
+				'help_tabs' => array(
+					'add_people_type_help_tab' => array(
+						'title' => __( 'Add People Type', 'event_espresso' ),
+						'filename' => 'people_add_type'
+					)
+				),
 				'metaboxes' => array( '_publish_post_box' )
 				),
 			'edit_type' => array(
@@ -346,6 +364,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 					'persistent' => FALSE,
 					'url' => isset($this->_req_data['PER_TYPE_ID']) ? add_query_arg(array('PER_TYPE_ID' => $this->_req_data['PER_TYPE_ID'] ), $this->_current_page_view_url )  : $this->_admin_base_url
 					),
+				'help_tabs' => array(
+					'edit_people_type_help_tab' => array(
+						'title' => __( 'Edit People Type', 'event_espresso' ),
+						'filename' => 'people_edit_type'
+					)
+				),
 				'metaboxes' => array( '_publish_post_box' )
 				),
 			'type_list' => array(

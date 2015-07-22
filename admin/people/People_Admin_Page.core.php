@@ -234,8 +234,8 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 				'capability' => 'ee_edit_people_type',
 				'args' => array('edit')
 				),
-			'delete_categories' => array(
-				'func' => '_delete_categories',
+			'delete_types' => array(
+				'func' => '_delete_types',
 				'capability' => 'ee_delete_people_type',
 				'noheader' => TRUE
 				),

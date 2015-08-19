@@ -63,7 +63,11 @@ class EE_People_Template_Hooks {
 	 * @return string show people attached to an event.
 	 */
 	public static function people_event_details( $content ) {
-		$content = EEH_Template::locate_template( 'content-espresso_events-people.php' ) . $content;
+
+		if ( function_exists( 'is_espresso_event' ) && is_espresso_event() ) {
+			EE_Registry::instance()->load_helper( 'Template' );
+			$content = EEH_Template::locate_template( 'content-espresso_events-people.php' ) . $content;
+		}
 		return $content;
 	}
 

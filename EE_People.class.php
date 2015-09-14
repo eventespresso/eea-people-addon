@@ -174,8 +174,6 @@ Class  EE_People extends EE_Addon {
 		//make sure people addonnavmenu metabox gets activated on fresh installs of wp
 		add_filter( 'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes', array( $this, 'activate_people_nav_menu_options' ), 10 );
 
-		//include our public "templates" file.
-		require_once EEA_PEOPLE_ADDON_PATH . 'public/template_hooks.php';
 	}
 
 

@@ -228,7 +228,7 @@ class EED_People_Single extends EED_Module {
 		EED_People_Single::instance()->set_config();
 		$config = EED_People_Single::instance()->config();
 		if ( $config instanceof EE_People_Config ) {
-			$config->event_single_display_order_people = isset( $config->event_single_display_order_people ) ? $config->event_single_display_order_people : 115;
+			$config->event_single_display_order_people = isset( $config->event_single_display_order_people ) ? $config->event_single_display_order_people : 125;
 			$template_parts->add_template_part(
 				'people',
 				EED_People_Single::$templates_path . 'content-espresso_events-people.php',

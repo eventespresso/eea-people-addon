@@ -47,7 +47,7 @@ class EED_People_Single extends EED_Module {
 		 EE_Config::register_route( 'person', 'People_Single', 'run' );
 		 EED_People_Single::$templates_path = EEA_PEOPLE_ADDON_PATH . 'public' . DS . 'templates' . DS;
 		 add_action( 'AHEE__EED_Event_Single__use_filterable_display_order__after_add_filters', array( 'EED_People_Single', 'add_event_single_filters' ), 10 );
-		 add_filter( 'FHEE__EED_Event_Single__set_config__template_parts', array( 'EED_People_Single', 'filter_event_single_template_parts' ), 10 );
+		 add_action( 'AHEE__EED_Event_Single__initialize_template_parts', array( 'EED_People_Single', 'add_event_single_template_parts' ), 10 );
 	 }
 
 	 /**
@@ -58,9 +58,8 @@ class EED_People_Single extends EED_Module {
 	  */
 	 public static function set_hooks_admin() {
 		 // EED_Event_Single
-		 add_filter( 'FHEE__EED_Event_Single__template_settings_form__event_single_order_array', array( 'EED_People_Single', 'event_single_order_array' ), 10 );
-		 add_filter( 'FHEE__EED_Event_Single__template_settings_form__templates', array( 'EED_People_Single', 'event_single_template_settings_form' ), 10 );
 		 add_action( 'AHEE__EED_Event_Single__update_event_single_order__display_order_people', array( 'EED_People_Single', 'update_event_single_display_order_people' ), 10 );
+		 add_action( 'AHEE__EED_Event_Single__initialize_template_parts', array( 'EED_People_Single', 'add_event_single_template_parts' ), 10 );
 	 }
 
 
@@ -75,34 +74,6 @@ class EED_People_Single extends EED_Module {
 		$this->set_config_class( 'EE_People_Config' );
 		$this->set_config_name( 'EED_People_Single' );
 		return $this->config();
-	}
-
-
-
-	/**
-	 *    event_single_order_array
-	 *
-	 * @access    public
-	 * @param  array $event_single_order_array
-	 * @return    array
-	 */
-	public static function event_single_order_array( $event_single_order_array ) {
-		$event_single_order_array[ EED_People_Single::instance()->set_config()->event_single_display_order_people ] = 'people';
-		return $event_single_order_array;
-	}
-
-
-
-	/**
-	 *    event_single_template_settings_form
-	 *
-	 * @access    public
-	 * @param  array $template_settings_form
-	 * @return    array
-	 */
-	public static function event_single_template_settings_form( $template_settings_form ) {
-		$template_settings_form[ 'people' ] = __( "People", "event_espresso" );
-		return $template_settings_form;
 	}
 
 
@@ -219,18 +190,19 @@ class EED_People_Single extends EED_Module {
 
 
 	/**
-	 * filter_event_single_template_parts
+	 * add_event_single_template_parts
 	 *
 	 * @param EE_Template_Part_Manager $template_parts
 	 * @return array
 	 */
-	public static function filter_event_single_template_parts( EE_Template_Part_Manager $template_parts ) {
+	public static function add_event_single_template_parts( EE_Template_Part_Manager $template_parts ) {
 		EED_People_Single::instance()->set_config();
 		$config = EED_People_Single::instance()->config();
 		if ( $config instanceof EE_People_Config ) {
 			$config->event_single_display_order_people = isset( $config->event_single_display_order_people ) ? $config->event_single_display_order_people : 125;
 			$template_parts->add_template_part(
 				'people',
+				__( "People", "event_espresso" ),
 				EED_People_Single::$templates_path . 'content-espresso_events-people.php',
 				$config->event_single_display_order_people
 			);

@@ -90,7 +90,9 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 
 
 	function column_PER_ID($item) {
-		return '<div>' . $item->ID() . '</div>';
+		$content =  $item->ID();
+		$content .= '<span class="show-on-mobile-view-only">' . ' ' . $item->feature_image( array( 36, 36 ) ) . ' ' . $item->full_name() . '</span>';
+		return $content;
 	}
 
 

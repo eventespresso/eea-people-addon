@@ -61,3 +61,9 @@
     -o-border-radius: 15px;
     border-radius: 15px;
 }
+
+@media screen and ( max-width: 782px ) {
+    .wp-post-image {
+        vertical-align: top;
+    }
+}

@@ -404,6 +404,11 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		wp_enqueue_script( 'eea-person-admin-js' );
 	}
 
+	public function load_scripts_styles_default() {
+		wp_register_style( 'eea-person-admin-list-table-css', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin-list-table.css', array( 'ee-admin-css' ), EEA_PEOPLE_ADDON_VERSION );
+		wp_enqueue_style( 'eea-person-admin-list-table-css' );
+	}
+
 	public function admin_init() {}
 	public function admin_notices() {}
 	public function admin_footer_scripts() {}

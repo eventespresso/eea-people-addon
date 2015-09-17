@@ -41,24 +41,15 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 		$this->_columns = array(
 				'cb' => '<input type="checkbox" />', //Render a checkbox instead of text
 				'PER_ID' => __('ID', 'event_espresso'),
-				'PER_fname' => __('First Name', 'event_espresso'),
-				'PER_lname' => __('Last Name', 'event_espresso'),
-				'PER_email' => __('Email Address', 'event_espresso'),
-				'PER_phone' => __('Phone', 'event_espresso'),
+				'FET_Image' => __( 'Picture', 'event_espresso' ),
+				'PER_lname' => __('Name', 'event_espresso'),
 				'PER_address' => __('Address', 'event_espresso'),
-				'PER_city' => __('City', 'event_espresso'),
-				'STA_ID' => __('State/Province', 'event_espresso'),
-				'CNT_ISO' => __('Country', 'event_espresso'),
+				'PER_event_types' => __( 'Assigned As On Events', 'event_espresso' )
 			);
 
 		$this->_sortable_columns = array(
 			'PER_ID' => array( 'PER_ID' => FALSE ),
 			'PER_lname' => array( 'PER_lname' => TRUE ), //true means its already sorted
-			'PER_fname' => array( 'PER_fname' => FALSE ),
-			'PER_email' => array( 'PER_email' => FALSE ),
-			'PER_city' => array( 'PER_city' => FALSE ),
-			'STA_ID' => array( 'STA_ID' => FALSE ),
-			'CNT_ISO' => array( 'CNT_ISO' => FALSE )
 		);
 
 		$this->_hidden_columns = array();
@@ -99,26 +90,19 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 
 
 	function column_PER_ID($item) {
-		return '<div>' . $item->ID() . '</div>';
+		$content =  $item->ID();
+		$content .= '<span class="show-on-mobile-view-only">' . ' ' . $item->feature_image( array( 36, 36 ) ) . ' ' . $item->full_name() . '</span>';
+		return $content;
 	}
 
 
 
+	function column_FET_Image( $item ) {
+		return $item->feature_image( array( 56, 56 ) );
+	}
 
 
 	function column_PER_lname($item) {
-
-		// edit attendee link
-		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
-		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->lname() . '</a>' : $item->lname();
-		return $name_link;
-
-	}
-
-
-
-
-	function column_PER_fname($item) {
 
 		//Build row actions
 		$actions = array();
@@ -146,7 +130,9 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 		}
 
 		$edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );
-		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->fname() . '</a>' : $item->fname();
+		$name_link = EE_Registry::instance()->CAP->current_user_can( 'ee_edit_people', 'eea-people-addon_edit_people', $item->ID() ) ?  '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . $item->full_name() . '</a>' : $item->full_name();
+		$name_link .= '<br>' . '<a href="mailto:' . $item->email() .'">' . $item->email() . '</a>';
+		$name_link .= $item->phone() ? '<br>' . sprintf( __( 'Phone: %s', 'event_espresso' ), $item->phone() ) : '';
 
 		//Return the name contents
 		return sprintf('%1$s %2$s', $name_link, $this->row_actions($actions) );
@@ -154,47 +140,61 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 
 
 
-
-
-	function column_PER_email($item) {
-		return '<a href="mailto:' . $item->email() . '">' . $item->email() . '</a>';
-	}
-
-
-
-
 	function column_PER_address($item) {
-		return $item->address();
+		EE_Registry::instance()->load_helper('Formatter');
+		$content = EEH_Address::format( $item );
+		return $content;
 	}
 
 
 
-	function column_PER_city($item) {
-		return $item->city();
+	public function column_PER_event_types( $item ) {
+		EE_Registry::instance()->load_helper('URL');
+		//first do a query to get all the types for this user for where they are assigned to an event.
+		$event_type_IDs = EEM_Person_Post::instance()->get_col(
+			array(
+				array(
+					'PER_ID' => $item->ID(),
+					'OBJ_type' => 'Event',
+				),
+			),
+			'PT_ID'
+		);
+
+		$event_types = EEM_Term_Taxonomy::instance()->get_all(
+			array(
+				array(
+					'term_taxonomy_id' => array( 'IN', $event_type_IDs )
+				)
+			)
+		);
+
+		//loop through the types and setup the pills and the links
+		$content = '<ul class="person-to-cpt-people-type-list">';
+		foreach ( $event_types as $type ) {
+			$name = $type->get_first_related( 'Term' )->get('name');
+			$count = EEM_Person_Post::instance()->count(
+				array(
+					array(
+						'PER_ID' => $item->ID(),
+						'OBJ_type' => 'Event',
+						'PT_ID' => $type->ID()
+					)
+				)
+			);
+			$event_filter_link =  EEH_URL::add_query_args_and_nonce(
+				array(
+					'page' => 'espresso_events',
+					'action' => 'default',
+					'PER_ID' => $item->ID(),
+					'PT_ID' => $type->ID()
+				),
+				admin_url( 'admin.php' )
+			);
+			$content .= '<li><a href="' . $event_filter_link . '">' . $name . '<span class="person-type-count">' . $count . '</span></a></li>';
+		}
+		$content .= '</ul>';
+		echo $content;
 	}
-
-
-
-	function column_STA_ID($item) {
-		$states = EEM_State::instance()->get_all_states();
-		$state = isset( $states[ $item->state_ID() ] ) ? $states[ $item->state_ID() ]->get( 'STA_name' ) : $item->state_ID();
-		return ! is_numeric( $state ) ? $state : '';
-	}
-
-
-
-	function column_CNT_ISO($item) {
-		$countries = EEM_Country::instance()->get_all_countries();
-		//printr( $countries, '$countries  <br /><span style="font-size:10px;font-weight:normal;">' . __FILE__ . '<br />line no: ' . __LINE__ . '</span>', 'auto' );
-		$country = isset( $countries[ $item->country_ID() ] ) ? $countries[ $item->country_ID() ]->get( 'CNT_name' ) : $item->country_ID();
-		return ! is_numeric( $country ) ? $country : '';
-	}
-
-
-
-	function column_PER_phone($item) {
-		return $item->phone();
-	}
-
 
 }

@@ -73,6 +73,11 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 
 		add_filter( 'FHEE__Events_Admin_Page___insert_update_cpt_item__event_update_callbacks', array( $this, 'people_to_event_callback' ), 10 );
 
+
+		//add filter for event list table queries
+		add_filter( 'FHEE__Events_Admin_Page__get_events__where', array( $this, 'filter_events_list_table_where' ), 10, 2 );
+		add_filter( 'FHEE__EE_Admin_Page___display_admin_list_table_page__before_list_table__template_arg', array( $this, 'filtered_events_list_table_title' ), 10, 4 );
+
 	}
 
 
@@ -80,6 +85,70 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	public function people_to_event_callback( $update_callbacks ) {
 		$update_callbacks[] = array( $this, 'people_to_event_updates' );
 		return $update_callbacks;
+	}
+
+
+
+
+	/**
+	 * Callback for FHEE__Events_Admin_Page__get_events__where to filter the where conditions for events being queried for
+	 * event list table.
+	 * @param $original_where
+	 * @param $req_data
+	 */
+	public function filter_events_list_table_where( $original_where, $req_data ) {
+		if ( isset( $req_data['PER_ID'] ) ) {
+			$where['AND*Person'] = array(
+				'Person.PER_ID' => $req_data['PER_ID']
+			);
+		}
+
+		if ( isset( $req_data['PT_ID'] ) ) {
+			$where['AND*Person_Post'] = array(
+				'Person.Person_Post.PT_ID' => $req_data['PT_ID']
+			);
+		}
+		return $where;
+	}
+
+
+
+
+
+	/**
+	 * Callback for FHEE__EE_Admin_Page___display_admin_list_table_page__before_list_table__template_arg used to add
+	 * context title for when the event list table is filtered by person and person type.
+	 * @param $original_content
+	 * @param $page_slug
+	 * @param $request_data
+	 * @param $request_action
+	 */
+	public function filtered_events_list_table_title( $original_content, $page_slug, $request_data, $request_action ) {
+		if ( $page_slug === 'espresso_events' && $request_action === 'default' ) {
+			$person = $person_type = null;
+			if ( isset( $request_data['PER_ID'] ) ) {
+				$person = EEM_Person::instance()->get_one_by_ID( $request_data['PER_ID'] );
+			}
+
+			if ( isset( $request_data['PT_ID'] ) ) {
+				$person_type = EEM_Term_Taxonomy::instance()->get_one_by_ID( $request_data['PT_ID'] );
+				$person_type = $person_type instanceof EE_Term_Taxonomy ? $person_type->get_first_related( 'Term' ) : null;
+			}
+
+			if ( $person instanceof EE_Person && $person_type instanceof EE_Term ) {
+				$title = sprintf( __( 'Viewing the events that %s is assigned to as %s', 'event_espresso' ), $person->full_name(), $person_type->name() );
+			} elseif ( $person instanceof EE_Person && ! $person_type instanceof EE_Term ) {
+				$title = sprintf( __( 'Viewing the events that %s is assigned to', 'event_espresso' ), $person->full_name() );
+			} elseif ( ! $person instanceof EE_Person && $person_type instanceof EE_Term ) {
+				$title = sprintf( __( 'Viewing the events that has at least one person assigned as %s.', 'event_espresso' ), $person_type->name() );
+			} else {
+				$title = '';
+			}
+			if ( $title ) {
+				return '<h2>' . $title . '</h2>';
+			}
+		}
+		return $original_content;
 	}
 
 

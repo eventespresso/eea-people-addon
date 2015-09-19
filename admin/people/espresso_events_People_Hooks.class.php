@@ -98,17 +98,17 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 	 */
 	public function filter_events_list_table_where( $original_where, $req_data ) {
 		if ( isset( $req_data['PER_ID'] ) ) {
-			$where['AND*Person'] = array(
+			$original_where['AND*Person'] = array(
 				'Person.PER_ID' => $req_data['PER_ID']
 			);
 		}
 
 		if ( isset( $req_data['PT_ID'] ) ) {
-			$where['AND*Person_Post'] = array(
+			$original_where['AND*Person_Post'] = array(
 				'Person.Person_Post.PT_ID' => $req_data['PT_ID']
 			);
 		}
-		return $where;
+		return $original_where;
 	}
 
 

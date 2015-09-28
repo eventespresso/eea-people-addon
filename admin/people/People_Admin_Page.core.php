@@ -501,6 +501,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _people_list_table() {
 		$this->_search_btn_label = __('People', 'event_espresso');
 		$this->_admin_page_title .= $this->get_action_link_or_button('create_new', 'add-person', array(), 'add-new-h2');
+		if ( ! empty( $this->_req_data['EVT_ID'] ) ) {
+			$event = EEM_Event::instance()->get_one_by_ID( $this->_req_data['EVT_ID'] );
+			if ( $event instanceof EE_Event ) {
+				$this->_template_args['before_list_table'] = '<h2>' . sprintf( __( 'Showing people assigned to the event: %s', 'event_espresso' ), $event->name() ) . '</h2>';
+			}
+		}
 		$this->_template_args['after_list_table'] = EEH_Template::get_button_or_link( get_post_type_archive_link('espresso_people'), __("View People Archive Page", "event_espresso"), 'button' );
 		$this->display_admin_list_table_page_with_no_sidebar();
 	}
@@ -544,21 +550,25 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 			case 'draft' :
 				$status = array( 'draft', 'auto-draft' );
-				$where['status'] = array( 'IN', array('draft', 'auto-draft') );
+				$_where['status'] = array( 'IN', array('draft', 'auto-draft') );
 				break;
 
 			default :
 				$status = array( $status );
-				$where['status'] = $status;
+				$_where['status'] = $status;
 		}
 
 		//possible conditions for capability checks
 		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_read_private_peoples', 'get_people') ) {
-			$where['status**'] = array( '!=', 'private' );
+			$_where['status**'] = array( '!=', 'private' );
 		}
 
 		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_read_others_peoples', 'get_people' ) ) {
-			$where['PER_wp_user'] =  get_current_user_id();
+			$_where['PER_wp_user'] =  get_current_user_id();
+		}
+
+		if ( ! empty( $this->_req_data['EVT_ID'] ) ) {
+			$_where['Person_Post.OBJ_ID'] = $this->_req_data['EVT_ID'];
 		}
 
 		if ( ! empty( $this->_req_data['s'] ) ) {

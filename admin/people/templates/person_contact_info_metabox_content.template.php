@@ -9,7 +9,7 @@ EEH_Template_Validator::verify_instanceof( $person, '$person', 'EE_Person');
 		<tr valign="top">
 			<td>
 				<label for="PER_email"><?php _e('Email Address', 'event_espresso'); ?><br />
-				<input class="all-options" type="text" id="PER_email" name="PER_email" value="<?php echo $person->email(); ?>" required/>
+				<input class="all-options" type="text" id="PER_email" name="PER_email" value="<?php echo $person->email(); ?>"/>
 			</td>
 		</tr>
 		<tr valign="top">

@@ -1,0 +1,69 @@
+.wp-list-table .column-PER_ID {
+    width: 5%;
+}
+
+.wp-list-table .column-FET_Image {
+    width: 8%;
+}
+
+.wp-list-table .column-PER_lname {
+    width: 25%;
+}
+
+.wp-list-table .column-PER_address {
+    width: 15%;
+}
+
+.person-to-cpt-people-type-list {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.person-to-cpt-people-type-list a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.person-to-cpt-people-type-list a:hover {
+    color: #000;
+}
+
+.person-to-cpt-people-type-list li {
+    display: inline-block;
+    margin-right: 3px;
+    background-color: #666;
+    color: #fff;
+    padding: 2px 5px;
+    font-size: .8em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.person-to-cpt-people-type-list li:hover {
+    color: #666;
+    background-color: #aaa;
+}
+
+.person-type-count {
+    margin: 4px;
+    margin-left: 8px;
+    padding: 0 6px;
+    font-size: .8em;
+    color: #666;
+    display: inline-block;
+    background-color: white;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius: 15px;
+}
+
+@media screen and ( max-width: 782px ) {
+    .wp-post-image {
+        vertical-align: top;
+    }
+}

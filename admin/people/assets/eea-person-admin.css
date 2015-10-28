@@ -73,7 +73,7 @@
 	width: 50%;
 }
 
-.person-to-cpt-details-tabletd:last-child, .person-to-cpt-details-table th:last-child {
+.person-to-cpt-details-table td:last-child, .person-to-cpt-details-table th:last-child {
 	width: 48%;
 }
 

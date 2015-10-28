@@ -30,7 +30,12 @@ Class  EE_People extends EE_Addon {
 	public function __construct() {
 		//setting this SUPER late because EventSmart runs it's deregisters later as well.  This ensures that we are
 		//running this hook well after any other plugins have possibly deregistered the addon.
-		add_action( 'AHEE__EE_System___detect_if_activation_or_upgrade__begin', array( $this, 'load_early_hooks_when_registered' ), 1000 );
+		add_action(
+			'AHEE__EE_System___detect_if_activation_or_upgrade__begin',
+			array( $this, 'load_early_hooks_when_registered' ),
+			1000
+		);
+		parent::__construct();
 	}
 
 
@@ -53,7 +58,10 @@ Class  EE_People extends EE_Addon {
 					'People_Admin_Page_Init' => EEA_PEOPLE_ADDON_ADMIN . 'People_Admin_Page_Init.core.php',
 				),
 				'dms_paths' 			=> array( EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'data_migration_scripts' . DS ),
-				'module_paths' 		=> array( EEA_PEOPLE_ADDON_PATH . 'EED_People_Single.module.php' ),
+				'module_paths' 		=> array(
+                    EEA_PEOPLE_ADDON_PATH . 'EED_People_Single.module.php',
+                    EEA_PEOPLE_ADDON_PATH . 'EED_People_Event_Template_Parts.module.php',
+                ),
 				//'shortcode_paths' 	=> array( EEA_PEOPLE_ADDON_PATH . 'EES_Espresso_People.shortcode.php' ),
 				//'widget_paths' 		=> array( EEA_PEOPLE_ADDON_PATH . 'EEW_eea-people-addon.widget.php' ),
 				// if plugin update engine is being used for auto-updates. not needed if PUE is not being used.
@@ -170,9 +178,19 @@ Class  EE_People extends EE_Addon {
 		//filter extra paths
 		add_filter( 'FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10  );
 		add_filter( 'FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10 );
+		//add our templates folder to the EEH_Template::locate_template() paths checked.
+		add_filter(
+			'FHEE__EEH_Template__locate_template__template_folder_paths',
+			array( $this, 'add_template_folder_to_paths' ),
+			10
+		);
 
 		//make sure people addonnavmenu metabox gets activated on fresh installs of wp
-		add_filter( 'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes', array( $this, 'activate_people_nav_menu_options' ), 10 );
+		add_filter(
+			'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes',
+			array( $this, 'activate_people_nav_menu_options' ),
+			10
+		);
 
 	}
 
@@ -235,7 +253,7 @@ Class  EE_People extends EE_Addon {
 	public function plugin_actions( $links, $file ) {
 		if ( $file == EEA_PEOPLE_ADDON_BASENAME ) {
 			// before other links
-			array_unshift( $links, '<a href="admin.php?page=espresso_people">' . __('Start Adding People!', 'event_espresso') . '</a>' );
+			array_unshift( $links, '<a href="admin.php?page=espresso_people">' . __('Settings', 'event_espresso') . '</a>' );
 		}
 		return $links;
 	}
@@ -246,8 +264,8 @@ Class  EE_People extends EE_Addon {
 	 * Add our cpt strategy path to the core paths array.
 	 *
 	 * @since 1.0.0
-	 *
 	 * @param array $core_paths incoming array of paths
+	 * @return array
 	 */
 	public function add_extra_core_paths( $core_paths ) {
 		$core_paths[] = EEA_PEOPLE_ADDON_PATH . 'core/CPTs/';
@@ -255,19 +273,32 @@ Class  EE_People extends EE_Addon {
 	}
 
 
-
 	/**
 	 * Adds extra helper paths for when EE_Registry::instance()->load_helper() is called.
 	 *
 	 * @since 1.0.0
-	 *
 	 * @param array $helper_paths
+	 * @return array
 	 */
 	public function add_extra_helper_paths( $helper_paths ) {
 		$helper_paths[] = EEA_PEOPLE_ADDON_PATH . 'core/helpers/';
 		return $helper_paths;
 	}
 
+
+	/**
+	 * Registers the folder for core people templates to be included with the template path locator.
+	 * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $template_paths incoming paths
+	 * @return array
+	 */
+	public function add_template_folder_to_paths($template_paths) {
+		$template_paths[] = EEA_PEOPLE_ADDON_PATH . 'public/templates/';
+		return $template_paths;
+	}
 
 
 

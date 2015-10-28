@@ -46,8 +46,6 @@ class EED_People_Single extends EED_Module {
 	 public static function set_hooks() {
 		 EE_Config::register_route( 'person', 'People_Single', 'run' );
 		 EED_People_Single::$templates_path = EEA_PEOPLE_ADDON_PATH . 'public' . DS . 'templates' . DS;
-		 add_action( 'AHEE__EED_Event_Single__use_filterable_display_order__after_add_filters', array( 'EED_People_Single', 'add_event_single_filters' ), 10 );
-		 add_action( 'AHEE__EED_Event_Single__initialize_template_parts', array( 'EED_People_Single', 'add_event_single_template_parts' ), 10 );
 	 }
 
 	 /**
@@ -57,9 +55,6 @@ class EED_People_Single extends EED_Module {
 	  *  @return 	void
 	  */
 	 public static function set_hooks_admin() {
-		 // EED_Event_Single
-		 add_action( 'AHEE__EED_Event_Single__update_event_single_order__display_order_people', array( 'EED_People_Single', 'update_event_single_display_order_people' ), 10 );
-		 add_action( 'AHEE__EED_Event_Single__initialize_template_parts', array( 'EED_People_Single', 'add_event_single_template_parts' ), 10 );
 	 }
 
 
@@ -74,19 +69,6 @@ class EED_People_Single extends EED_Module {
 		$this->set_config_class( 'EE_People_Config' );
 		$this->set_config_name( 'EED_People_Single' );
 		return $this->config();
-	}
-
-
-
-	/**
-	 *    update_event_single_template_settings_form
-	 *
-	 * @access 	public
-	 * @param 	int $priority
-	 * @return 	array
-	 */
-	public static function update_event_single_display_order_people( $priority ) {
-		EED_People_Single::instance()->set_config()->event_single_display_order_people = $priority;
 	}
 
 
@@ -157,75 +139,6 @@ class EED_People_Single extends EED_Module {
 
 
 
-	/*********************************** following moved over from /public/template_hooks.php ***********************************/
-
-
-
-	/**
-	 * add_event_single_filters
-	 *
-	 * @return void
-	 */
-	public static function add_event_single_filters() {
-		//hook into event details right before event details content
-		add_filter( 'the_content', array( __CLASS__, 'people_event_details' ), 100 );
-	}
-
-
-
-	/**
-	 * Registers the folder for core people templates to be included with the template path locator.
-	 * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $template_paths incoming paths
-	 * @return array
-	 */
-	public static function add_template_folder_to_paths( $template_paths ) {
-		$template_paths[] = EEA_PEOPLE_ADDON_PATH . 'public/templates/';
-		return $template_paths;
-	}
-
-
-
-	/**
-	 * add_event_single_template_parts
-	 *
-	 * @param EE_Template_Part_Manager $template_parts
-	 * @return array
-	 */
-	public static function add_event_single_template_parts( EE_Template_Part_Manager $template_parts ) {
-		EED_People_Single::instance()->set_config();
-		$config = EED_People_Single::instance()->config();
-		if ( $config instanceof EE_People_Config ) {
-			$config->event_single_display_order_people = isset( $config->event_single_display_order_people ) ? $config->event_single_display_order_people : 125;
-			$template_parts->add_template_part(
-				'people',
-				__( "People", "event_espresso" ),
-				EED_People_Single::$templates_path . 'content-espresso_events-people.php',
-				$config->event_single_display_order_people
-			);
-		}
-		return $template_parts;
-	}
-
-
-
-	/**
-	 * This is added right before event content is displayed for an event
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $content (the content so far).
-	 *
-	 * @return string show people attached to an event.
-	 */
-	public static function people_event_details( $content ) {
-		return $content . EEH_Template::locate_template( EED_People_Single::$templates_path . 'content-espresso_events-people.php' );
-	}
-
-
 	/**
 	 *        @ override magic methods
 	 *        @ return void
@@ -241,6 +154,8 @@ class EED_People_Single extends EED_Module {
 	public function __wakeup() { return FALSE; }
 	public function __destruct() { return FALSE; }
 
- }
+
+
+}
 // End of file EED_People.module.php
 // Location: /wp-content/plugins/eea-people-addon/EED_People.module.php

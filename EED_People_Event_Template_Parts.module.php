@@ -47,12 +47,12 @@ class EED_People_Event_Template_Parts extends EED_Module {
          );
          add_action(
 			 'AHEE__EED_Event_Single__initialize_template_parts',
-			 array( 'EED_People_Event_Template_Parts', 'add_event_template_parts' ),
+			 array( 'EED_People_Event_Template_Parts', 'add_event_single_template_parts' ),
 			 10
 		 );
          add_action(
 			 'AHEE__EED_Event_Archive__initialize_template_parts',
-			 array( 'EED_People_Event_Template_Parts', 'add_event_template_parts' ),
+			 array( 'EED_People_Event_Template_Parts', 'add_event_archive_template_parts' ),
 			 10
 		 );
 	 }
@@ -66,12 +66,12 @@ class EED_People_Event_Template_Parts extends EED_Module {
 	 public static function set_hooks_admin() {
 		 add_action(
 			 'AHEE__EED_Event_Single__initialize_template_parts',
-			 array( 'EED_People_Event_Template_Parts', 'add_event_template_parts' ),
+			 array( 'EED_People_Event_Template_Parts', 'add_event_single_template_parts' ),
 			 10
 		 );
 		 add_action(
 			 'AHEE__EED_Event_Archive__initialize_template_parts',
-			 array( 'EED_People_Event_Template_Parts', 'add_event_template_parts' ),
+			 array( 'EED_People_Event_Template_Parts', 'add_event_archive_template_parts' ),
 			 10
 		 );
 		 // this is for a dynamic hook in \EED_Event_Single_Caff::update_event_single_order()
@@ -149,21 +149,22 @@ class EED_People_Event_Template_Parts extends EED_Module {
 
 
 	/**
-	  * get_event_display_order_people
-	  *
-	  * @access    protected
-	  * @return    int
-	  */
-	 protected static function get_event_display_order_people() {
+	 * get_event_display_order_people
+	 *
+	 * @access    protected
+	 * @param bool $archive
+	 * @return int
+	 */
+	 protected static function get_event_display_order_people( $archive = true ) {
 		 $event_display_order_people = 125;
 		 EED_People_Event_Template_Parts::instance()->set_config();
 		 $config = EED_People_Event_Template_Parts::instance()->config();
 		 if ( $config instanceof EE_People_Config ) {
-			 if ( is_single() ) {
+			 if ( ! $archive ) {
 				 $config->event_single_display_order_people = isset( $config->event_single_display_order_people )
 					 ? $config->event_single_display_order_people : 125;
 				 $event_display_order_people = $config->event_single_display_order_people;
-			 } else if ( is_archive() ) {
+			 } else {
 				 $config->event_archive_display_order_people = isset( $config->event_archive_display_order_people )
 					 ? $config->event_archive_display_order_people : 125;
 				 $event_display_order_people = $config->event_archive_display_order_people;
@@ -217,18 +218,43 @@ class EED_People_Event_Template_Parts extends EED_Module {
 
 
     /**
-	 * add_event_template_parts
+	 * add_event_archive_template_parts
 	 *
 	 * @param EE_Template_Part_Manager $template_parts
 	 * @return array
 	 */
-	public static function add_event_template_parts( EE_Template_Part_Manager $template_parts ) {
+	public static function add_event_archive_template_parts( EE_Template_Part_Manager $template_parts ) {
+		return EED_People_Event_Template_Parts::add_event_template_parts( $template_parts, true );
+	}
+
+
+
+    /**
+	 * add_event_single_template_parts
+	 *
+	 * @param EE_Template_Part_Manager $template_parts
+	 * @return array
+	 */
+	public static function add_event_single_template_parts( EE_Template_Part_Manager $template_parts ) {
+		return EED_People_Event_Template_Parts::add_event_template_parts( $template_parts, false );
+	}
+
+
+
+	/**
+	 * add_event_template_parts
+	 *
+	 * @param EE_Template_Part_Manager $template_parts
+	 * @param bool                     $archive
+	 * @return array
+	 */
+	public static function add_event_template_parts( EE_Template_Part_Manager $template_parts, $archive = true ) {
 		EED_People_Event_Template_Parts::$templates_path = EEA_PEOPLE_ADDON_PATH . 'public' . DS . 'templates' . DS;
 		$template_parts->add_template_part(
 			'people',
 			__( "People", "event_espresso" ),
 			EED_People_Event_Template_Parts::$templates_path . 'content-espresso_events-people.php',
-			EED_People_Event_Template_Parts::get_event_display_order_people()
+			EED_People_Event_Template_Parts::get_event_display_order_people( $archive )
 		);
 		return $template_parts;
 	}

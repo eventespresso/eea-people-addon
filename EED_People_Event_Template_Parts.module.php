@@ -83,7 +83,7 @@ class EED_People_Event_Template_Parts extends EED_Module {
 		 // this is for a dynamic hook in \EED_Events_Archive_Caff::update_event_archive_order()
 		 add_action(
 			 'AHEE__EED_Events_Archive__update_event_archive_order__display_order_people',
-			 array( 'EED_People_Event_Template_Parts', 'update_event_single_display_order_people' ),
+			 array( 'EED_People_Event_Template_Parts', 'update_event_archive_display_order_people' ),
 			 10
 		 );
 	 }
@@ -113,6 +113,9 @@ class EED_People_Event_Template_Parts extends EED_Module {
 	 */
 	public static function update_event_single_display_order_people( $priority ) {
 		EED_People_Event_Template_Parts::instance()->set_config()->event_single_display_order_people = $priority;
+		EED_People_Event_Template_Parts::instance()->_update_config(
+			EED_People_Event_Template_Parts::instance()->config()
+		);
 	}
 
 
@@ -126,6 +129,9 @@ class EED_People_Event_Template_Parts extends EED_Module {
 	 */
 	public static function update_event_archive_display_order_people( $priority ) {
 		EED_People_Event_Template_Parts::instance()->set_config()->event_archive_display_order_people = $priority;
+		EED_People_Event_Template_Parts::instance()->_update_config(
+			EED_People_Event_Template_Parts::instance()->config()
+		);
 	}
 
 
@@ -181,7 +187,7 @@ class EED_People_Event_Template_Parts extends EED_Module {
 
 
     /**
-     * add_people_event_details_filters
+     * remove_people_event_details_filters
      *
      * @return void
      */

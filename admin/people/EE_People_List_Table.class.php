@@ -68,7 +68,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 	protected function _add_view_counts() {
 		$orig_status = isset( $this->_req_data['status'] ) ? $this->_req_data['status'] : null;
 		$this->_req_data['status'] = 'publish';
-		$this->_views['publish']['count'] = EE_Registry::instance()->load_model('Person')->count();
+		$this->_views['publish']['count'] = EE_Registry::instance()->load_model('Person')->count( array( array( 'status' => 'publish' ) ) );
 		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_peoples', 'eea-people-addon_delete_people' ) ) {
 			$this->_views['trash']['count'] = EE_Registry::instance()->load_model('Person')->count_deleted();
 		}

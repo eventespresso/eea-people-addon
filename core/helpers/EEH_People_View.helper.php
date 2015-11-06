@@ -131,18 +131,19 @@ class EEH_People_View extends EEH_Base {
 			$query = array( $where, 'order_by' => array( 'PER_OBJ_order' => 'ASC' ) );
 		}
 
-
 		$object_items = EEM_Person_Post::instance()->get_all( $query );
 		$term_name_cache = array();
 
 		foreach ( $object_items as $object_item ) {
 			if ( ! isset( $term_name_cache[$object_item->get('PT_ID')] )  || ! isset( $objects[$term_name][$object_item->ID()] ) ) {
 				$term_name =  EEM_Term_Taxonomy::instance()->get_one_by_ID( $object_item->get( 'PT_ID' ) )->get_first_related( 'Term' )->get( 'name' );
-				$objects[$term_name][$object_item->ID()] = $object_item->get_first_related( $primary_obj_type );
-				$term_name_cache[$object_item->get('PT_ID')] = $term_name;
+				$related_object = $object_item->get_first_related( $primary_obj_type, array( array( 'status' => 'publish' ) ) );
+				if ( $related_object instanceof EE_Base_Class ) {
+					$objects[$term_name][$object_item->ID()] = $related_object;
+					$term_name_cache[$object_item->get('PT_ID')] = $term_name;
+				}
 			}
 		}
-
 		return $objects;
 	}
 } //end EEH_People_View

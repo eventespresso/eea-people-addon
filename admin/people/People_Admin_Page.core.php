@@ -531,34 +531,29 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 
 		$_where = array();
 
-		$status = isset( $this->_req_data['status'] ) ? $this->_req_data['status'] : NULL;
-
 		//determine what post status our condition will have for the query.
 		$status = isset( $this->_req_data['status'] ) ? $this->_req_data['status'] : NULL;
 		//determine what post_status our condition will have for the query.
 		switch ( $status ) {
 			case NULL :
 			case 'all' :
-				$status = array();
 				break;
 
 			case 'draft' :
-				$status = array( 'draft', 'auto-draft' );
-				$where['status'] = array( 'IN', array('draft', 'auto-draft') );
+				$_where['status'] = array( 'IN', array('draft', 'auto-draft') );
 				break;
 
 			default :
-				$status = array( $status );
-				$where['status'] = $status;
+				$_where['status'] = $status;
 		}
 
 		//possible conditions for capability checks
 		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_read_private_peoples', 'get_people') ) {
-			$where['status**'] = array( '!=', 'private' );
+			$_where['status**'] = array( '!=', 'private' );
 		}
 
 		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_read_others_peoples', 'get_people' ) ) {
-			$where['PER_wp_user'] =  get_current_user_id();
+			$_where['PER_wp_user'] =  get_current_user_id();
 		}
 
 		if ( ! empty( $this->_req_data['s'] ) ) {
@@ -586,7 +581,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		if ( $trash )
 			$people = $count ? $PPLM->count_deleted( array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit)): $PPLM->get_all_deleted( array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit));
 		else
-			$people = $count ? $PPLM->count( array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all( array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit) );
+			$people = $count ? $PPLM->count( array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all( array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit ) );
 
 		return $people;
 	}

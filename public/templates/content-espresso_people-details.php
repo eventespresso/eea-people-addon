@@ -1,6 +1,7 @@
 <?php
 /**
  * Template file to add extra content to a single person display
+ * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.
  * @since 1.0.0
  * @package EE People Addon
  * @subpackage  template

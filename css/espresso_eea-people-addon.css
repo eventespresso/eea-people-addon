@@ -6,7 +6,15 @@
 /*
 General Styles
 ---------------------------------------------------------------------------------------------------- */
+.eea-people-addon-people-list-ul li {
+	clear: both;
+	margin: 0 0 1em;
+}
 
+.eea-people-addon-feature-image {
+	float: left;
+	margin: 0 1em 1em 0;
+}
 
 /* Media Query for screens smaller then 768px (iPad portrait)
 ---------------------------------------------------------------------------------------------------- */

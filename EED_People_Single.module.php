@@ -132,7 +132,7 @@ class EED_People_Single extends EED_Module {
 	public static function person_details( $content ) {
 		global $post;
 		if ( is_single() && $post->post_type == 'espresso_people' && ! post_password_required() ) {
-			$content .= EEH_Template::locate_template( EED_People_Single::$templates_path . 'content-espresso_people-details.php' );
+			$content .= EEH_Template::locate_template( 'content-espresso_people-details.php' );
 		}
 		return $content;
 	}

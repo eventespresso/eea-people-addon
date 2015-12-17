@@ -133,11 +133,21 @@ class EEH_People_View extends EEH_Base {
 
 		$object_items = EEM_Person_Post::instance()->get_all( $query );
 		$term_name_cache = array();
+		if ( method_exists( EEM_Event::instance(), 'public_event_stati' ) ) {
+			$public_event_stati = EEM_Event::instance()->public_event_stati();
+		} else {
+			$public_event_stati = get_post_stati( array( 'public' => TRUE ));
+			foreach ( EEM_Event::instance()->get_custom_post_statuses() as $custom_post_status ) {
+				$public_event_stati[] = strtolower( str_replace( ' ', '_', $custom_post_status ) );
+			}
+		}
 
 		foreach ( $object_items as $object_item ) {
 			if ( ! isset( $term_name_cache[$object_item->get('PT_ID')] )  || ! isset( $objects[$term_name][$object_item->ID()] ) ) {
 				$term_name =  EEM_Term_Taxonomy::instance()->get_one_by_ID( $object_item->get( 'PT_ID' ) )->get_first_related( 'Term' )->get( 'name' );
-				$related_object = $object_item->get_first_related( $primary_obj_type, array( array( 'status' => 'publish' ) ) );
+				$related_object = $object_item->get_first_related( $primary_obj_type, array( array( 'status' => array( 
+					'IN', apply_filters( 'FHEE__EEH_People_View__get_rel_objects__public_event_stati', $public_event_stati ) 
+				) ) ) );
 				if ( $related_object instanceof EE_Base_Class ) {
 					$objects[$term_name][$object_item->ID()] = $related_object;
 					$term_name_cache[$object_item->get('PT_ID')] = $term_name;

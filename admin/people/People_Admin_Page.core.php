@@ -545,16 +545,13 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		switch ( $status ) {
 			case NULL :
 			case 'all' :
-				$status = array();
 				break;
 
 			case 'draft' :
-				$status = array( 'draft', 'auto-draft' );
 				$_where['status'] = array( 'IN', array('draft', 'auto-draft') );
 				break;
 
 			default :
-				$status = array( $status );
 				$_where['status'] = $status;
 		}
 
@@ -596,7 +593,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		if ( $trash )
 			$people = $count ? $PPLM->count_deleted( array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit)): $PPLM->get_all_deleted( array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit));
 		else
-			$people = $count ? $PPLM->count( array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all( array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit) );
+			$people = $count ? $PPLM->count( array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all( array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit ) );
 
 		return $people;
 	}
@@ -777,46 +774,48 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		$row_data = array();
 		foreach ( $person_relationships as $person_relationship ) {
 			$cpt_obj = EE_Registry::instance()->load_model( $person_relationship->get('OBJ_type') )->get_one_by_ID( $person_relationship->get( 'OBJ_ID' ) );
-			if ( ! isset( $row_data[$cpt_obj->ID()] ) ) {
-				switch( get_class( $cpt_obj ) ) {
-					case 'EE_Event' :
-						$css_class = 'dashicons dashicons-calendar-alt';
-						$edit_link = add_query_arg( array(
-							'page' => 'espresso_events',
-							'action' => 'edit',
-							'post' => $cpt_obj->ID()
+			if ( $cpt_obj instanceof EE_Base_Class ) {
+				if ( ! isset( $row_data[$cpt_obj->ID()] ) ) {
+					switch( get_class( $cpt_obj ) ) {
+						case 'EE_Event' :
+							$css_class = 'dashicons dashicons-calendar-alt';
+							$edit_link = add_query_arg( array(
+								'page' => 'espresso_events',
+								'action' => 'edit',
+								'post' => $cpt_obj->ID()
 							), admin_url( 'admin.php' ) );
-						break;
-					case 'EE_Venue' :
-						$css_class = 'ee-icon ee-icon-venue';
-						$edit_link = add_query_arg( array(
-							'page' => 'espresso_venues',
-							'action' => 'edit',
-							'post' => $cpt_obj->ID()
+							break;
+						case 'EE_Venue' :
+							$css_class = 'ee-icon ee-icon-venue';
+							$edit_link = add_query_arg( array(
+								'page' => 'espresso_venues',
+								'action' => 'edit',
+								'post' => $cpt_obj->ID()
 							), admin_url( 'admin.php' ) );
-						break;
-					case 'EE_Attendee' :
-						$css_class = 'dashicons dashicons-admin-users';
-						$edit_link = add_query_arg( array(
-							'page' => 'espresso_registrations',
-							'action' => 'edit_attendee',
-							'post' => $cpt_obj->ID()
+							break;
+						case 'EE_Attendee' :
+							$css_class = 'dashicons dashicons-admin-users';
+							$edit_link = add_query_arg( array(
+								'page' => 'espresso_registrations',
+								'action' => 'edit_attendee',
+								'post' => $cpt_obj->ID()
 							), admin_url( 'admin.php' ) );
-						break;
-					default :
-						$css_class = '';
-						break;
+							break;
+						default :
+							$css_class = '';
+							break;
+					}
+					$row_data[$cpt_obj->ID()] = array(
+						'css_class' => $css_class,
+						'cpt_type' => strtolower( $person_relationship->get('OBJ_type') ),
+						'cpt_obj' => $cpt_obj,
+						'edit_link' => $edit_link,
+						'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) ) )
+					);
+				} else {
+					//add other person types.
+					$row_data[$cpt_obj->ID()]['ct_obj'][] = EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) );
 				}
-				$row_data[$cpt_obj->ID()] = array(
-					'css_class' => $css_class,
-					'cpt_type' => strtolower( $person_relationship->get('OBJ_type') ),
-					'cpt_obj' => $cpt_obj,
-					'edit_link' => $edit_link,
-					'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) ) )
-				);
-			} else {
-				//add other person types.
-				$row_data[$cpt_obj->ID()]['ct_obj'][] = EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) );
 			}
 		}
 

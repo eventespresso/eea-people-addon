@@ -24,6 +24,9 @@
  */
 class EED_People_Single extends EED_Module {
 
+	public static $templates_path;
+
+
 
 	/**
 	 * @return EED_People_Single
@@ -42,6 +45,7 @@ class EED_People_Single extends EED_Module {
 	  */
 	 public static function set_hooks() {
 		 EE_Config::register_route( 'person', 'People_Single', 'run' );
+		 EED_People_Single::$templates_path = EEA_PEOPLE_ADDON_PATH . 'public' . DS . 'templates' . DS;
 	 }
 
 	 /**
@@ -55,10 +59,21 @@ class EED_People_Single extends EED_Module {
 
 
 
+	/**
+	 *    set_config
+	 *
+	 * @return \EE_People_Config
+	 */
+	public function set_config() {
+		$this->set_config_section( 'template_settings' );
+		$this->set_config_class( 'EE_People_Config' );
+		$this->set_config_name( 'EED_People_Single' );
+		return $this->config();
+	}
 
 
 
-	 /**
+	/**
 	  *    run - initial module setup
 	  *
 	  * @access    public
@@ -66,7 +81,7 @@ class EED_People_Single extends EED_Module {
 	  * @return    void
 	  */
 	 public function run( $WP ) {
-	 	add_filter( 'template_include', array( $this, 'template_include' ), 999 );
+		 add_filter( 'template_include', array( $this, 'template_include' ), 999 );
 	 	EE_Registry::instance()->load_helper( 'People_View' );
 	 }
 
@@ -95,9 +110,8 @@ class EED_People_Single extends EED_Module {
 	 */
 	public function template_include( $template ) {
 		global $post;
-
 		// not a custom template?
-		if ( EE_Registry::instance()->load_core( 'Front_Controller', array(), false, true )->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
+		if ( EE_Registry::instance()->load_core( 'Front_Controller', array(), false )->get_selected_template() != 'single-espresso_people.php' && ! post_password_required( $post ) ) {
 			EEH_Template::load_espresso_theme_functions();
 			//add extra people data
 			add_filter( 'the_content', array( 'EED_People_Single', 'person_details' ), 100 );
@@ -126,8 +140,11 @@ class EED_People_Single extends EED_Module {
 
 
 	/**
-	 *		@ override magic methods
-	 *		@ return void
+	 *        @ override magic methods
+	 *        @ return void
+	 * @param $a
+	 * @param $b
+	 * @return bool
 	 */
 	public function __set($a,$b) { return FALSE; }
 	public function __get($a) { return FALSE; }
@@ -137,6 +154,8 @@ class EED_People_Single extends EED_Module {
 	public function __wakeup() { return FALSE; }
 	public function __destruct() { return FALSE; }
 
- }
+
+
+}
 // End of file EED_People.module.php
 // Location: /wp-content/plugins/eea-people-addon/EED_People.module.php

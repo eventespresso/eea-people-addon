@@ -77,9 +77,10 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 		add_filter( 'FHEE__Events_Admin_Page__get_events__where', array( $this, 'filter_events_list_table_where' ), 10, 2 );
 		add_filter( 'FHEE__EE_Admin_Page___display_admin_list_table_page__before_list_table__template_arg', array( $this, 'filtered_events_list_table_title' ), 10, 4 );
 
-		//add filter for adding to people assigned column to event list table!
+		//add filter for adding to people assigned column to event list table and the legend!
 		add_filter( 'FHEE_manage_toplevel_page_espresso_events_columns', array( $this, 'add_people_column' ), 10, 2 );
 		add_action( 'AHEE__EE_Admin_List_Table__column_people_on_event__toplevel_page_espresso_events', array( $this, 'display_people_column' ), 10, 2 );
+		add_filter( 'FHEE__Events_Admin_Page___event_legend_items__items', array( $this, 'additional_legend_items' ), 11 );
 
 	}
 
@@ -335,6 +336,21 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 			);
 		$template = EEA_PEOPLE_ADDON_PATH . 'admin/people/templates/people_type_event_metabox_details.template.php';
 		EEH_Template::display_template( $template, $template_args );
+	}
+
+
+	/**
+	 * Callback for FHEE__Events_Admin_Page___event_legend_items__items to add the people icon to the event list table legend.
+	 * @param  array $items
+	 * @return array
+	 */
+	public function additional_legend_items( $items ) {
+		$items['people'] = array(
+			'class' => 'dashicons dashicons-businessman',
+			'desc' => __( 'People assigned to Event', 'event_espresso' )
+		);
+		unset( $items['empty'] );
+		return $items;
 	}
 
 }

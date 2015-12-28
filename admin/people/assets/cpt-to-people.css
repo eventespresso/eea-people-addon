@@ -1,5 +1,5 @@
 /**
- * Contains css for people to ee cpt edit/create_new views
+ * Contains css for people to ee cpt edit/create_new views and event list table views.
  */
 .people-to-cpt-table th input[type=text], .people-to-cpt-table td input[type=text] {
     width: 40px;
@@ -12,4 +12,9 @@
 
 .people-to-cpt-table th:last-child, .people-to-cpt-table td:last-child {
     width: 15%;
+}
+
+/** event list table **/
+.column-people_on_event {
+    width: 5%;
 }

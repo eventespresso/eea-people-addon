@@ -83,7 +83,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 		add_filter( 'FHEE__Events_Admin_Page___event_legend_items__items', array( $this, 'additional_legend_items' ), 11 );
 
 		//hook into when events are deleted to remove the people relations for those events.
-		add_action( 'AHEE__EE_Base_Class__delete__before', array( $this, 'delete_people_relations_on_related_delete' ) );
+		add_action( 'AHEE__EE_Base_Class__delete_permanently__before', array( $this, 'delete_people_relations_on_related_delete' ) );
 
 	}
 

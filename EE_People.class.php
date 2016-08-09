@@ -6,7 +6,17 @@
  * @package  EE People Addon
  * @subpackage plugin api
  */
-if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed');
+if ( ! defined('EVENT_ESPRESSO_VERSION')) {
+	exit('No direct script access allowed');
+}
+// define the plugin directory path and URL
+define( 'EEA_PEOPLE_ADDON_BASENAME', plugin_basename( EEA_PEOPLE_ADDON_PLUGIN_FILE ) );
+define( 'EEA_PEOPLE_ADDON_PATH', plugin_dir_path( __FILE__ ) );
+define( 'EEA_PEOPLE_ADDON_URL', plugin_dir_url( __FILE__ ) );
+define( 'EEA_PEOPLE_ADDON_ADMIN', EEA_PEOPLE_ADDON_PATH . 'admin' . DS . 'people' . DS );
+
+
+
 /**
  *
  * Main class setting up addon that hooks into EE_Plugin_API (EE_Addon)
@@ -19,14 +29,12 @@ if ( ! defined('EVENT_ESPRESSO_VERSION')) exit('No direct script access allowed'
  *
  * ------------------------------------------------------------------------
  */
-// define the plugin directory path and URL
-define( 'EEA_PEOPLE_ADDON_BASENAME', plugin_basename( EEA_PEOPLE_ADDON_PLUGIN_FILE ));
-define( 'EEA_PEOPLE_ADDON_PATH', plugin_dir_path( __FILE__ ));
-define( 'EEA_PEOPLE_ADDON_URL', plugin_dir_url( __FILE__ ));
-define( 'EEA_PEOPLE_ADDON_ADMIN', EEA_PEOPLE_ADDON_PATH . 'admin' . DS . 'people' . DS );
 Class  EE_People extends EE_Addon {
 
 
+	/**
+	 * EE_People constructor.
+	 */
 	public function __construct() {
 		//setting this SUPER late because EventSmart runs it's deregisters later as well.  This ensures that we are
 		//running this hook well after any other plugins have possibly deregistered the addon.
@@ -168,6 +176,8 @@ Class  EE_People extends EE_Addon {
 	 * Callback for 'AHEE__EE_System__load_espresso_addons' hook registered in constructor.
 	 * This is to ensure that we load things necessary really early, but after this addon has been registered.  That way
 	 * It can be determined whether the addon was registered successfully or not (and not deregistered) before executing.
+	 *
+	 * @throws \EE_Error
 	 */
 	public function load_early_hooks_when_registered() {
 
@@ -232,6 +242,7 @@ Class  EE_People extends EE_Addon {
 	 *
 	 *  @access 	public
 	 *  @return 	void
+	 * @throws \EE_Error
 	 */
 	public function additional_admin_hooks() {
 		// is admin and not in M-Mode ?
@@ -251,7 +262,7 @@ Class  EE_People extends EE_Addon {
 	 * @return array
 	 */
 	public function plugin_actions( $links, $file ) {
-		if ( $file == EEA_PEOPLE_ADDON_BASENAME ) {
+		if ( $file === EEA_PEOPLE_ADDON_BASENAME ) {
 			// before other links
 			array_unshift( $links, '<a href="admin.php?page=espresso_people">' . __('Settings', 'event_espresso') . '</a>' );
 		}

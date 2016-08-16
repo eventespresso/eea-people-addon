@@ -40,6 +40,32 @@ Class  EE_People extends EE_Addon {
 
 
 	public static function register_addon() {
+		$people_capabilities = array(
+			'ee_edit_people',
+			'ee_read_people',
+			'ee_read_peoples',
+			'ee_read_others_peoples',
+			'ee_delete_people',
+			'ee_edit_peoples',
+			'ee_edit_others_peoples',
+			'ee_publish_peoples',
+			'ee_read_private_peoples',
+			'ee_delete_peoples',
+			'ee_delete_private_peoples',
+			'ee_delete_published_peoples',
+			'ee_delete_others_peoples',
+			'ee_edit_private_peoples',
+			'ee_edit_published_peoples',
+			'ee_manage_people_types',
+			'ee_edit_people_type',
+			'ee_delete_people_type',
+			'ee_assign_people_type',
+			'ee_manage_people_categories',
+			'ee_edit_people_category',
+			'ee_delete_people_category',
+			'ee_assign_people_category',
+		);
+
 		// register addon via Plugin API
 		EE_Register_Addon::register(
 			'People',
@@ -72,9 +98,8 @@ Class  EE_People extends EE_Addon {
 					'use_wp_update' => FALSE,
 					),
 				'capabilities' => array(
-					'administrator' => array(
-						'ee_edit_people', 'ee_read_people', 'ee_read_peoples', 'ee_read_others_peoples','ee_delete_people', 'ee_edit_peoples', 'ee_edit_others_peoples', 'ee_publish_peoples', 'ee_read_private_peoples', 'ee_delete_peoples', 'ee_delete_private_peoples', 'ee_delete_published_peoples', 'ee_delete_others_peoples', 'ee_edit_private_peoples', 'ee_edit_published_peoples', 'ee_manage_people_types', 'ee_edit_people_type', 'ee_delete_people_type', 'ee_assign_people_type', 'ee_manage_people_categories', 'ee_edit_people_category', 'ee_delete_people_category', 'ee_assign_people_category'
-						),
+					'administrator' => $people_capabilities,
+					'ee_events_administrator' => $people_capabilities,
 					),
 				'capability_maps' => array(
 					'EE_Meta_Capability_Map_Edit' => array( 'ee_edit_people', array( 'Person', 'ee_edit_published_peoples', 'ee_edit_others_peoples', 'ee_edit_private_peoples' ) ),

@@ -500,7 +500,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	 */
 	protected function _people_list_table() {
 		$this->_search_btn_label = __('People', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('create_new', 'add-person', array(), 'add-new-h2');
+		$this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
+		    'create_new',
+            'add-person',
+            array(),
+            'add-new-h2'
+        );
 		if ( ! empty( $this->_req_data['EVT_ID'] ) ) {
 			$event = EEM_Event::instance()->get_one_by_ID( $this->_req_data['EVT_ID'] );
 			if ( $event instanceof EE_Event ) {
@@ -991,7 +996,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _category_list_table() {
 		do_action( 'AHEE_log', __FILE__, __FUNCTION__, '' );
 		$this->_search_btn_label = __('Categories', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('add_category', 'add_category', array(), 'add-new-h2');
+		$this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
+		    'add_category',
+            'add_category',
+            array(),
+            'add-new-h2'
+        );
 		$this->display_admin_list_table_page_with_sidebar();
 	}
 
@@ -999,7 +1009,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _type_list_table() {
 		do_action( 'AHEE_log', __FILE__, __FUNCTION__, '' );
 		$this->_search_btn_label = __('Types', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('add_type', 'add_type', array(), 'add-new-h2');
+		$this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
+		    'add_type',
+            'add_type',
+            array(),
+            'add-new-h2'
+        );
 		$this->display_admin_list_table_page_with_sidebar();
 	}
 

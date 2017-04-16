@@ -2,10 +2,10 @@
 
 ## if there is a BUILD_BRANCH build environment variable then we use that for what branch of
 ## ee core to checkout.  otherwise master.
-if [ -n "$BUILD_BRANCH" ]; then
-    core_branch=$BUILD_BRANCH
+if [ -n "$RELEASE_BUILD" ]; then
+    core_tag=$RELEASE_BUILD
 else
-    core_branch="master"
+    core_tag="master"
 fi
 
 # commands taking care of WordPress setup
@@ -23,7 +23,13 @@ function wpCoreSetup {
 function eeCoreSetup {
     local BRANCH=$1
     git clone git@github.com:eventespresso/event-espresso-core.git $event_espresso_core_dir
-    git checkout $BRANCH
+    ##fetch tags in case a release is being checked out
+    git fetch --tags
+    if [ "$core_tag" = "master" ]; then
+        git checkout master
+    else
+        git checkout tags/$core_tag -b $core_tag
+    fi
 }
 
 # commands taking care of addon setup

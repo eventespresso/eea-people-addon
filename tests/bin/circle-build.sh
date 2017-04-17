@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ## if there is a BUILD_BRANCH build environment variable then we use that for what branch of
-## ee core to checkout.  otherwise master.
+## ee core to checkout, otherwise master.
 if [ -n "$RELEASE_BUILD" ]; then
     core_tag=$RELEASE_BUILD
 else

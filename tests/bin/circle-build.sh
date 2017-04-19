@@ -8,9 +8,6 @@ else
     core_tag="master"
 fi
 
-echo $core_tag;
-echo $RELEASE_BUILD;
-
 # commands taking care of WordPress setup
 function wpCoreSetup {
     git clone git://develop.git.wordpress.org/ $WP_CORE_DIR
@@ -26,11 +23,11 @@ function wpCoreSetup {
 function eeCoreSetup {
     local BRANCH=$1
     git clone git@github.com:eventespresso/event-espresso-core.git $event_espresso_core_dir
-    ##fetch tags in case a release is being checked out
-    git fetch --tags
     if [ "$core_tag" = "master" ]; then
         git checkout master
     else
+        git remote update
+        git fetch --tags
         git checkout tags/$core_tag -b $core_tag
     fi
     echo "Building against EE core" $core_tag

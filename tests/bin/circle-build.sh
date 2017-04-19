@@ -30,6 +30,7 @@ function eeCoreSetup {
     else
         git checkout tags/$core_tag -b $core_tag
     fi
+    echo "Building against EE core " $core_tag
 }
 
 # commands taking care of addon setup

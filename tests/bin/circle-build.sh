@@ -27,7 +27,6 @@ function eeCoreSetup {
     if [ "$BRANCH" = "master" ]; then
         git checkout master
     else
-        git remote update
         git fetch --tags
         git checkout tags/$BRANCH -b $BRANCH
     fi

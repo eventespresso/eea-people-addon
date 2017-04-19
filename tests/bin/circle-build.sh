@@ -23,14 +23,15 @@ function wpCoreSetup {
 function eeCoreSetup {
     local BRANCH=$1
     git clone git@github.com:eventespresso/event-espresso-core.git $event_espresso_core_dir
-    if [ "$core_tag" = "master" ]; then
+    cd $event_espresso_core_dir/tests
+    if [ "$BRANCH" = "master" ]; then
         git checkout master
     else
         git remote update
         git fetch --tags
-        git checkout tags/$core_tag -b $core_tag
+        git checkout tags/$BRANCH -b $BRANCH
     fi
-    echo "Building against EE core" $core_tag
+    echo "Building against EE core" $BRANCH
 }
 
 # commands taking care of addon setup
@@ -51,7 +52,7 @@ function setupPhpUnit {
 }
 
 wpCoreSetup
-eeCoreSetup $core_branch
+eeCoreSetup $core_tag
 addOnSetup
 createDB
 setupPhpUnit

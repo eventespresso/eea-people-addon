@@ -8,6 +8,9 @@ else
     core_tag="master"
 fi
 
+echo $core_tag;
+echo $RELEASE_BUILD;
+
 # commands taking care of WordPress setup
 function wpCoreSetup {
     git clone git://develop.git.wordpress.org/ $WP_CORE_DIR
@@ -30,7 +33,7 @@ function eeCoreSetup {
     else
         git checkout tags/$core_tag -b $core_tag
     fi
-    echo "Building against EE core " $core_tag
+    echo "Building against EE core" $core_tag
 }
 
 # commands taking care of addon setup

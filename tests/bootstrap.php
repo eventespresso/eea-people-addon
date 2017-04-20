@@ -1,26 +1,21 @@
 <?php
 /**
- * Bootstrap for EE4 Addon Skeleton Unit Tests
- *
- * @since 		1.0.0
- * @package 		EE People Addon
- * @subpackage 	Tests
+ * Bootstrap for eea-people-addon tests
  */
 
-require( dirname( __FILE__ ) . '/includes/define-constants.php' );
-if ( ! is_readable( WP_TESTS_DIR . '/includes/functions.php' ) ) {
-	die( "The WordPress PHPUnit test suite could not be found.\n" );
-}
+use EETests\bootstrap\AddonLoader;
 
-require_once WP_TESTS_DIR . '/includes/functions.php';
+$core_tests_dir = dirname(dirname(dirname(__FILE__))) . '/event-espresso-core/tests/';
+require $core_tests_dir . 'includes/CoreLoader.php';
+require $core_tests_dir . 'includes/AddonLoader.php';
 
-function _install_and_load_core_and_ee_people_addon() {
-	require EE_TESTS_DIR . 'includes/loader.php';
-	require EEA_PEOPLE_ADDON_TESTS_DIR . 'includes/loader.php';
-}
-tests_add_filter( 'muplugins_loaded', '_install_and_load_core_and_ee_people_addon' );
+define('EEA_PEOPLE_ADDON_PLUGIN_DIR', dirname(dirname(__FILE__)) . '/');
+define('EEA_PEOPLE_ADDON_TESTS_DIR', EEA_PEOPLE_ADDON_PLUGIN_DIR . 'tests');
 
-require WP_TESTS_DIR . '/includes/bootstrap.php';
 
-//Load the EE_specific testing tools
-require EE_TESTS_DIR . 'includes/EE_UnitTestCase.class.php';
+$addon_loader = new AddonLoader(
+    EEA_PEOPLE_ADDON_TESTS_DIR,
+    EEA_PEOPLE_ADDON_PLUGIN_DIR,
+    'eea-people-addon.php'
+);
+$addon_loader->init();

@@ -10,7 +10,7 @@ require $core_tests_dir . 'includes/CoreLoader.php';
 require $core_tests_dir . 'includes/AddonLoader.php';
 
 define('EEA_PEOPLE_ADDON_PLUGIN_DIR', dirname(dirname(__FILE__)) . '/');
-define('EEA_PEOPLE_ADDON_TESTS_DIR', EEA_PEOPLE_ADDON_PLUGIN_DIR . 'tests');
+define('EEA_PEOPLE_ADDON_TESTS_DIR', EEA_PEOPLE_ADDON_PLUGIN_DIR . 'tests/');
 
 
 $addon_loader = new AddonLoader(

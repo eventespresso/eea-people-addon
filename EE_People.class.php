@@ -155,6 +155,7 @@ Class  EE_People extends EE_Addon {
                                 'excerpt',
                                 'custom-fields',
                                 'comments',
+                                'author',
                             ),
                         ),
                     ),

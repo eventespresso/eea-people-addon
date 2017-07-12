@@ -42,7 +42,7 @@ class EEM_Person extends EEM_CPT_Base
             ),
         );
         $this->_fields = array(
-            'Person_CPT'  => [
+            'Person_CPT'  => array(
                 'PER_ID'        => new EE_Primary_Key_Int_Field(
                     'ID',
                     esc_html__('Person ID', 'event_espresso')
@@ -100,7 +100,7 @@ class EEM_Person extends EEM_CPT_Base
                     false,
                     'publish'
                 ),
-            ],
+            ),
             'Person_Meta' => array(
                 'PERM_ID'      => new EE_DB_Only_Int_Field(
                     'ATTM_ID',

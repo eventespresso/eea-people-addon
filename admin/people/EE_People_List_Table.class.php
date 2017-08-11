@@ -68,7 +68,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 	protected function _add_view_counts() {
 		$orig_status = isset( $this->_req_data['status'] ) ? $this->_req_data['status'] : null;
 		$this->_req_data['status'] = 'publish';
-		$this->_views['publish']['count'] = EE_Registry::instance()->load_model('Person')->count();
+		$this->_views['publish']['count'] = EE_Registry::instance()->load_model('Person')->count( array( array( 'status' => 'publish' ) ) );
 		if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_peoples', 'eea-people-addon_delete_people' ) ) {
 			$this->_views['trash']['count'] = EE_Registry::instance()->load_model('Person')->count_deleted();
 		}
@@ -112,7 +112,7 @@ class EE_People_List_Table extends EE_Admin_List_Table {
 			$actions['edit'] = '<a href="'.$edit_lnk_url.'" title="' . __( 'Edit Person', 'event_espresso' ) . '">' . __( 'Edit', 'event_espresso' ) . '</a>';
 		}
 
-		if ( $this->_view == 'published'  || $this->_view == 'all' || $this->_view == 'draft' ) {
+		if ( $this->_view == 'publish'  || $this->_view == 'all' || $this->_view == 'draft' ) {
 			// trash person link
 			if ( EE_Registry::instance()->CAP->current_user_can( 'ee_delete_people', 'eea-people-addon_trash_people', $item->ID() ) ) {
 				$trash_lnk_url = EE_Admin_Page::add_query_args_and_nonce( array( 'action'=>'trash_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL );

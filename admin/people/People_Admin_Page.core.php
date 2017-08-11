@@ -500,7 +500,18 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	 */
 	protected function _people_list_table() {
 		$this->_search_btn_label = __('People', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('create_new', 'add-person', array(), 'add-new-h2');
+		$this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
+		    'create_new',
+            'add-person',
+            array(),
+            'add-new-h2'
+        );
+		if ( ! empty( $this->_req_data['EVT_ID'] ) ) {
+			$event = EEM_Event::instance()->get_one_by_ID( $this->_req_data['EVT_ID'] );
+			if ( $event instanceof EE_Event ) {
+				$this->_template_args['before_list_table'] = '<h2>' . sprintf( __( 'Showing people assigned to the event: %s', 'event_espresso' ), $event->name() ) . '</h2>';
+			}
+		}
 		$this->_template_args['after_list_table'] = EEH_Template::get_button_or_link( get_post_type_archive_link('espresso_people'), __("View People Archive Page", "event_espresso"), 'button' );
 		$this->display_admin_list_table_page_with_no_sidebar();
 	}
@@ -539,26 +550,27 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		switch ( $status ) {
 			case NULL :
 			case 'all' :
-				$status = array();
 				break;
 
 			case 'draft' :
-				$status = array( 'draft', 'auto-draft' );
-				$where['status'] = array( 'IN', array('draft', 'auto-draft') );
+				$_where['status'] = array( 'IN', array('draft', 'auto-draft') );
 				break;
 
 			default :
-				$status = array( $status );
-				$where['status'] = $status;
+				$_where['status'] = $status;
 		}
 
 		//possible conditions for capability checks
 		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_read_private_peoples', 'get_people') ) {
-			$where['status**'] = array( '!=', 'private' );
+			$_where['status**'] = array( '!=', 'private' );
 		}
 
 		if ( ! EE_Registry::instance()->CAP->current_user_can( 'ee_read_others_peoples', 'get_people' ) ) {
-			$where['PER_wp_user'] =  get_current_user_id();
+			$_where['PER_wp_user'] =  get_current_user_id();
+		}
+
+		if ( ! empty( $this->_req_data['EVT_ID'] ) ) {
+			$_where['Person_Post.OBJ_ID'] = $this->_req_data['EVT_ID'];
 		}
 
 		if ( ! empty( $this->_req_data['s'] ) ) {
@@ -586,7 +598,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		if ( $trash )
 			$people = $count ? $PPLM->count_deleted( array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit)): $PPLM->get_all_deleted( array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit));
 		else
-			$people = $count ? $PPLM->count( array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all( array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit) );
+			$people = $count ? $PPLM->count( array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all( array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit ) );
 
 		return $people;
 	}
@@ -767,46 +779,48 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 		$row_data = array();
 		foreach ( $person_relationships as $person_relationship ) {
 			$cpt_obj = EE_Registry::instance()->load_model( $person_relationship->get('OBJ_type') )->get_one_by_ID( $person_relationship->get( 'OBJ_ID' ) );
-			if ( ! isset( $row_data[$cpt_obj->ID()] ) ) {
-				switch( get_class( $cpt_obj ) ) {
-					case 'EE_Event' :
-						$css_class = 'dashicons dashicons-calendar-alt';
-						$edit_link = add_query_arg( array(
-							'page' => 'espresso_events',
-							'action' => 'edit',
-							'post' => $cpt_obj->ID()
+			if ( $cpt_obj instanceof EE_Base_Class ) {
+				if ( ! isset( $row_data[$cpt_obj->ID()] ) ) {
+					switch( get_class( $cpt_obj ) ) {
+						case 'EE_Event' :
+							$css_class = 'dashicons dashicons-calendar-alt';
+							$edit_link = add_query_arg( array(
+								'page' => 'espresso_events',
+								'action' => 'edit',
+								'post' => $cpt_obj->ID()
 							), admin_url( 'admin.php' ) );
-						break;
-					case 'EE_Venue' :
-						$css_class = 'ee-icon ee-icon-venue';
-						$edit_link = add_query_arg( array(
-							'page' => 'espresso_venues',
-							'action' => 'edit',
-							'post' => $cpt_obj->ID()
+							break;
+						case 'EE_Venue' :
+							$css_class = 'ee-icon ee-icon-venue';
+							$edit_link = add_query_arg( array(
+								'page' => 'espresso_venues',
+								'action' => 'edit',
+								'post' => $cpt_obj->ID()
 							), admin_url( 'admin.php' ) );
-						break;
-					case 'EE_Attendee' :
-						$css_class = 'dashicons dashicons-admin-users';
-						$edit_link = add_query_arg( array(
-							'page' => 'espresso_registrations',
-							'action' => 'edit_attendee',
-							'post' => $cpt_obj->ID()
+							break;
+						case 'EE_Attendee' :
+							$css_class = 'dashicons dashicons-admin-users';
+							$edit_link = add_query_arg( array(
+								'page' => 'espresso_registrations',
+								'action' => 'edit_attendee',
+								'post' => $cpt_obj->ID()
 							), admin_url( 'admin.php' ) );
-						break;
-					default :
-						$css_class = '';
-						break;
+							break;
+						default :
+							$css_class = '';
+							break;
+					}
+					$row_data[$cpt_obj->ID()] = array(
+						'css_class' => $css_class,
+						'cpt_type' => strtolower( $person_relationship->get('OBJ_type') ),
+						'cpt_obj' => $cpt_obj,
+						'edit_link' => $edit_link,
+						'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) ) )
+					);
+				} else {
+					//add other person types.
+					$row_data[$cpt_obj->ID()]['ct_obj'][] = EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) );
 				}
-				$row_data[$cpt_obj->ID()] = array(
-					'css_class' => $css_class,
-					'cpt_type' => strtolower( $person_relationship->get('OBJ_type') ),
-					'cpt_obj' => $cpt_obj,
-					'edit_link' => $edit_link,
-					'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) ) )
-				);
-			} else {
-				//add other person types.
-				$row_data[$cpt_obj->ID()]['ct_obj'][] = EEM_Term_Taxonomy::instance()->get_one_by_ID( $person_relationship->get('PT_ID' ) );
 			}
 		}
 
@@ -982,7 +996,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _category_list_table() {
 		do_action( 'AHEE_log', __FILE__, __FUNCTION__, '' );
 		$this->_search_btn_label = __('Categories', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('add_category', 'add_category', array(), 'add-new-h2');
+		$this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
+		    'add_category',
+            'add_category',
+            array(),
+            'add-new-h2'
+        );
 		$this->display_admin_list_table_page_with_sidebar();
 	}
 
@@ -990,7 +1009,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT {
 	protected function _type_list_table() {
 		do_action( 'AHEE_log', __FILE__, __FUNCTION__, '' );
 		$this->_search_btn_label = __('Types', 'event_espresso');
-		$this->_admin_page_title .= $this->get_action_link_or_button('add_type', 'add_type', array(), 'add-new-h2');
+		$this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
+		    'add_type',
+            'add_type',
+            array(),
+            'add-new-h2'
+        );
 		$this->display_admin_list_table_page_with_sidebar();
 	}
 

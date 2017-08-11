@@ -1,4 +1,4 @@
-<h2><?php _e('Edit People Type', 'event_espresso'); ?></h2>
+<p><strong><?php _e('Edit People Type', 'event_espresso'); ?></strong></p>
 <p>
 <?php _e('This page allows you to edit a people type.  People types are for classifying the role people play in your organization (such as staff, volunteer etc).', 'event_espresso'); ?>
 </p>

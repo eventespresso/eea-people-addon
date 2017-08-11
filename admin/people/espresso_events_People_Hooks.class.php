@@ -42,7 +42,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 		}
 
 
-		//there is a metabox PER peopel type.  So first thing we need to do is get all people types.
+		//there is a metabox PER people type.  So first thing we need to do is get all people types.
 		$people_types = EE_Registry::instance()->load_model( 'Term_Taxonomy' )->get_all( array( array( 'taxonomy' => 'espresso_people_type' ) ) );
 
 		//setup metabox args
@@ -67,18 +67,94 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 					)
 				),
 			'enqueues' => array(
-				'ee-cpt-people-css' => array( 'edit', 'create_new' )
+				'ee-cpt-people-css' => array( 'edit', 'create_new', 'default' )
 				)
 			);
 
 		add_filter( 'FHEE__Events_Admin_Page___insert_update_cpt_item__event_update_callbacks', array( $this, 'people_to_event_callback' ), 10 );
 
-
 		//add filter for event list table queries
 		add_filter( 'FHEE__Events_Admin_Page__get_events__where', array( $this, 'filter_events_list_table_where' ), 10, 2 );
 		add_filter( 'FHEE__EE_Admin_Page___display_admin_list_table_page__before_list_table__template_arg', array( $this, 'filtered_events_list_table_title' ), 10, 4 );
 
+		//add filter for adding to people assigned column to event list table and the legend!
+		add_filter( 'FHEE_manage_toplevel_page_espresso_events_columns', array( $this, 'add_people_column' ), 10, 2 );
+		add_action( 'AHEE__EE_Admin_List_Table__column_people_on_event__toplevel_page_espresso_events', array( $this, 'display_people_column' ), 10, 2 );
+		add_filter( 'FHEE__Events_Admin_Page___event_legend_items__items', array( $this, 'additional_legend_items' ), 11 );
+
+		//hook into when events are deleted to remove the people relations for those events.
+		add_action( 'AHEE__EE_Base_Class__delete_permanently__before', array( $this, 'delete_people_relations_on_related_delete' ) );
+
 	}
+
+
+
+
+
+	/**
+	 * Callback for FHEE__manage_toplevel_page_espresso_events_columns.
+	 * Add an additional people on event column for the event list table.
+	 *
+	 * @param array $columns incoming array of columns already on event.
+	 * @param WP_Screen $screen
+	 *
+	 * @return array
+	 */
+	public function add_people_column( $columns, $screen ) {
+		//want to insert right before actions
+		$new_columns = array();
+
+		foreach ( $columns as $column_name => $column_text ) {
+			if ( $column_name == 'actions' ) {
+				$new_columns['people_on_event'] = '<span class="dashicons dashicons-businessman"></span>';
+			}
+			$new_columns[ $column_name ] = $column_text;
+		}
+
+		return ! empty( $new_columns ) ? $new_columns : $columns;
+	}
+
+
+
+
+
+	/**
+	 * Callback for AHEE__EE_Admin_List_Table__column_people_on_event__toplevel_page_espresso_events action.
+	 * Displays the content for the people column added to the event list table.
+	 *
+	 * @param EE_Event $event
+	 * @param $screen
+	 * @return string
+	 */
+	public function display_people_column( $event, $screen ) {
+		if ( ! $event instanceof EE_Event ) {
+			return '';
+		}
+
+
+		//get count of people on the event.
+		$count_people = EEM_Person::instance()->count(
+			array(
+				array(
+					'Person_Post.OBJ_type' => 'Event',
+					'Person_Post.OBJ_ID' => $event->ID()
+				),
+			),
+			null,
+			true
+		);
+
+		//link to people list table filtered by the event.
+		$link = add_query_arg( array(
+			'page' => 'espresso_people',
+			'action' => 'default',
+			'EVT_ID' => $event->ID()
+			),
+			admin_url( 'admin.php' )
+		);
+		echo '<a href="' . $link . '">' . $count_people . '</a>';
+	}
+
 
 
 
@@ -263,6 +339,38 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 			);
 		$template = EEA_PEOPLE_ADDON_PATH . 'admin/people/templates/people_type_event_metabox_details.template.php';
 		EEH_Template::display_template( $template, $template_args );
+	}
+
+
+	/**
+	 * Callback for FHEE__Events_Admin_Page___event_legend_items__items to add the people icon to the event list table legend.
+	 * @param  array $items
+	 * @return array
+	 */
+	public function additional_legend_items( $items ) {
+		$items['people'] = array(
+			'class' => 'dashicons dashicons-businessman',
+			'desc' => __( 'People assigned to Event', 'event_espresso' )
+		);
+		unset( $items['empty'] );
+		return $items;
+	}
+
+
+	/**
+	 * Callback for AHEE__EE_Base_Class__delete_before hook so we can ensure any person relationships for an item being deleted
+	 * are also handled.
+	 *
+	 * @param EE_Base_Class $model_object
+	 */
+	public function delete_people_relations_on_related_delete( EE_Base_Class $model_object ) {
+		if ( $model_object instanceof EE_Event ) {
+			$remove_where = array(
+				'OBJ_ID' => $model_object->ID(),
+				'OBJ_type' => 'Event',
+			);
+			EEM_Person_Post::instance()->delete( array( $remove_where ) );
+		}
 	}
 
 }

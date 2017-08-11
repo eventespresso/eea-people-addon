@@ -1,6 +1,7 @@
 <?php
 /**
  * Template file to add extra content to a single person display
+ * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.
  * @since 1.0.0
  * @package EE People Addon
  * @subpackage  template
@@ -10,6 +11,7 @@ global $post;
 $events = EEH_People_View::get_events_for_person();
 ?>
 <div class="eea-people-addon-person-events-container">
+	<?php if ( $events ) : ?>
 	<h3><?php _e('Events this person is involved with:', 'event_espresso'); ?></h3>
 	<?php foreach ( $events as $type => $event ) : ?>
 		<div class="eea-people-addon-people-type-container">
@@ -23,4 +25,5 @@ $events = EEH_People_View::get_events_for_person();
 			</ul>
 		</div>
 	<?php endforeach; ?>
+	<?php endif; ?>
 </div>

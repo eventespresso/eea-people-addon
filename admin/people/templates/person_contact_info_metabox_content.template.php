@@ -8,10 +8,8 @@ EEH_Template_Validator::verify_instanceof( $person, '$person', 'EE_Person');
 	<tbody>
 		<tr valign="top">
 			<td>
-				<label for="PER_email"><?php _e('Email Address', 'event_espresso'); ?><span class="denotes-required-spn">*</span></label><br>
-				<div class="validation-notice-dv"><?php _e( 'The following is  a required field', 'event_espresso' );?></div>
-				<input class="all-options required" type="text" id="PER_email" name="PER_email" value="<?php echo $person->email(); ?>" required/><br/>
-				<p class="description"><?php _e('( required value )', 'event_espresso'); ?></p>
+				<label for="PER_email"><?php _e('Email Address', 'event_espresso'); ?><br />
+				<input class="all-options" type="text" id="PER_email" name="PER_email" value="<?php echo $person->email(); ?>"/>
 			</td>
 		</tr>
 		<tr valign="top">

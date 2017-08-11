@@ -23,15 +23,16 @@ class EE_Person extends EE_CPT_Base implements EEI_Address {
 
 
 
-	/**
-	 * Sets some dynamic values
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $fieldValues
-	 * @param bool   $bydb        whether being set by db or not
-	 * @param string $timezone    timezone_string
-	 */
+    /**
+     * Sets some dynamic values
+     *
+     * @since 1.0.0
+     *
+     * @param array  $fieldValues
+     * @param bool   $bydb     whether being set by db or not
+     * @param string $timezone timezone_string
+     * @throws EE_Error
+     */
 	protected function __construct( $fieldValues = NULL, $bydb = FALSE, $timezone = NULL ) {
 		if ( !isset( $fieldValues[ 'PER_full_name' ] ) ) {
 			$fname = isset( $fieldValues[ 'PER_fname' ] ) ? $fieldValues[ 'PER_fname' ] . ' ' : '';
@@ -48,26 +49,34 @@ class EE_Person extends EE_CPT_Base implements EEI_Address {
 	}
 
 
-	/**
-	 *
-	 * @param type $props_n_values
-	 * @return EE_Person
-	 */
-	public static function new_instance( $props_n_values = array() ) {
+    /**
+     *
+     * @param array $props_n_values
+     * @param string $timezone
+     * @param array  $date_formats
+     * @return EE_Person
+     * @throws EE_Error
+     */
+	public static function new_instance(array $props_n_values = array(), $timezone = '', array $date_formats = array()) {
 		$classname = __CLASS__;
-		$has_object = parent::_check_for_object( $props_n_values, $classname );
-		$obj = $has_object ? $has_object : new self( $props_n_values );
-		return $obj;
+		$has_object = parent::_check_for_object($props_n_values, $classname );
+        return $has_object ? $has_object : new self($props_n_values );
 	}
 
 
-	public static function new_instance_from_db ( $props_n_values = array() ) {
-		$obj =  new self( $props_n_values, TRUE );
-		return $obj;
+    /**
+     * @param array $props_n_values
+     * @param string $timezone
+     * @return EE_Person
+     * @throws EE_Error
+     */
+    public static function new_instance_from_db (array $props_n_values = array(), $timezone = '' ) {
+        return new self($props_n_values, TRUE );
 	}
 
 
-	/**
+
+    /**
 	 *        Set Person First Name
 	 *
 	 * @access        public

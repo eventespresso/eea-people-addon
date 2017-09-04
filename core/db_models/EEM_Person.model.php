@@ -186,6 +186,7 @@ class EEM_Person extends EEM_CPT_Base
             'Country'     => new EE_Belongs_To_Relation(),
         );
         $this->_default_where_conditions_strategy = new EE_CPT_Where_Conditions('espresso_people', 'PERM_ID');
+        $this->_caps_slug= 'peoples';
         parent::__construct($timezone);
     }
 

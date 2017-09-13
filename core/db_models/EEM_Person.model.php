@@ -85,8 +85,7 @@ class EEM_Person extends EEM_CPT_Base
                 'PER_wp_user'   => new EE_WP_User_Field(
                     'post_author',
                     esc_html__('WP User that Created this Person', 'event_espresso'),
-                    false,
-                    get_current_user_id()
+                    false
                 ),
                 'PER_parent'    => new EE_Integer_Field(
                     'post_parent',

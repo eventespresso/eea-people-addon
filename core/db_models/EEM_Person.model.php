@@ -82,7 +82,7 @@ class EEM_Person extends EEM_CPT_Base
                     true,
                     current_time('timestamp')
                 ),
-                'PER_wp_user'   => new EE_Integer_Field(
+                'PER_wp_user'   => new EE_WP_User_Field(
                     'post_author',
                     esc_html__('WP User that Created this Person', 'event_espresso'),
                     false,

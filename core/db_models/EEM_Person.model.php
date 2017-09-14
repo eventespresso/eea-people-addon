@@ -82,11 +82,10 @@ class EEM_Person extends EEM_CPT_Base
                     true,
                     current_time('timestamp')
                 ),
-                'PER_wp_user'   => new EE_Integer_Field(
+                'PER_wp_user'   => new EE_WP_User_Field(
                     'post_author',
                     esc_html__('WP User that Created this Person', 'event_espresso'),
-                    false,
-                    get_current_user_id()
+                    false
                 ),
                 'PER_parent'    => new EE_Integer_Field(
                     'post_parent',
@@ -186,6 +185,7 @@ class EEM_Person extends EEM_CPT_Base
             'Country'     => new EE_Belongs_To_Relation(),
         );
         $this->_default_where_conditions_strategy = new EE_CPT_Where_Conditions('espresso_people', 'PERM_ID');
+        $this->_caps_slug= 'peoples';
         parent::__construct($timezone);
     }
 

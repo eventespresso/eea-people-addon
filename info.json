@@ -1,1 +1,21 @@
-{"versionFile":"eea-people-addon.php","slug":"eea-people-addon","name":"EE4 People","archiveBaseUrl":"http:\/\/build.eventespresso.com\/","archiveBasePath":"~\/www\/build\/","releaseFilesRemove":["src\/tests\/**","src\/info.json","src\/circle.yml","src\/readme.txt","src\/.travis.yml"],"github":true,"demoee":true,"awsbucket":"","awsregion":"","srcBuildFolderName":"eea-people-addon","textDomain":"event_espresso","wpOrgRelease":"1.0.7.p"}
+{
+  "versionFile": "eea-people-addon.php",
+  "slug": "eea-people-addon",
+  "name": "EE4 People",
+  "releaseFilesRemove": [
+    "src\/tests\/**",
+    "src\/info.json",
+    "src\/circle.yml",
+    "src\/readme.txt",
+    "src\/.travis.yml"
+  ],
+  "github": true,
+  "awsbucket": "",
+  "awsregion": "",
+  "srcBuildFolderName": "eea-people-addon",
+  "textDomain": "event_espresso",
+  "wpOrgRelease": "1.0.7.p",
+  "remoteNamesToPushTo": [
+    "demoee"
+  ]
+}

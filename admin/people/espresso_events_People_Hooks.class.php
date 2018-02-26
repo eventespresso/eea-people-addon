@@ -106,7 +106,11 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks {
 
 		foreach ( $columns as $column_name => $column_text ) {
 			if ( $column_name == 'actions' ) {
-				$new_columns['people_on_event'] = '<span class="dashicons dashicons-businessman"></span>';
+				$new_columns['people_on_event'] = esc_html_x(
+                    'PPL',
+                    'Shortform for "People". This column header represents the count of people attached to the event.',
+                    'event_espresso'
+                );
 			}
 			$new_columns[ $column_name ] = $column_text;
 		}

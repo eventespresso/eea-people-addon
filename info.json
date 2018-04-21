@@ -9,7 +9,6 @@
     "src\/readme.txt",
     "src\/.travis.yml"
   ],
-  "github": true,
   "awsbucket": "",
   "awsregion": "",
   "srcBuildFolderName": "eea-people-addon",

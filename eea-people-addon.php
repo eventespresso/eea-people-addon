@@ -36,16 +36,18 @@
  *
  * ------------------------------------------------------------------------
  */
-define( 'EEA_PEOPLE_ADDON_VERSION', '1.0.8.rc.005' );
-define( 'EEA_PEOPLE_ADDON_PLUGIN_FILE',  __FILE__ );
-function load_espresso_eea_people_addon() {
-	if ( class_exists( 'EE_Addon' )) {
-		// eea-people-addon version
-		require_once ( plugin_dir_path( __FILE__ ) . 'EE_People.class.php' );
-		EE_People::register_addon();
-	}
+define('EEA_PEOPLE_ADDON_VERSION', '1.0.8.rc.004');
+define('EEA_PEOPLE_ADDON_PLUGIN_FILE', __FILE__);
+function load_espresso_eea_people_addon()
+{
+    if (class_exists('EE_Addon')) {
+        // eea-people-addon version
+        require_once(plugin_dir_path(__FILE__) . 'EE_People.class.php');
+        EE_People::register_addon();
+    }
 }
-add_action( 'AHEE__EE_System__load_espresso_addons', 'load_espresso_eea_people_addon' );
+
+add_action('AHEE__EE_System__load_espresso_addons', 'load_espresso_eea_people_addon');
 
 // End of file eea-people-addon.php
 // Location: wp-content/plugins/eea-people-addon/eea-people-addon.php

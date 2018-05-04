@@ -1,20 +1,27 @@
 {
-  "versionFile": "eea-people-addon.php",
-  "slug": "eea-people-addon",
-  "name": "EE4 People",
-  "releaseFilesRemove": [
-    "src\/tests\/**",
-    "src\/info.json",
-    "src\/circle.yml",
-    "src\/readme.txt",
-    "src\/.travis.yml"
-  ],
-  "awsbucket": "",
-  "awsregion": "",
-  "srcBuildFolderName": "eea-people-addon",
-  "textDomain": "event_espresso",
-  "wpOrgRelease": "1.0.7.p",
-  "remoteNamesToPushTo": [
-    "demoee"
-  ]
+	"versionFile": "eea-people-addon.php",
+	"slug": "eea-people-addon",
+	"name": "EE4 People",
+	"jsBuildDirectory": ".\/",
+	"wpi18nJsPotFilePath": ".\/languages\/ee-js.pot",
+	"releaseFilesRemove": [
+		"src\/tests\/**",
+		"src\/acceptance_tests\/**",
+		"src\/info.json",
+		"src\/.travis.yml",
+		"src\/.github\/**",
+		"src\/assets\/src\/**",
+		"src\/eslint\/**",
+		"src\/.babelrc",
+		"src\/.editorconfig",
+		"src\/.eslintignore",
+		"src\/.eslintrc.js",
+		"src\/.nvmrc",
+		"src\/.postcss.config.js"
+	],
+	"srcBuildFolderName": "eea-people-addon",
+	"textDomain": "event_espresso",
+	"remoteNamesToPushTo": [
+		"demoee"
+	]
 }

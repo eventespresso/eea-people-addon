@@ -273,40 +273,5 @@ class EED_People_Event_Template_Parts extends EED_Module
         );
         return $template_parts;
     }
-
-
-    /**
-     * @ override magic methods
-     * @param $a
-     * @param $b
-     * @return bool
-     */
-    public function __set($a, $b)
-    {
-        return false;
-    }
-    public function __get($a)
-    {
-        return false;
-    }
-    public function __isset($a)
-    {
-        return false;
-    }
-    public function __unset($a)
-    {
-        return false;
-    }
-    public function __clone()
-    {
-        return false;
-    }
-    public function __wakeup()
-    {
-        return false;
-    }
-    public function __destruct()
-    {
-        return false;
-    }
+    
 }

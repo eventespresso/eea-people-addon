@@ -273,5 +273,4 @@ class EED_People_Event_Template_Parts extends EED_Module
         );
         return $template_parts;
     }
-    
 }

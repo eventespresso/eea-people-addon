@@ -3,7 +3,7 @@
   Plugin Name: Event Espresso - People Addon (EE 4.5+)
   Plugin URI: http://www.eventespresso.com
   Description: The Event Espresso People Addon adds a people manager for your events. Compatible with Event Espresso 4.5 or higher
-  Version: 1.0.8.rc.006
+  Version: 1.0.8.rc.007
   Author: Event Espresso
   Author URI: http://www.eventespresso.com
   Copyright 2014 Event Espresso (email : support@eventespresso.com)

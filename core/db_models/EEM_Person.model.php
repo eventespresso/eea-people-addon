@@ -1,6 +1,4 @@
 <?php
-defined('EVENT_ESPRESSO_VERSION') || exit('No direct script access allowed');
-
 
 /**
  *
@@ -207,7 +205,7 @@ class EEM_Person extends EEM_CPT_Base
             // instantiate Espresso_model
             self::$_instance = new self($timezone);
         }
-        //we might have a timezone set, let set_timezone decide what to do with it
+        // we might have a timezone set, let set_timezone decide what to do with it
         self::$_instance->set_timezone($timezone);
         // EEM_Person object
         return self::$_instance;
@@ -248,5 +246,3 @@ class EEM_Person extends EEM_CPT_Base
         return $this->get_all($query);
     }
 }
-
-// End of file EEM_Person.model.php

@@ -2,7 +2,6 @@
 	"versionFile": "eea-people-addon.php",
 	"slug": "eea-people-addon",
 	"name": "EE4 People",
-	"jsBuildDirectory": ".\/",
 	"wpi18nJsPotFilePath": ".\/languages\/ee-js.pot",
 	"releaseFilesRemove": [
 		"src\/tests\/**",

@@ -192,11 +192,11 @@ class EEM_Person extends EEM_CPT_Base
     /**
      * This function is a singleton method used to instantiate the EEM_Person object
      *
-     * @since 1.0.0
-     * @param null $timezone
+     * @param string|null $timezone
      * @return EEM_Person instance
      * @throws InvalidArgumentException
      * @throws EE_Error
+     *@since 1.0.0
      */
     public static function instance($timezone = null)
     {
@@ -216,7 +216,7 @@ class EEM_Person extends EEM_CPT_Base
     /**
      * resets the model and returns it
      *
-     * @param null $timezone
+     * @param string|null $timezone
      * @return EEM_Person
      * @throws EE_Error
      * @throws InvalidArgumentException

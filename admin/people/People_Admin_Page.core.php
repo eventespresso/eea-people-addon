@@ -126,7 +126,6 @@ class People_Admin_Page extends EE_Admin_Page_CPT
                 ),
             'create_new' => array(
                 'func' => '_create_new_cpt_item',
-                'args' => array( 'new_person' => true ),
                 'capability' => 'ee_edit_peoples'
             ),
             'edit' => array(
@@ -618,7 +617,8 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         $limit = $count ? null : array( $offset, $per_page );
 
         if ($trash) {
-            $people = $count ? $PPLM->count_deleted(array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit)): $PPLM->get_all_deleted(array($_where,'order_by'=>array($orderby=>$sort), 'limit'=>$limit));
+            $people = $count ? $PPLM->count_deleted(array($_where, 'order_by' =>array($orderby =>$sort), 'limit' =>$limit)
+            ): $PPLM->get_all_deleted(array($_where, 'order_by' =>array($orderby =>$sort), 'limit' =>$limit));
         } else {
             $people = $count ? $PPLM->count(array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all(array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit ));
         }

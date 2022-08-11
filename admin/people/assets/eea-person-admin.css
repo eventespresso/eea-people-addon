@@ -1,3 +1,26 @@
+.post-type-espresso_people.espresso-admin #poststuff #titlewrap {
+    align-content: space-between;
+    flex-flow: column nowrap;
+}
+
+.post-type-espresso_people.espresso-admin #poststuff #titlewrap #title-prompt-text {
+    display: inline-flex;
+    font-size: 1.25em;
+    padding: .25rem 0;
+    position: relative;
+}
+
+.post-type-espresso_people.espresso-admin #poststuff #titlewrap #title {
+    max-width: 100%;
+    top: unset;
+    width: 100%;
+}
+
+.post-type-espresso_people.espresso-admin #edit-slug-box {
+    display: none;
+    padding: 0;
+}
+
 #titlediv-people-addon .title-prompt-text {
 	color     : #BBB;
 	position  : absolute;

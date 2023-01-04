@@ -6,9 +6,6 @@
  * @package  EE People Addon
  * @subpackage dms
  */
-if (! defined('EVENT_ESPRESSO_VERSION')) {
-    exit('No direct script access allowed');
-}
 /**
  *
  * People Addon Data Migration Script

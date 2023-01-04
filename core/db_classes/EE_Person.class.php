@@ -1,42 +1,39 @@
 <?php
 
+use EventEspresso\core\services\address\AddressInterface;
+
 /**
- *
  * Person model class
  *
- * @since 1.0.0
- *
+ * @since       1.0.0
  * @package     EE Person Addon
  * @subpackage  models
  * @author      Darren Ethier
- *
- * ------------------------------------------------------------------------
+ * @method EE_Country|EE_State get_first_related($relationName, $query_params = [])
  */
-class EE_Person extends EE_CPT_Base implements EEI_Address
+class EE_Person extends EE_CPT_Base implements AddressInterface
 {
-
-
-
     /**
      * Sets some dynamic values
      *
+     * @param null            $fieldValues
+     * @param bool|int|string $bydb     whether being set by db or not
+     * @param null            $timezone timezone_string
+     * @throws EE_Error
+     * @throws ReflectionException
      * @since 1.0.0
-     *
-     * @param array $fieldValues
-     * @param bool   $bydb        whether being set by db or not
-     * @param string $timezone    timezone_string
      */
     protected function __construct($fieldValues = null, $bydb = false, $timezone = null)
     {
-        if (!isset($fieldValues['PER_full_name'])) {
-            $fname = isset($fieldValues['PER_fname']) ? $fieldValues['PER_fname'] . ' ' : '';
-            $lname = isset($fieldValues['PER_lname']) ? $fieldValues['PER_lname'] : '';
-            $fieldValues['PER_full_name'] = $fname . $lname;
+        if (! isset($fieldValues['PER_full_name'])) {
+            $fname                        = $fieldValues['PER_fname'] ?? '';
+            $lname                        = $fieldValues['PER_lname'] ?? '';
+            $fieldValues['PER_full_name'] = "$fname $lname";
         }
-        if (!isset($fieldValues['PER_slug'])) {
+        if (! isset($fieldValues['PER_slug'])) {
             $fieldValues['PER_slug'] = sanitize_title($fieldValues['PER_full_name']);
         }
-        if (!isset($fieldValues['PER_short_bio']) && isset($fieldValues['PER_bio'])) {
+        if (! isset($fieldValues['PER_short_bio']) && isset($fieldValues['PER_bio'])) {
             $fieldValues['PER_short_bio'] = substr($fieldValues['PER_bio'], 0, 50);
         }
         parent::__construct($fieldValues, $bydb, $timezone);
@@ -44,161 +41,145 @@ class EE_Person extends EE_CPT_Base implements EEI_Address
 
 
     /**
-     *
-     * @param type $props_n_values
+     * @param array $props_n_values
      * @return EE_Person
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public static function new_instance($props_n_values = array())
+    public static function new_instance(array $props_n_values = []): EE_Person
     {
-        $classname = __CLASS__;
-        $has_object = parent::_check_for_object($props_n_values, $classname);
-        $obj = $has_object ? $has_object : new self($props_n_values);
-        return $obj;
-    }
-
-
-    public static function new_instance_from_db($props_n_values = array())
-    {
-        $obj =  new self($props_n_values, true);
-        return $obj;
+        $has_object = parent::_check_for_object($props_n_values, __CLASS__);
+        return $has_object
+            ?: new self($props_n_values);
     }
 
 
     /**
-     *        Set Person First Name
-     *
-     * @access        public
-     * @param string $fname
+     * @param array $props_n_values
+     * @return EE_Person
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_fname($fname = '')
+    public static function new_instance_from_db(array $props_n_values = []): EE_Person
+    {
+        return new self($props_n_values, true);
+    }
+
+
+    /**
+     * @param string $fname
+     * @throws EE_Error
+     * @throws ReflectionException
+     */
+    public function set_fname(string $fname = '')
     {
         $this->set('PER_fname', $fname);
     }
 
 
-
     /**
-     *        Set Person Last Name
-     *
-     * @access        public
      * @param string $lname
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_lname($lname = '')
+    public function set_lname(string $lname = '')
     {
         $this->set('PER_lname', $lname);
     }
 
 
-
     /**
-     *        Set Person Address
-     *
-     * @access        public
      * @param string $address
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_address($address = '')
+    public function set_address(string $address = '')
     {
         $this->set('PER_address', $address);
     }
 
 
-
     /**
-     *        Set Person Address2
-     *
-     * @access        public
-     * @param        string $address2
+     * @param string $address2
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_address2($address2 = '')
+    public function set_address2(string $address2 = '')
     {
         $this->set('PER_address2', $address2);
     }
 
 
-
     /**
-     *        Set Person City
-     *
-     * @access        public
-     * @param        string $city
+     * @param string $city
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_city($city = '')
+    public function set_city(string $city = '')
     {
         $this->set('PER_city', $city);
     }
 
 
-
     /**
-     *        Set Person State ID
-     *
-     * @access        public
-     * @param        int $STA_ID
+     * @param int $STA_ID
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_state($STA_ID = 0)
+    public function set_state(int $STA_ID = 0)
     {
         $this->set('STA_ID', $STA_ID);
     }
 
 
-
     /**
-     *        Set Person Country ISO Code
-     *
-     * @access        public
-     * @param        string $CNT_ISO
+     * @param string $CNT_ISO
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_country($CNT_ISO = '')
+    public function set_country(string $CNT_ISO = '')
     {
         $this->set('CNT_ISO', $CNT_ISO);
     }
 
 
-
     /**
-     *        Set Person Zip/Postal Code
-     *
-     * @access        public
-     * @param        string $zip
+     * @param string $zip
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_zip($zip = '')
+    public function set_zip(string $zip = '')
     {
         $this->set('PER_zip', $zip);
     }
 
 
-
     /**
-     *        Set Person Email Address
-     *
-     * @access        public
-     * @param        string $email
+     * @param string $email
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_email($email = '')
+    public function set_email(string $email = '')
     {
         $this->set('PER_email', $email);
     }
 
 
-
     /**
-     *        Set Person Phone
-     *
-     * @access        public
-     * @param        string $phone
+     * @param string $phone
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function set_phone($phone = '')
+    public function set_phone(string $phone = '')
     {
         $this->set('PER_phone', $phone);
     }
 
 
-
     /**
-     *        set deleted
-     *
-     * @access        public
-     * @param        bool $PER_deleted
+     * @param bool|int|string $PER_deleted
+     * @throws EE_Error
+     * @throws ReflectionException
      */
     public function set_deleted($PER_deleted = false)
     {
@@ -206,36 +187,37 @@ class EE_Person extends EE_CPT_Base implements EEI_Address
     }
 
 
-
     /**
      * Returns the value for the post_author id saved with the cpt
      *
-     * @since 4.5.0
-     *
      * @return int
+     * @throws EE_Error
+     * @throws ReflectionException
+     * @since 4.5.0
      */
-    public function wp_user()
+    public function wp_user(): int
     {
-        return $this->get('PER_wp_user');
+        return (int) $this->get('PER_wp_user');
     }
-
 
 
     /**
-     *        get Person First Name
-     * @access        public
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function fname()
+    public function fname(): string
     {
-        return $this->get('PER_fname');
+        return (string) $this->get('PER_fname');
     }
-
 
 
     /**
      * echoes out the person's first name
+     *
      * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
      */
     public function e_full_name()
     {
@@ -243,260 +225,267 @@ class EE_Person extends EE_CPT_Base implements EEI_Address
     }
 
 
-
     /**
      * Returns the first and last name concatenated together with a space.
-     * @param bool $apply_html_entities
+     *
+     * @param bool|int|string $apply_html_entities
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function full_name($apply_html_entities = false)
+    public function full_name($apply_html_entities = false): string
     {
         $full_name = $this->fname() . ' ' . $this->lname();
-        return $apply_html_entities ? htmlentities($full_name, ENT_QUOTES, 'UTF-8') : $full_name;
+        return $apply_html_entities
+            ? htmlentities($full_name, ENT_QUOTES, 'UTF-8')
+            : $full_name;
     }
-
 
 
     /**
-     *        get Person Last Name
-     * @access        public
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function lname()
+    public function lname(): string
     {
-        return $this->get('PER_lname');
+        return (string) $this->get('PER_lname');
     }
-
 
 
     /**
      * Gets the person's full address as an array so client code can decide hwo to display it
+     *
      * @return array numerically indexed, with each part of the address that is known.
      * Eg, if the user only responded to state and country,
      * it would be array(0=>'Alabama',1=>'USA')
-     * @return array
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function full_address_as_array()
+    public function full_address_as_array(): array
     {
-        $full_address_array = array();
-        $initial_address_fields = array( 'PER_address', 'PER_address2', 'PER_city', );
+        $full_address_array     = [];
+        $initial_address_fields = ['PER_address', 'PER_address2', 'PER_city',];
         foreach ($initial_address_fields as $address_field_name) {
             $address_fields_value = $this->get($address_field_name);
-            if (!empty($address_fields_value)) {
+            if (! empty($address_fields_value)) {
                 $full_address_array[] = $address_fields_value;
             }
         }
         // now handle state and country
         $state_obj = $this->state_obj();
-        if (!empty($state_obj)) {
+        if (! empty($state_obj)) {
             $full_address_array[] = $state_obj->name();
         }
         $country_obj = $this->country_obj();
-        if (!empty($country_obj)) {
+        if (! empty($country_obj)) {
             $full_address_array[] = $country_obj->name();
         }
         // lastly get the xip
         $zip_value = $this->zip();
-        if (!empty($zip_value)) {
+        if (! empty($zip_value)) {
             $full_address_array[] = $zip_value;
         }
         return $full_address_array;
     }
 
 
-
     /**
-     *        get Person Address
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function address()
+    public function address(): string
     {
-        return $this->get('PER_address');
+        return (string) $this->get('PER_address');
     }
 
 
-
     /**
-     *        get Person Address2
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function address2()
+    public function address2(): string
     {
-        return $this->get('PER_address2');
+        return (string) $this->get('PER_address2');
     }
 
 
-
     /**
-     *        get Person City
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function city()
+    public function city(): string
     {
-        return $this->get('PER_city');
+        return (string) $this->get('PER_city');
     }
 
 
-
     /**
-     *        get Person State ID
-     * @return string
+     * @return int
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function state_ID()
+    public function state_ID(): int
     {
-        return $this->get('STA_ID');
+        return (int) $this->get('STA_ID');
     }
-
 
 
     /**
      * Gets the state set to this person
-     * @return EE_State
+     *
+     * @return EE_State|null
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function state_obj()
+    public function state_obj(): ?EE_State
     {
         return $this->get_first_related('State');
     }
 
+
     /**
      * Returns the state's name, otherwise ''
+     *
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function state_name()
+    public function state_name(): string
     {
-        if ($this->state_obj() instanceof EE_State) {
-            return $this->state_obj()->name();
-        } else {
-            return '';
-        }
+        return $this->state_obj() instanceof EE_State
+            ? $this->state_obj()->name()
+            : '';
     }
-
 
 
     /**
      * Returns the state's abbreviation, otherwise ''
+     *
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function state_abbrev()
+    public function state_abbrev(): string
     {
-        if ($this->state_obj() instanceof EE_State) {
-            return $this->state_obj()->abbrev();
-        } else {
-            return '';
-        }
+        return $this->state_obj() instanceof EE_State
+            ? $this->state_obj()->abbrev()
+            : '';
     }
-
-
 
 
     /**
      * either displays the state abbreviation or the state name, as determined
      * by the "FHEE__EEI_Address__state__use_abbreviation" filter.
      * defaults to abbreviation
+     *
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function state()
+    public function state(): string
     {
-        if (apply_filters('FHEE__EEI_Address__state__use_abbreviation', true, $this->state_obj())) {
-            return $this->state_abbrev();
-        } else {
-            return $this->state_name();
-        }
+        return apply_filters('FHEE__EEI_Address__state__use_abbreviation', true, $this->state_obj())
+            ? $this->state_abbrev()
+            : $this->state_name();
     }
 
 
-
     /**
-     *    get Person Country ISO Code
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function country_ID()
+    public function country_ID(): string
     {
-        return $this->get('CNT_ISO');
+        return (string) $this->get('CNT_ISO');
     }
 
 
-
     /**
-     * Gets country set for this person
      * @return EE_Country
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function country_obj()
+    public function country_obj(): EE_Country
     {
         return $this->get_first_related('Country');
     }
 
-    /**
-     * REturns the country's name if known, otherwise ''
-     * @return string
-     */
-    public function country_name()
-    {
-        if ($this->country_obj()) {
-            return $this->country_obj()->name();
-        } else {
-            return '';
-        }
-    }
 
+    /**
+     * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
+     */
+    public function country_name(): string
+    {
+        return $this->country_obj()
+            ? $this->country_obj()->name()
+            : '';
+    }
 
 
     /**
      * either displays the country ISO2 code or the country name, as determined
      * by the "FHEE__EEI_Address__country__use_abbreviation" filter.
      * defaults to abbreviation
+     *
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function country()
+    public function country(): string
     {
-        if (apply_filters('FHEE__EEI_Address__country__use_abbreviation', true, $this->country_obj())) {
-            return $this->country_ID();
-        } else {
-            return $this->country_name();
-        }
+        return apply_filters('FHEE__EEI_Address__country__use_abbreviation', true, $this->country_obj())
+            ? $this->country_ID()
+            : $this->country_name();
     }
 
 
-
     /**
-     *        get Person Zip/Postal Code
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function zip()
+    public function zip(): string
     {
-        return $this->get('PER_zip');
+        return (string) $this->get('PER_zip');
     }
 
 
-
     /**
-     *        get Person Email Address
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function email()
+    public function email(): string
     {
-        return $this->get('PER_email');
+        return (string) $this->get('PER_email');
     }
 
 
-
     /**
-     *        get Person Phone #
      * @return string
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function phone()
+    public function phone(): string
     {
-        return $this->get('PER_phone');
+        return (string) $this->get('PER_phone');
     }
 
 
-
     /**
-     *    get deleted
      * @return        bool
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function deleted()
+    public function deleted(): bool
     {
-        return $this->get('PER_deleted');
+        return (bool) $this->get('PER_deleted');
     }
 }

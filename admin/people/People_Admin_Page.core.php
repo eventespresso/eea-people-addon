@@ -1543,4 +1543,37 @@ class People_Admin_Page extends EE_Admin_Page_CPT
             ? EEM_Term_Taxonomy::instance()->count($query_params, 'term_id')
             : EEM_Term_Taxonomy::instance()->get_all($query_params);
     }
+
+
+    /**
+     * @param string                 $box_id
+     * @param string                 $title
+     * @param callable|string|null   $callback
+     * @param string|array|WP_Screen $screen
+     * @param string                 $context
+     * @param string                 $priority
+     * @param array|null             $callback_args
+     */
+    protected function addMetaBox(
+        string $box_id,
+        string $title,
+        $callback,
+        $screen,
+        string $context = 'normal',
+        string $priority = 'default',
+        ?array $callback_args = null
+    ) {
+        if (! (is_callable($callback) || ! function_exists($callback))) {
+            return;
+        }
+
+        add_meta_box($box_id, $title, $callback, $screen, $context, $priority, $callback_args);
+        add_filter(
+            "postbox_classes_{$this->_wp_page_slug}_{$box_id}",
+            function ($classes) {
+                $classes[] = 'ee-admin-container';
+                return $classes;
+            }
+        );
+    }
 }

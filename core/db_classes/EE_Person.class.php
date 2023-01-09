@@ -410,7 +410,7 @@ class EE_Person extends EE_CPT_Base implements AddressInterface
      * @throws EE_Error
      * @throws ReflectionException
      */
-    public function country_obj(): EE_Country
+    public function country_obj(): ?EE_Country
     {
         return $this->get_first_related('Country');
     }

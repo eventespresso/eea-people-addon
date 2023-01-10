@@ -1456,7 +1456,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
             $term_id = $update ? $this->request->getRequestParam('PER_TYPE_ID', 0, DataType::INT) : 0;
         }
         $category_name   = $this->request->getRequestParam('category_name');
-        $category_desc   = $this->request->getRequestParam('category_desc');
+        $category_desc   = $this->request->getRequestParam('category_desc', '', DataType::HTML);
         $category_parent = $this->request->getRequestParam('category_parent', 0, DataType::INT);
 
         $term_args = [

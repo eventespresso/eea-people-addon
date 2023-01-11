@@ -1,42 +1,41 @@
 <?php
-EEH_Template_Validator::verify_instanceof($person, '$person', 'EE_Person');
-/*
+
+/**
  * @var $person EE_Person
- * @var $state_html html for displaying the person's state
- * @var $country_html html for displaying the person's country
+ * @var $state_html string html for displaying the person's state
+ * @var $country_html string html for displaying the person's country
  */
 ?>
-<table class="form-table">
+<table class="ee-admin-two-column-layout form-table">
     <tbody>
-        <tr valign="top">
+        <tr>
             <td>
-                <label for="PER_address"><?php _e('Address:', 'event_espresso'); ?></label><br>
+                <label for="PER_address"><?php esc_html_e('Address:', 'event_espresso'); ?></label>
                 <input class="all-options" type="text" id="PER_address" name="PER_address" value="<?php echo $person->address(); ?>"/>
-                <br/>
+                <label for="PER_address2" class="screen-reader-text"><?php esc_html_e('Address 2', 'event_espresso'); ?></label>
                 <input class="all-options" type="text" id="PER_address2" name="PER_address2" value="<?php echo $person->address2(); ?>"/>
-                <br/>
-                <p class="description"><?php _e('The person\'s street address.', 'event_espresso'); ?></p>
+                <p class="description"><?php esc_html_e('The person\'s street address.', 'event_espresso'); ?></p>
             </td>
         </tr>
-        <tr valign="top">
+        <tr>
             <td>
-                <label for="PER_city"><?php _e('City', 'event_espresso'); ?></label><br>
+                <label for="PER_city"><?php esc_html_e('City', 'event_espresso'); ?></label>
                 <input class="all-options" type="text" id="PER_city" name="PER_city" value="<?php echo $person->city(); ?>"/>
             </td>
         </tr>
-        <tr valign="top">
+        <tr>
             <td>
                 <?php echo $state_html?>
             </td>
         </tr>
-        <tr valign="top">
+        <tr>
             <td>
                 <?php echo $country_html?>
             </td>
         </tr>
-        <tr valign="top">
+        <tr>
             <td>
-                <label for="PER_zip"><?php _e('Zip/Postal Code', 'event_espresso'); ?></label><br>
+                <label for="PER_zip"><?php esc_html_e('Zip/Postal Code', 'event_espresso'); ?></label>
                 <input class="all-options" type="text" id="PER_zip" name="PER_zip" value="<?php echo $person->zip(); ?>"/>
             </td>
         </tr>

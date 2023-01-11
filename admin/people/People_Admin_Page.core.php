@@ -1,19 +1,23 @@
 <?php
 
+use EventEspresso\core\services\request\DataType;
+
 /**
  *
  * People Admin Page class
  *
- * @since 1.0.0
+ * @since       1.0.0
  *
  * @package     EE People Addon
  * @subpackage  admin
  * @author      Darren Ethier
- *
- * ------------------------------------------------------------------------
  */
 class People_Admin_Page extends EE_Admin_Page_CPT
 {
+    /**
+     * @var EE_Person
+     */
+    protected $_cpt_model_obj;
 
     /**
      * Used to cache a WP_Term object
@@ -26,33 +30,31 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
     protected function _init_page_props()
     {
-        $this->page_slug = EEA_PEOPLE_PG_SLUG;
-        $this->page_label = EEA_PEOPLE_LABEL;
-        $this->_admin_base_url = EEA_PEOPLE_ADDON_ADMIN_URL;
+        $this->page_slug        = EEA_PEOPLE_PG_SLUG;
+        $this->page_label       = esc_html__('Manage People', 'event_espresso');
+        $this->_admin_base_url  = EEA_PEOPLE_ADDON_ADMIN_URL;
         $this->_admin_base_path = EEA_PEOPLE_ADDON_ADMIN;
-        $this->page_label = __('Manage People', 'event_espresso');
-        $this->_cpt_routes = array(
-            'create_new' => 'espresso_people',
-            'edit' => 'espresso_people',
+        $this->_cpt_routes      = [
+            'create_new'    => 'espresso_people',
+            'edit'          => 'espresso_people',
             'insert_person' => 'espresso_people',
-            'update_person' => 'espresso_people'
-            );
-        $this->_cpt_model_names = array(
+            'update_person' => 'espresso_people',
+        ];
+        $this->_cpt_model_names = [
             'create_new' => 'EEM_Person',
-            'edit' => 'EEM_Person'
-            );
-        $this->_cpt_edit_routes = array(
-            'espresso_people' => 'edit'
-            );
-        add_action('edit_form_after_title', array( $this, 'after_title_form_fields'), 10);
-        add_filter('FHEE__EE_Admin_Page_CPT___edit_cpt_item__create_new_action', array( $this, 'map_cpt_route'), 10, 2);
+            'edit'       => 'EEM_Person',
+        ];
+        $this->_cpt_edit_routes = [
+            'espresso_people' => 'edit',
+        ];
+        add_action('edit_form_after_title', [$this, 'after_title_form_fields'], 10);
+        add_filter('FHEE__EE_Admin_Page_CPT___edit_cpt_item__create_new_action', [$this, 'map_cpt_route'], 10, 2);
     }
 
 
-
-    public function map_cpt_route($route, EE_Admin_Page $adminpage)
+    public function map_cpt_route(string $route, EE_Admin_Page $admin_page): string
     {
-        if ($adminpage->page_slug == $this->page_slug && $route == 'create_new') {
+        if ($admin_page->page_slug == $this->page_slug && $route == 'create_new') {
             return 'create_new';
         }
         return $route;
@@ -61,19 +63,19 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
     /**
      * add in the form fields for the person first name/last name edit
-     * @param  WP_Post $post wp post object
-     * @return string        html for new form.
+     *
+     * @param WP_Post $post wp post object
+     * @return void
      */
-    public function after_title_form_fields($post)
+    public function after_title_form_fields(WP_Post $post)
     {
         if ($post->post_type == 'espresso_people') {
             $template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'people_details_after_title_form_fields.template.php';
+
             $template_args['people'] = $this->_cpt_model_obj;
             EEH_Template::display_template($template, $template_args);
         }
     }
-
-
 
 
     protected function _ajax_hooks()
@@ -81,350 +83,378 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     }
 
 
-
-
-
     protected function _define_page_props()
     {
         $this->_admin_page_title = $this->page_label;
-        $this->_labels = array(
-            'buttons' => array(
-                'add-person' => __('Add Person', 'event_espresso'),
-                'edit' => __('Add Person', 'event_espresso'),
-                'add_category' => __('Add New Category', 'event_espresso'),
-                'edit_category' => __('Edit Category', 'event_espresso'),
-                'delete_category' => __('Delete_Category', 'event_espresso'),
-                'add_type' => __('Add New Type', 'event_espresso'),
-                'edit_type' => __('Edit Type', 'event_espresso'),
-                'delete_type' => __('Delete Type', 'event_espresso')
-                ),
-            'editor_title' => array(
-                'espresso_people' => __('Enter Full Name here', 'event_espresso')
-                ),
-            'publishbox' => array(
-                'edit' => __('Update Person Record', 'event_espresso'),
-                'create_new' => __('Save Person Record', 'event_espresso'),
-                'add_category' => __('Save New Category', 'event_espresso'),
-                'edit_category' => __('Update Category', 'event_espresso'),
-                'add_type' => __('Save New Type', 'event_espresso'),
-                'edit_type' => __('Update Type', 'event_espresso')
-                )
-        );
+        $this->_labels           = [
+            'buttons'      => [
+                'add-person'      => esc_html__('Add Person', 'event_espresso'),
+                'edit'            => esc_html__('Add Person', 'event_espresso'),
+                'add_category'    => esc_html__('Add New Category', 'event_espresso'),
+                'edit_category'   => esc_html__('Edit Category', 'event_espresso'),
+                'delete_category' => esc_html__('Delete_Category', 'event_espresso'),
+                'add_type'        => esc_html__('Add New Type', 'event_espresso'),
+                'edit_type'       => esc_html__('Edit Type', 'event_espresso'),
+                'delete_type'     => esc_html__('Delete Type', 'event_espresso'),
+            ],
+            'editor_title' => [
+                'espresso_people' => esc_html__('Enter Full Name here', 'event_espresso'),
+            ],
+            'publishbox'   => [
+                'edit'          => esc_html__('Update Person Record', 'event_espresso'),
+                'create_new'    => esc_html__('Save Person Record', 'event_espresso'),
+                'add_category'  => esc_html__('Save New Category', 'event_espresso'),
+                'edit_category' => esc_html__('Update Category', 'event_espresso'),
+                'add_type'      => esc_html__('Save New Type', 'event_espresso'),
+                'edit_type'     => esc_html__('Update Type', 'event_espresso'),
+            ],
+        ];
     }
-
-
 
 
     protected function _set_page_routes()
     {
-        $ppl_id = ! empty($this->_req_data['PER_ID']) && ! is_array($this->_req_data['PER_ID']) ? $this->_req_data['PER_ID'] : 0;
-        $ppl_id = !empty($this->_req_data['post']) && ! is_array($this->_req_data['post']) ? $this->_req_data['post'] : $ppl_id;
-        $this->_page_routes = array(
-            'default' => array(
-                'func' => '_people_list_table',
-                'capability' => 'ee_read_peoples'
-                ),
-            'create_new' => array(
-                'func' => '_create_new_cpt_item',
-                'capability' => 'ee_edit_peoples'
-            ),
-            'edit' => array(
-                'func' => '_edit_cpt_item',
+        $PER_ID             = $this->request->getRequestParam('post', 0, DataType::INT);
+        $PER_ID             = $this->request->getRequestParam('PER_ID', $PER_ID, DataType::INT);
+        $this->_page_routes = [
+            'default'    => [
+                'func'       => [$this, '_people_list_table'],
+                'capability' => 'ee_read_peoples',
+            ],
+            'create_new' => [
+                'func'       => [$this, '_create_new_cpt_item'],
+                'capability' => 'ee_edit_peoples',
+            ],
+            'edit'       => [
+                'func'       => [$this, '_edit_cpt_item'],
                 'capability' => 'ee_edit_people',
-                'obj_id' => $ppl_id
-            ),
+                'obj_id'     => $PER_ID,
+            ],
 
-            'trash_person' => array(
-                'func' => '_trash_or_restore_people',
-                'args' => array( 'trash' => true ),
-                'noheader' => true,
+            'trash_person' => [
+                'func'       => [$this, '_trash_or_restore_people'],
+                'args'       => ['trash' => true],
+                'noheader'   => true,
                 'capability' => 'ee_delete_people',
-                'obj_id' => $ppl_id
-                ),
+                'obj_id'     => $PER_ID,
+            ],
 
-            'trash_people'  => array(
-                'func' => '_trash_or_restore_people',
-                'args' => array(
-                    'trash' => true
-                ),
-                'noheader' => true,
-                'capability' => 'ee_delete_peoples'
-            ),
+            'trash_people' => [
+                'func'       => [$this, '_trash_or_restore_people'],
+                'args'       => [
+                    'trash' => true,
+                ],
+                'noheader'   => true,
+                'capability' => 'ee_delete_peoples',
+            ],
 
-            'restore_person' => array(
-                'func' => '_trash_or_restore_people',
-                'args' => array( 'trash' => false ),
-                'noheader' => true,
+            'restore_person' => [
+                'func'       => [$this, '_trash_or_restore_people'],
+                'args'       => ['trash' => false],
+                'noheader'   => true,
                 'capability' => 'ee_delete_people',
-                'obj_id' => $ppl_id
-                ),
+                'obj_id'     => $PER_ID,
+            ],
 
-            'restore_people' => array(
-                'func' => '_trash_or_restore_people',
-                'args' => array(
-                    'trash' => false
-                ),
-                'noheader' => true,
-                'capability' => 'ee_delete_peoples'
-            ),
+            'restore_people'    => [
+                'func'       => [$this, '_trash_or_restore_people'],
+                'args'       => [
+                    'trash' => false,
+                ],
+                'noheader'   => true,
+                'capability' => 'ee_delete_peoples',
+            ],
 
             // delete permanently
-            'delete_person' => array(
-                'func' => '_delete_permanently_people',
-                'noheader' => true,
+            'delete_person'     => [
+                'func'       => [$this, '_delete_permanently_people'],
+                'noheader'   => true,
                 'capability' => 'ee_delete_people',
-                'obj_id' => $ppl_id
-                ),
-            'delete_people' => array(
-                'func' => '_delete_permanently_people',
-                'noheader' => true,
+                'obj_id'     => $PER_ID,
+            ],
+            'delete_people'     => [
+                'func'       => [$this, '_delete_permanently_people'],
+                'noheader'   => true,
                 'capability' => 'ee_delete_peoples',
-                ),
+            ],
 
             // categories
-            'add_category' => array(
-                'func' => '_category_details',
+            'add_category'      => [
+                'func'       => [$this, '_category_details'],
                 'capability' => 'ee_edit_people_category',
-                'args' => array('add'),
-                ),
-            'edit_category' => array(
-                'func' => '_category_details',
+                'args'       => ['add'],
+            ],
+            'edit_category'     => [
+                'func'       => [$this, '_category_details'],
                 'capability' => 'ee_edit_people_category',
-                'args' => array('edit')
-                ),
-            'delete_categories' => array(
-                'func' => '_delete_categories',
+                'args'       => ['edit'],
+            ],
+            'delete_categories' => [
+                'func'       => [$this, '_delete_categories'],
                 'capability' => 'ee_delete_people_category',
-                'noheader' => true
-                ),
+                'noheader'   => true,
+            ],
 
-            'delete_category' => array(
-                'func' => '_delete_categories',
+            'delete_category' => [
+                'func'       => [$this, '_delete_categories'],
                 'capability' => 'ee_delete_people_category',
-                'noheader' => true
-                ),
+                'noheader'   => true,
+            ],
 
-            'insert_category' => array(
-                'func' => '_insert_or_update_category',
-                'args' => array('new_category' => true),
+            'insert_category' => [
+                'func'       => [$this, '_insert_or_update_category'],
+                'args'       => ['new_category' => true],
                 'capability' => 'ee_edit_people_category',
-                'noheader' => true
-                ),
+                'noheader'   => true,
+            ],
 
-            'update_category' => array(
-                'func' => '_insert_or_update_category',
-                'args' => array('new_category' => false),
+            'update_category' => [
+                'func'       => [$this, '_insert_or_update_category'],
+                'args'       => ['new_category' => false],
                 'capability' => 'ee_edit_people_category',
-                'noheader' => true
-                ),
-            'category_list' => array(
-                'func' => '_category_list_table',
-                'capability' => 'ee_manage_people_categories'
-                ),
+                'noheader'   => true,
+            ],
+            'category_list'   => [
+                'func'       => [$this, '_category_list_table'],
+                'capability' => 'ee_manage_people_categories',
+            ],
 
             // types
-            'add_type' => array(
-                'func' => '_type_details',
+            'add_type'        => [
+                'func'       => [$this, '_type_details'],
                 'capability' => 'ee_edit_people_type',
-                'args' => array('add'),
-                ),
-            'edit_type' => array(
-                'func' => '_type_details',
+                'args'       => ['add'],
+            ],
+            'edit_type'       => [
+                'func'       => [$this, '_type_details'],
                 'capability' => 'ee_edit_people_type',
-                'args' => array('edit')
-                ),
-            'delete_types' => array(
-                'func' => '_delete_types',
+                'args'       => ['edit'],
+            ],
+            'delete_types'    => [
+                'func'       => [$this, '_delete_types'],
                 'capability' => 'ee_delete_people_type',
-                'noheader' => true
-                ),
+                'noheader'   => true,
+            ],
 
-            'delete_type' => array(
-                'func' => '_delete_types',
+            'delete_type' => [
+                'func'       => [$this, '_delete_types'],
                 'capability' => 'ee_delete_people_type',
-                'noheader' => true
-                ),
+                'noheader'   => true,
+            ],
 
-            'insert_type' => array(
-                'func' => '_insert_or_update_type',
-                'args' => array('new_type' => true),
+            'insert_type' => [
+                'func'       => [$this, '_insert_or_update_type'],
+                'args'       => ['new_type' => true],
                 'capability' => 'ee_edit_people_type',
-                'noheader' => true
-                ),
+                'noheader'   => true,
+            ],
 
-            'update_type' => array(
-                'func' => '_insert_or_update_type',
-                'args' => array('new_type' => false),
+            'update_type' => [
+                'func'       => [$this, '_insert_or_update_type'],
+                'args'       => ['new_type' => false],
                 'capability' => 'ee_edit_people_type',
-                'noheader' => true
-                ),
-            'type_list' => array(
-                'func' => '_type_list_table',
-                'capability' => 'ee_manage_people_types'
-                )
-        );
+                'noheader'   => true,
+            ],
+            'type_list'   => [
+                'func'       => [$this, '_type_list_table'],
+                'capability' => 'ee_manage_people_types',
+            ],
+        ];
     }
-
-
-
 
 
     protected function _set_page_config()
     {
-
-        $this->_page_config = array(
-            'default' => array(
-                'nav' => array(
-                    'label' => __('People List', 'event_espresso'),
-                    'order' => 5
-                    ),
-                'list_table' => 'EE_People_List_Table',
-                'metaboxes' => array(),
-                'require_nonce' => false
-            ),
-            'create_new' => array(
-                'nav' => array(
-                    'label' => __('Add Person', 'event_espresso'),
-                    'order' => 10,
-                    'persistent' => false
-                    ),
-                'metaboxes' => array( '_publish_post_box', 'people_editor_metaboxes' ),
-                'require_nonce' => false
-            ),
-            'edit' => array(
-                'nav' => array(
-                    'label' => __('Edit Person', 'event_espresso'),
-                    'order' => 10,
+        $post               = $this->request->getRequestParam('post', 0, DataType::INT);
+        $PER_CAT_ID         = $this->request->getRequestParam('PER_CAT_ID', 0, DataType::INT);
+        $PER_TYPE_ID        = $this->request->getRequestParam('PER_TYPE_ID', 0, DataType::INT);
+        $this->_page_config = [
+            'default'       => [
+                'nav'           => [
+                    'label' => esc_html__('People List', 'event_espresso'),
+                    'order' => 5,
+                ],
+                'list_table'    => 'EE_People_List_Table',
+                'metaboxes'     => [],
+                'require_nonce' => false,
+            ],
+            'create_new'    => [
+                'nav'           => [
+                    'label'      => esc_html__('Add Person', 'event_espresso'),
+                    'order'      => 10,
                     'persistent' => false,
-                    'url' => isset($this->_req_data['post']) ? add_query_arg(array('post' => $this->_req_data['post'] ), $this->_current_page_view_url)  : $this->_admin_base_url
-                    ),
-                'metaboxes' => array('people_editor_metaboxes', '_publish_post_box'),
-                'require_nonce' => false
-                ),
+                ],
+                'metaboxes'     => ['people_editor_metaboxes'],
+                'require_nonce' => false,
+            ],
+            'edit'          => [
+                'nav'           => [
+                    'label'      => esc_html__('Edit Person', 'event_espresso'),
+                    'order'      => 10,
+                    'persistent' => false,
+                    'url'        => $post
+                        ? add_query_arg(['post' => $post], $this->_current_page_view_url)
+                        : $this->_admin_base_url,
+                ],
+                'metaboxes'     => ['people_editor_metaboxes'],
+                'require_nonce' => false,
+            ],
 
             // people category stuff
-            'add_category' => array(
-                'nav' => array(
-                    'label' => __('Add Category', 'event_espresso'),
-                    'order' => 10,
+            'add_category'  => [
+                'nav'       => [
+                    'label'      => esc_html__('Add Category', 'event_espresso'),
+                    'order'      => 10,
                     'persistent' => false,
-                    ),
-                'help_tabs' => array(
-                    'add_category_help_tab' => array(
-                        'title' => __('Add New People Category', 'event_espresso'),
-                        'filename' => 'people_add_category'
-                    )
-                ),
-                'metaboxes' => array( '_publish_post_box' )
-                ),
-            'edit_category' => array(
-                'nav' => array(
-                    'label' => __('Edit Category', 'event_espresso'),
-                    'order' => 10,
+                ],
+                'help_tabs' => [
+                    'add_category_help_tab' => [
+                        'title'    => esc_html__('Add New People Category', 'event_espresso'),
+                        'filename' => 'people_add_category',
+                    ],
+                ],
+                'metaboxes' => ['_publish_post_box'],
+            ],
+            'edit_category' => [
+                'nav'       => [
+                    'label'      => esc_html__('Edit Category', 'event_espresso'),
+                    'order'      => 10,
                     'persistent' => false,
-                    'url' => isset($this->_req_data['PER_CAT_ID']) ? add_query_arg(array('PER_CAT_ID' => $this->_req_data['PER_CAT_ID'] ), $this->_current_page_view_url)  : $this->_admin_base_url
-                    ),
-                'help_tabs' => array(
-                    'edit_category_help_tab' => array(
-                        'title' => __('Edit People Category', 'event_espresso'),
-                        'filename' => 'people_edit_category'
-                    )
-                ),
-                'metaboxes' => array( '_publish_post_box' )
-                ),
-            'category_list' => array(
-                'nav' => array(
-                    'label' => __('Categories', 'event_espresso'),
-                    'order' => 15
-                    ),
-                'list_table' => 'EE_People_Categories_List_Table',
-                'metaboxes' => array('_espresso_news_post_box'),
-                'require_nonce' => false
-                ),
+                    'url'        => $PER_CAT_ID
+                        ? add_query_arg(['PER_CAT_ID' => $PER_CAT_ID], $this->_current_page_view_url)
+                        : $this->_admin_base_url,
+                ],
+                'help_tabs' => [
+                    'edit_category_help_tab' => [
+                        'title'    => esc_html__('Edit People Category', 'event_espresso'),
+                        'filename' => 'people_edit_category',
+                    ],
+                ],
+                'metaboxes' => ['_publish_post_box'],
+            ],
+            'category_list' => [
+                'nav'           => [
+                    'label' => esc_html__('Categories', 'event_espresso'),
+                    'order' => 15,
+                ],
+                'list_table'    => 'EE_People_Categories_List_Table',
+                'metaboxes'     => ['_espresso_news_post_box'],
+                'require_nonce' => false,
+            ],
 
             // people type stuff
-            'add_type' => array(
-                'nav' => array(
-                    'label' => __('Add Type', 'event_espresso'),
-                    'order' => 10,
-                    'persistent' => false
-                    ),
-                'help_tabs' => array(
-                    'add_people_type_help_tab' => array(
-                        'title' => __('Add People Type', 'event_espresso'),
-                        'filename' => 'people_add_type'
-                    )
-                ),
-                'metaboxes' => array( '_publish_post_box' )
-                ),
-            'edit_type' => array(
-                'nav' => array(
-                    'label' => __('Edit Type', 'event_espresso'),
-                    'order' => 10,
+            'add_type'      => [
+                'nav'       => [
+                    'label'      => esc_html__('Add Type', 'event_espresso'),
+                    'order'      => 10,
                     'persistent' => false,
-                    'url' => isset($this->_req_data['PER_TYPE_ID']) ? add_query_arg(array('PER_TYPE_ID' => $this->_req_data['PER_TYPE_ID'] ), $this->_current_page_view_url)  : $this->_admin_base_url
-                    ),
-                'help_tabs' => array(
-                    'edit_people_type_help_tab' => array(
-                        'title' => __('Edit People Type', 'event_espresso'),
-                        'filename' => 'people_edit_type'
-                    )
-                ),
-                'metaboxes' => array( '_publish_post_box' )
-                ),
-            'type_list' => array(
-                'nav' => array(
-                    'label' => __('Types', 'event_espresso'),
-                    'order' => 15
-                    ),
-                'list_table' => 'EE_People_Types_List_Table',
-                'metaboxes' => array('_espresso_news_post_box'),
-                'require_nonce' => false
-                )
-        );
+                ],
+                'help_tabs' => [
+                    'add_people_type_help_tab' => [
+                        'title'    => esc_html__('Add People Type', 'event_espresso'),
+                        'filename' => 'people_add_type',
+                    ],
+                ],
+                'metaboxes' => ['_publish_post_box'],
+            ],
+            'edit_type'     => [
+                'nav'       => [
+                    'label'      => esc_html__('Edit Type', 'event_espresso'),
+                    'order'      => 10,
+                    'persistent' => false,
+                    'url'        => $PER_TYPE_ID
+                        ? add_query_arg(['PER_TYPE_ID' => $PER_TYPE_ID], $this->_current_page_view_url)
+                        : $this->_admin_base_url,
+                ],
+                'help_tabs' => [
+                    'edit_people_type_help_tab' => [
+                        'title'    => esc_html__('Edit People Type', 'event_espresso'),
+                        'filename' => 'people_edit_type',
+                    ],
+                ],
+                'metaboxes' => ['_publish_post_box'],
+            ],
+            'type_list'     => [
+                'nav'           => [
+                    'label' => esc_html__('Types', 'event_espresso'),
+                    'order' => 15,
+                ],
+                'list_table'    => 'EE_People_Types_List_Table',
+                'metaboxes'     => ['_espresso_news_post_box'],
+                'require_nonce' => false,
+            ],
+        ];
     }
 
 
     protected function _add_screen_options()
     {
     }
+
+
     protected function _add_screen_options_default()
     {
         $this->_per_page_screen_option();
     }
 
+
     protected function _add_feature_pointers()
     {
     }
+
+
     public function load_scripts_styles()
     {
     }
+
 
     public function load_scripts_styles_create_new()
     {
         $this->load_scripts_styles_edit();
     }
 
+
     public function load_scripts_styles_edit()
     {
-        wp_register_style('eea-person-admin-css', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.css', array('ee-admin-css'), EEA_PEOPLE_ADDON_VERSION);
-        wp_register_script('eea-person-admin-js', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.js', array( 'post' ), EEA_PEOPLE_ADDON_VERSION);
+        wp_register_style(
+            'eea-person-admin-css',
+            EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.css',
+            ['ee-admin-css'],
+            EEA_PEOPLE_ADDON_VERSION
+        );
+        wp_register_script(
+            'eea-person-admin-js',
+            EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.js',
+            ['post'],
+            EEA_PEOPLE_ADDON_VERSION
+        );
         wp_enqueue_style('eea-person-admin-css');
         wp_enqueue_script('eea-person-admin-js');
     }
 
+
     public function load_scripts_styles_default()
     {
-        wp_register_style('eea-person-admin-list-table-css', EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin-list-table.css', array( 'ee-admin-css' ), EEA_PEOPLE_ADDON_VERSION);
+        wp_register_style(
+            'eea-person-admin-list-table-css',
+            EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin-list-table.css',
+            ['ee-admin-css'],
+            EEA_PEOPLE_ADDON_VERSION
+        );
         wp_enqueue_style('eea-person-admin-list-table-css');
     }
+
 
     public function admin_init()
     {
     }
+
+
     public function admin_notices()
     {
     }
+
+
     public function admin_footer_scripts()
     {
     }
@@ -432,82 +462,99 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
     protected function _set_list_table_views_default()
     {
-        $this->_views = array(
-            'all' => array(
-                'slug' => 'all',
-                'label' => __('All', 'event_espresso'),
-                'count' => 0,
-                'bulk_action' => array()
-                ),
-            'publish' => array(
-                'slug' => 'publish',
-                'label' => __('Published', 'event_espresso'),
-                'count' => 0,
-                'bulk_action' => array()
-                ),
-            'draft' => array(
-                'slug' => 'draft',
-                'label' => __('Draft', 'event_espresso'),
-                'count' => 0,
-                'bulk_action' => array()
-                )
-            );
+        $this->_views = [
+            'all'     => [
+                'slug'        => 'all',
+                'label'       => esc_html__('All', 'event_espresso'),
+                'count'       => 0,
+                'bulk_action' => [],
+            ],
+            'publish' => [
+                'slug'        => 'publish',
+                'label'       => esc_html__('Published', 'event_espresso'),
+                'count'       => 0,
+                'bulk_action' => [],
+            ],
+            'draft'   => [
+                'slug'        => 'draft',
+                'label'       => esc_html__('Draft', 'event_espresso'),
+                'count'       => 0,
+                'bulk_action' => [],
+            ],
+        ];
 
-        if (EE_Registry::instance()->CAP->current_user_can('ee_delete_peoples', 'eea-people-addon_trash_people')) {
-            $this->_views['trash'] = array(
-                'slug' => 'trash',
-                'label' => __('Trash', 'event_espresso'),
-                'count' => 0,
-                'bulk_action' => array(
-                    'restore_people' => __('Restore from Trash', 'event_espresso'),
-                    'delete_people' => __('Delete Permanently', 'event_espresso')
-                    )
-                );
-            $this->_views['all']['bulk_action'] = array(
-                    'trash_people' => __('Move to Trash', 'event_espresso')
-                );
-            $this->_views['publish']['bulk_action'] = array(
-                    'trash_people' => __('Move to Trash', 'event_espresso')
-                );
-            $this->_views['draft']['bulk_action'] = array(
-                    'trash_people' => __('Move to Trash', 'event_espresso')
-                );
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_peoples',
+                'eea-people-addon_trash_people'
+            )
+        ) {
+            $this->_views['trash']                  = [
+                'slug'        => 'trash',
+                'label'       => esc_html__('Trash', 'event_espresso'),
+                'count'       => 0,
+                'bulk_action' => [
+                    'restore_people' => esc_html__('Restore from Trash', 'event_espresso'),
+                    'delete_people'  => esc_html__('Delete Permanently', 'event_espresso'),
+                ],
+            ];
+            $this->_views['all']['bulk_action']     = [
+                'trash_people' => esc_html__('Move to Trash', 'event_espresso'),
+            ];
+            $this->_views['publish']['bulk_action'] = [
+                'trash_people' => esc_html__('Move to Trash', 'event_espresso'),
+            ];
+            $this->_views['draft']['bulk_action']   = [
+                'trash_people' => esc_html__('Move to Trash', 'event_espresso'),
+            ];
         }
     }
-
 
 
     protected function _set_list_table_views_category_list()
     {
-        $this->_views = array(
-            'all' => array(
-                'slug' => 'all',
-                'label' => __('All', 'event_espresso'),
-                'count' => 0,
-                'bulk_action' => array()
-                )
-        );
+        $this->_views = [
+            'all' => [
+                'slug'        => 'all',
+                'label'       => esc_html__('All', 'event_espresso'),
+                'count'       => 0,
+                'bulk_action' => [],
+            ],
+        ];
 
-        if (EE_Registry::instance()->CAP->current_user_can('ee_delete_people_category', 'eea-people-addon-delete_category')) {
-            $this->_views['all']['bulk_action'] = array( 'delete_categories' => __('Delete Permanently', 'event_espresso') );
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_people_category',
+                'eea-people-addon-delete_category'
+            )
+        ) {
+            $this->_views['all']['bulk_action'] = [
+                'delete_categories' => esc_html__('Delete Permanently', 'event_espresso')
+            ];
         }
     }
 
 
-
     protected function _set_list_table_views_type_list()
     {
-        $this->_views = array(
-            'all' => array(
-                'slug' => 'all',
-                'label' => __('All', 'event_espresso'),
-                'count' => 0,
-                'bulk_action' => array()
-                )
-        );
+        $this->_views = [
+            'all' => [
+                'slug'        => 'all',
+                'label'       => esc_html__('All', 'event_espresso'),
+                'count'       => 0,
+                'bulk_action' => [],
+            ],
+        ];
 
-        if (EE_Registry::instance()->CAP->current_user_can('ee_delete_people_type', 'eea-people-addon-delete_type')) {
-            $this->_views['all']['bulk_action'] = array( 'delete_types' => __('Delete Permanently', 'event_espresso') );
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_people_type',
+                'eea-people-addon-delete_type'
+            )
+        ) {
+            $this->_views['all']['bulk_action'] = [
+                'delete_types' => esc_html__('Delete Permanently', 'event_espresso')
+            ];
         }
     }
 
@@ -515,58 +562,65 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     /**
      * Set up page for people list table
      *
-     * @return string
+     * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
      */
     protected function _people_list_table()
     {
-        $this->_search_btn_label = __('People', 'event_espresso');
+        $this->_search_btn_label = esc_html__('People', 'event_espresso');
         $this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
-            'create_new',
-            'add-person',
-            array(),
-            'add-new-h2'
-        );
-        if (! empty($this->_req_data['EVT_ID'])) {
-            $event = EEM_Event::instance()->get_one_by_ID($this->_req_data['EVT_ID']);
+                'create_new',
+                'add-person',
+                [],
+                'add-new-h2'
+            );
+
+        $EVT_ID = $this->request->getRequestParam('EVT_ID', 0, DataType::INT);
+        if ($EVT_ID) {
+            $event = EEM_Event::instance()->get_one_by_ID($EVT_ID);
             if ($event instanceof EE_Event) {
-                $this->_template_args['before_list_table'] = '<h2>' . sprintf(__('Showing people assigned to the event: %s', 'event_espresso'), $event->name()) . '</h2>';
+                $this->_template_args['before_list_table'] = '
+                    <h2>
+                        ' . sprintf(
+                        esc_html__('Showing people assigned to the event: %s', 'event_espresso'),
+                        $event->name()
+                    ) . '
+                    </h2>';
             }
         }
-        $this->_template_args['after_list_table'] = EEH_Template::get_button_or_link(get_post_type_archive_link('espresso_people'), __("View People Archive Page", "event_espresso"), 'button');
+        $this->_template_args['after_list_table'] = EEH_Template::get_button_or_link(
+            get_post_type_archive_link('espresso_people'),
+            esc_html__("View People Archive Page", "event_espresso"),
+            'button'
+        );
         $this->display_admin_list_table_page_with_no_sidebar();
     }
-
 
 
     /**
      * get people.
      *
-     * @param int     $per_page number of people per page
-     * @param int     $count    whether to return count or data.
-     * @param bool   $trash    whether to just return trashed or not.
+     * @param int  $per_page number of people per page
+     * @param bool $count    whether to return count or data.
+     * @param bool $trash    whether to just return trashed or not.
      *
-     * @return EE_People[]
+     * @return EE_People[]|int
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function get_people($per_page, $count = false, $trash = false)
+    public function get_people(int $per_page, bool $count = false, bool $trash = false)
     {
-        $people = array();
-        $PPLM = EE_Registry::instance()->load_model('Person');
+        $orderby      = $this->request->getRequestParam('orderby', 'PER_lname');
+        $sort         = $this->request->getRequestParam('order', 'ASC');
+        $current_page = $this->request->getRequestParam('paged', 1, DataType::INT);
+        $per_page     = $per_page ?? 10;
+        $per_page     = $this->request->getRequestParam('paged', $per_page, DataType::INT);
 
-        $orderby = ! empty($this->_req_data['orderby']) ? $this->_req_data['orderby'] : '';
-        $orderby = empty($orderby) ? 'PER_lname' : $orderby;
-
-        $sort = ! empty($this->_req_data['order']) ? $this->_req_data['order'] : 'ASC';
-
-        $current_page = ! empty($this->_req_data['paged']) ? $this->_req_data['paged'] : 1;
-        $per_page = ! empty($per_page) ? $per_page : 10;
-        $per_page = ! empty($this->_req_data['perpage']) ? $this->_req_data['perpage'] : $per_page;
-
-        $_where = array();
-
-        $status = isset($this->_req_data['status']) ? $this->_req_data['status'] : null;
+        $_where = [];
 
         // determine what post status our condition will have for the query.
-        $status = isset($this->_req_data['status']) ? $this->_req_data['status'] : null;
+        $status = $this->request->getRequestParam('status');
         // determine what post_status our condition will have for the query.
         switch ($status) {
             case null:
@@ -574,7 +628,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
                 break;
 
             case 'draft':
-                $_where['status'] = array( 'IN', array('draft', 'auto-draft') );
+                $_where['status'] = ['IN', ['draft', 'auto-draft']];
                 break;
 
             default:
@@ -583,44 +637,50 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
         // possible conditions for capability checks
         if (! EE_Registry::instance()->CAP->current_user_can('ee_read_private_peoples', 'get_people')) {
-            $_where['status**'] = array( '!=', 'private' );
+            $_where['status**'] = ['!=', 'private'];
         }
 
         if (! EE_Registry::instance()->CAP->current_user_can('ee_read_others_peoples', 'get_people')) {
-            $_where['PER_wp_user'] =  get_current_user_id();
+            $_where['PER_wp_user'] = get_current_user_id();
         }
 
-        if (! empty($this->_req_data['EVT_ID'])) {
-            $_where['Person_Post.OBJ_ID'] = $this->_req_data['EVT_ID'];
+        $EVT_ID = $this->request->getRequestParam('EVT_ID', 0, DataType::INT);
+        if ($EVT_ID) {
+            $_where['Person_Post.OBJ_ID'] = $EVT_ID;
         }
 
-        if (! empty($this->_req_data['s'])) {
-            $sstr = '%' . $this->_req_data['s'] . '%';
-            $_where['OR'] = array(
-                'Event.EVT_name' => array( 'LIKE', $sstr),
-                'Event.EVT_desc' => array( 'LIKE', $sstr ),
-                'Event.EVT_short_desc' => array( 'LIKE' , $sstr ),
-                'PER_fname' => array( 'LIKE', $sstr ),
-                'PER_lname' => array( 'LIKE', $sstr ),
-                'PER_short_bio' => array( 'LIKE', $sstr ),
-                'PER_email' => array('LIKE', $sstr ),
-                'PER_address' => array( 'LIKE', $sstr ),
-                'PER_address2' => array( 'LIKE', $sstr ),
-                'PER_city' => array( 'LIKE', $sstr ),
-                'Country.CNT_name' => array( 'LIKE', $sstr ),
-                'State.STA_name' => array('LIKE', $sstr ),
-                'PER_phone' => array( 'LIKE', $sstr )
-                );
+        $search_term = $this->request->getRequestParam('s');
+        if ($search_term) {
+            $search_term  = "%$search_term%";
+            $_where['OR'] = [
+                'Event.EVT_name'       => ['LIKE', $search_term],
+                'Event.EVT_desc'       => ['LIKE', $search_term],
+                'Event.EVT_short_desc' => ['LIKE', $search_term],
+                'PER_fname'            => ['LIKE', $search_term],
+                'PER_lname'            => ['LIKE', $search_term],
+                'PER_short_bio'        => ['LIKE', $search_term],
+                'PER_email'            => ['LIKE', $search_term],
+                'PER_address'          => ['LIKE', $search_term],
+                'PER_address2'         => ['LIKE', $search_term],
+                'PER_city'             => ['LIKE', $search_term],
+                'Country.CNT_name'     => ['LIKE', $search_term],
+                'State.STA_name'       => ['LIKE', $search_term],
+                'PER_phone'            => ['LIKE', $search_term],
+            ];
         }
 
-        $offset = ($current_page-1)*$per_page;
-        $limit = $count ? null : array( $offset, $per_page );
+        $offset = ($current_page - 1) * $per_page;
+        $limit  = $count ? null : [$offset, $per_page];
 
+        $person_model = EE_Registry::instance()->load_model('Person');
         if ($trash) {
-            $people = $count ? $PPLM->count_deleted(array($_where, 'order_by' =>array($orderby =>$sort), 'limit' =>$limit)
-            ): $PPLM->get_all_deleted(array($_where, 'order_by' =>array($orderby =>$sort), 'limit' =>$limit));
+            $people = $count
+                ? $person_model->count_deleted([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit])
+                : $person_model->get_all_deleted([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit]);
         } else {
-            $people = $count ? $PPLM->count(array($_where, 'order_by'=>array($orderby=>$sort),'limit'=>$limit)) : $PPLM->get_all(array($_where, 'order_by'=>array($orderby=>$sort), 'limit'=>$limit ));
+            $people = $count
+                ? $person_model->count([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit])
+                : $person_model->get_all([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit]);
         }
 
         return $people;
@@ -630,52 +690,70 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     /**
      * Callback for cpt route insert/updates.  Runs on the "save_post" hook.
      *
-     * @since  1.0.0
-     *
-     * @param int      $post_id Post id of item
+     * @param int     $post_id Post id of item
      * @param WP_Post $post
      *
      * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
+     * @since  1.0.0
      */
     protected function _insert_update_cpt_item($post_id, $post)
     {
-        $success = true;
-        $person = EEM_Person::instance()->get_one_by_ID($post_id);
+        $person  = EEM_Person::instance()->get_one_by_ID($post_id);
 
         // for people updates
         if ($post->post_type != 'espresso_people' || ! $person instanceof EE_Person) {
             return;
         }
 
-        $updated_fields = array(
-            'PER_fname' => $this->_req_data['PER_fname'],
-            'PER_lname' => $this->_req_data['PER_lname'],
-            'PER_full_name'=> ! empty($this->_req_data['post_title']) ? $this->_req_data['post_title'] : $this->_req_data['PER_fname'] . ' ' . $this->_req_data['PER_lname'],
-            'PER_address' => isset($this->_req_data['PER_address']) ? $this->_req_data['PER_address'] : '',
-            'PER_address2' => isset($this->_req_data['PER_address2']) ? $this->_req_data['PER_address2'] : '',
-            'PER_city' => isset($this->_req_data['PER_city']) ? $this->_req_data['PER_city'] : '',
-            'STA_ID' => isset($this->_req_data['STA_ID']) ? $this->_req_data['STA_ID'] : '',
-            'CNT_ISO' => isset($this->_req_data['CNT_ISO']) ? $this->_req_data['CNT_ISO'] : '',
-            'PER_zip' => isset($this->_req_data['PER_zip']) ? $this->_req_data['PER_zip'] : '',
-            'PER_email' => isset($this->_req_data['PER_email']) ? $this->_req_data['PER_email'] : '',
-            'PER_phone' => isset($this->_req_data['PER_phone']) ? $this->_req_data['PER_phone'] : ''
-            );
+        $first          = $this->request->getRequestParam('PER_fname');
+        $last           = $this->request->getRequestParam('PER_lname');
+        $updated_fields = [
+            'PER_fname'     => $first,
+            'PER_lname'     => $last,
+            'PER_full_name' => $this->request->getRequestParam('post_title', "$first $last"),
+            'PER_address'   => $this->request->getRequestParam('PER_address'),
+            'PER_address2'  => $this->request->getRequestParam('PER_address2'),
+            'PER_city'      => $this->request->getRequestParam('PER_city'),
+            'STA_ID'        => $this->request->getRequestParam('STA_ID'),
+            'CNT_ISO'       => $this->request->getRequestParam('CNT_ISO'),
+            'PER_zip'       => $this->request->getRequestParam('PER_zip'),
+            'PER_email'     => $this->request->getRequestParam('PER_email'),
+            'PER_phone'     => $this->request->getRequestParam('PER_phone'),
+        ];
 
         foreach ($updated_fields as $field => $value) {
-                $person->set($field, $value);
+            $person->set($field, $value);
         }
 
         $success = $person->save();
 
-        $people_update_callbacks = apply_filters('FHEE__People_Admin_Page__insert_update_cpt_item__people_update', array());
+        $people_update_callbacks = apply_filters('FHEE__People_Admin_Page__insert_update_cpt_item__people_update', []);
         foreach ($people_update_callbacks as $a_callback) {
-            if (false === call_user_func_array($a_callback, array($person, $this->_req_data ))) {
-                throw new EE_Error(sprintf(__('The %s callback given for the "FHEE__People_Admin_Page__insert_update_cpt_item__people_update" filter is not a valid callback.  Please check the spelling.', 'event_espresso'), $a_callback));
+            if (false === call_user_func_array($a_callback, [$person, $this->request->requestParams()])) {
+                throw new EE_Error(
+                    sprintf(
+                        esc_html__(
+                            'The %s callback given for the "FHEE__People_Admin_Page__insert_update_cpt_item__people_update" filter is not a valid callback.  Please check the spelling.',
+                            'event_espresso'
+                        ),
+                        $a_callback
+                    )
+                );
             }
         }
 
         if ($success === false) {
-            EE_Error::add_error(__('Something went wrong with updating the meta table data for the person.', 'event_espresso'), __FILE__, __FUNCTION__, __LINE__);
+            EE_Error::add_error(
+                esc_html__(
+                    'Something went wrong with updating the meta table data for the person.',
+                    'event_espresso'
+                ),
+                __FILE__,
+                __FUNCTION__,
+                __LINE__
+            );
         }
     }
 
@@ -684,258 +762,340 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     public function trash_cpt_item($post_id)
     {
     }
+
+
     public function delete_cpt_item($post_id)
     {
     }
+
+
     public function restore_cpt_item($post_id)
     {
     }
+
+
     protected function _restore_cpt_item($post_id, $revision_id)
     {
     }
 
 
-
-
     /**
      * People Editor metabox registration
      *
-     * @since  1.0.0
-     *
      * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
+     * @since  1.0.0
      */
     public function people_editor_metaboxes()
     {
         $this->verify_cpt_object();
 
-        remove_meta_box('postexcerpt', __('Excerpt', 'event_espresso'), 'post_excerpt_meta_box', $this->_cpt_routes[ $this->_req_action ], 'normal', 'core');
-        remove_meta_box('commentstatusdiv', $this->_cpt_routes[ $this->_req_action ], 'normal', 'core');
+        if (! $this->_cpt_model_obj instanceof EE_Person) {
+            return;
+        }
+        $screen = $this->_cpt_routes[ $this->_req_action ];
+        $post   = $this->_cpt_model_obj->wp_post();
+        remove_meta_box('postexcerpt', $screen, 'normal');
+        remove_meta_box('commentstatusdiv', $screen, 'normal');
 
-        if (post_type_supports('espresso_people', 'excerpt')) {
-            add_meta_box('postexcerpt', __('Short Biography', 'event_espresso'), 'post_excerpt_meta_box', $this->_cpt_routes[ $this->_req_action ], 'normal');
+        if ($post instanceof WP_Post && post_type_supports('espresso_people', 'excerpt')) {
+            $this->addMetaBox(
+                'postexcerpt',
+                esc_html__('Short Biography', 'event_espresso'),
+                function () use ($post) {
+                    post_excerpt_meta_box($post);
+                },
+                $screen
+            );
         }
 
-        if (post_type_supports('espresso_people', 'comments')) {
-            add_meta_box('commentsdiv', __('Notes on the Person', 'event_espresso'), 'post_comment_meta_box', $this->_cpt_routes[ $this->_req_action ], 'normal', 'core');
+        if ($post instanceof WP_Post && post_type_supports('espresso_people', 'comments')) {
+            $this->addMetaBox(
+                'commentsdiv',
+                esc_html__('Notes on the Person', 'event_espresso'),
+                function () use ($post) {
+                    post_comment_meta_box($post);
+                },
+                $screen
+            );
         }
 
-        add_meta_box('person_contact_info', __('Contact Info', 'event_espresso'), array( $this, 'person_contact_info'), $this->_cpt_routes[ $this->_req_action ], 'side', 'core');
-        add_meta_box('person_details_address', __('Address Details', 'event_espresso'), array($this, 'person_address_details'), $this->_cpt_routes[ $this->_req_action ], 'normal', 'core');
+        $this->addMetaBox(
+            'person_contact_info',
+            esc_html__('Contact Info', 'event_espresso'),
+            [$this, 'person_contact_info'],
+            $screen,
+            'side',
+            'core'
+        );
+
+        $this->addMetaBox(
+            'person_details_address',
+            esc_html__('Address Details', 'event_espresso'),
+            [$this, 'person_address_details'],
+            $screen,
+            'normal',
+            'core'
+        );
 
         // add event editor relationship
-        add_meta_box('person_to_cpt_relationship', __('Where is this person assigned?', 'event_espresso'), array( $this, 'person_to_cpt_details' ), $this->_cpt_routes[ $this->_req_action ], 'normal', 'core');
+        $this->addMetaBox(
+            'person_to_cpt_relationship',
+            esc_html__('Where is this person assigned?', 'event_espresso'),
+            [$this, 'person_to_cpt_details'],
+            $screen,
+            'normal',
+            'core'
+        );
     }
-
 
 
     /**
      * Metabox for person contact info
-     * @param  WP_Post $post wp post object
-     * @return string        person contact info ( and form )
+     *
+     * @param WP_Post $post wp post object
+     * @return void
      */
-    public function person_contact_info($post)
+    public function person_contact_info(WP_Post $post)
     {
         // get attendee object ( should already have it )
         $this->_template_args['person'] = $this->_cpt_model_obj;
+
         $template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'person_contact_info_metabox_content.template.php';
         EEH_Template::display_template($template, $this->_template_args);
     }
 
 
-
     /**
      * Metabox for person details
-     * @param  WP_Post $post wp post object
-     * @return string        person address details (and form)
+     *
+     * @param WP_Post $post wp post object
+     * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function person_address_details($post)
+    public function person_address_details(WP_Post $post)
     {
         // get people object (should already have it)
-        $this->_template_args['person'] = $this->_cpt_model_obj;
-        $this->_template_args['state_html'] = EEH_Form_Fields::generate_form_input(
+        $this->_template_args['person']       = $this->_cpt_model_obj;
+        $this->_template_args['state_html']   = EEH_Form_Fields::generate_form_input(
             new EE_Question_Form_Input(
-                EE_Question::new_instance(array(
-                    'QST_ID' => 0,
-                    'QST_display_text' => __('State/Province', 'event_espresso'),
-                    'QST_system' => 'admin-state'
-                    )),
-                EE_Answer::new_instance(array(
-                    'ANS_ID' => 0,
-                    'ANS_value' => $this->_cpt_model_obj->state_ID()
-                    )),
-                array(
-                    'input_id' => 'STA_ID',
-                    'input_name' => 'STA_ID',
-                    'input_prefix' => '',
-                    'append_qstn_id' => false
-                    )
+                EE_Question::new_instance(
+                    [
+                        'QST_ID'           => 0,
+                        'QST_display_text' => esc_html__('State/Province', 'event_espresso'),
+                        'QST_system'       => 'admin-state',
+                    ]
+                ),
+                EE_Answer::new_instance(
+                    [
+                        'ANS_ID'    => 0,
+                        'ANS_value' => $this->_cpt_model_obj->state_ID(),
+                    ]
+                ),
+                [
+                    'input_id'       => 'STA_ID',
+                    'input_name'     => 'STA_ID',
+                    'input_prefix'   => '',
+                    'append_qstn_id' => false,
+                ]
             )
         );
         $this->_template_args['country_html'] = EEH_Form_Fields::generate_form_input(
             new EE_Question_Form_Input(
-                EE_Question::new_instance(array(
-                    'QST_ID' => 0,
-                    'QST_display_text' => __('Country', 'event_espresso'),
-                    'QST_system' => 'admin-country'
-                    )),
-                EE_Answer::new_instance(array(
-                    'ANS_ID' => 0,
-                    'ANS_value' => $this->_cpt_model_obj->country_ID()
-                    )),
-                array(
-                    'input_id' => 'CNT_ISO',
-                    'input_name' => 'CNT_ISO',
-                    'input_prefix' => '',
-                    'append_qstn_id' => false
-                    )
+                EE_Question::new_instance(
+                    [
+                        'QST_ID'           => 0,
+                        'QST_display_text' => esc_html__('Country', 'event_espresso'),
+                        'QST_system'       => 'admin-country',
+                    ]
+                ),
+                EE_Answer::new_instance(
+                    [
+                        'ANS_ID'    => 0,
+                        'ANS_value' => $this->_cpt_model_obj->country_ID(),
+                    ]
+                ),
+                [
+                    'input_id'       => 'CNT_ISO',
+                    'input_name'     => 'CNT_ISO',
+                    'input_prefix'   => '',
+                    'append_qstn_id' => false,
+                ]
             )
         );
+
         $template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'people_address_details_metabox_content.template.php';
         EEH_Template::display_template($template, $this->_template_args);
     }
 
 
-
     /**
-     * Displays al lthe person relationships for this user.
-     *
-     * @since 1.0.0
-     * @todo   Add paging.
-     * @todo   Add filters.
+     * Displays all the person relationships for this user.
      *
      * @param WP_Post $post
+     * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
+     * @todo   Add filters.
      *
-     * @return string
+     * @since  1.0.0
+     * @todo   Add paging.
      */
-    public function person_to_cpt_details($post)
+    public function person_to_cpt_details(WP_Post $post)
     {
         // get all relationships for the given person
-        $person_relationships = EEM_Person_Post::instance()->get_all(array( array( 'PER_ID' => $post->ID ) ));
+        $person_relationships = EEM_Person_Post::instance()->get_all([['PER_ID' => $post->ID]]);
 
         // let's setup the row data for the rows.
-        $row_data = array();
+        $row_data = [];
         foreach ($person_relationships as $person_relationship) {
-            $cpt_obj = EE_Registry::instance()->load_model($person_relationship->get('OBJ_type'))->get_one_by_ID($person_relationship->get('OBJ_ID'));
+            $cpt_obj = EE_Registry::instance()->load_model(
+                $person_relationship->get('OBJ_type')
+            )->get_one_by_ID(
+                $person_relationship->get('OBJ_ID')
+            );
             if ($cpt_obj instanceof EE_Base_Class) {
                 if (! isset($row_data[ $cpt_obj->ID() ])) {
                     switch (get_class($cpt_obj)) {
                         case 'EE_Event':
                             $css_class = 'dashicons dashicons-calendar-alt';
-                            $edit_link = add_query_arg(array(
-                                'page' => 'espresso_events',
-                                'action' => 'edit',
-                                'post' => $cpt_obj->ID()
-                            ), admin_url('admin.php'));
+                            $edit_link = add_query_arg(
+                                [
+                                    'page'   => 'espresso_events',
+                                    'action' => 'edit',
+                                    'post'   => $cpt_obj->ID(),
+                                ],
+                                admin_url('admin.php')
+                            );
                             break;
                         case 'EE_Venue':
                             $css_class = 'ee-icon ee-icon-venue';
-                            $edit_link = add_query_arg(array(
-                                'page' => 'espresso_venues',
-                                'action' => 'edit',
-                                'post' => $cpt_obj->ID()
-                            ), admin_url('admin.php'));
+                            $edit_link = add_query_arg(
+                                [
+                                    'page'   => 'espresso_venues',
+                                    'action' => 'edit',
+                                    'post'   => $cpt_obj->ID(),
+                                ],
+                                admin_url('admin.php')
+                            );
                             break;
                         case 'EE_Attendee':
                             $css_class = 'dashicons dashicons-admin-users';
-                            $edit_link = add_query_arg(array(
-                                'page' => 'espresso_registrations',
-                                'action' => 'edit_attendee',
-                                'post' => $cpt_obj->ID()
-                            ), admin_url('admin.php'));
+                            $edit_link = add_query_arg(
+                                [
+                                    'page'   => 'espresso_registrations',
+                                    'action' => 'edit_attendee',
+                                    'post'   => $cpt_obj->ID(),
+                                ],
+                                admin_url('admin.php')
+                            );
                             break;
                         default:
                             $css_class = '';
+                            $edit_link = '';
                             break;
                     }
-                    $row_data[ $cpt_obj->ID() ] = array(
+                    $row_data[ $cpt_obj->ID() ] = [
                         'css_class' => $css_class,
-                        'cpt_type' => strtolower($person_relationship->get('OBJ_type')),
-                        'cpt_obj' => $cpt_obj,
+                        'cpt_type'  => strtolower($person_relationship->get('OBJ_type')),
+                        'cpt_obj'   => $cpt_obj,
                         'edit_link' => $edit_link,
-                        'ct_obj' => array( EEM_Term_Taxonomy::instance()->get_one_by_ID($person_relationship->get('PT_ID')) )
-                    );
+                        'ct_obj'    => [
+                            EEM_Term_Taxonomy::instance()->get_one_by_ID(
+                                $person_relationship->get('PT_ID')
+                            ),
+                        ],
+                    ];
                 } else {
                     // add other person types.
-                    $row_data[ $cpt_obj->ID() ]['ct_obj'][] = EEM_Term_Taxonomy::instance()->get_one_by_ID($person_relationship->get('PT_ID'));
+                    $row_data[ $cpt_obj->ID() ]['ct_obj'][] =
+                        EEM_Term_Taxonomy::instance()->get_one_by_ID($person_relationship->get('PT_ID'));
                 }
             }
         }
 
         // now we have row data so we can send that to the template
-        $template_args = array( 'row_data' => $row_data );
-        $template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'person_to_cpt_details_metabox_content.template.php';
+        $template_args = ['row_data' => $row_data];
+        $template      = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'person_to_cpt_details_metabox_content.template.php';
         EEH_Template::display_template($template, $template_args);
     }
-
-
 
 
     /**
      * Trashing or restoring people.
      *
-     * @since  1.0.0
-     *
      * @param bool $trash true if trashing otherwise restoring
      *
      * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
+     * @since  1.0.0
      */
-    protected function _trash_or_restore_people($trash = true)
+    protected function _trash_or_restore_people(bool $trash = true)
     {
-        $PERM = EE_Registry::instance()->load_model('Person');
+        $PERM    = EE_Registry::instance()->load_model('Person');
         $success = 1;
 
         // Checkboxes
-        if (!empty($this->_req_data['checkbox']) && is_array($this->_req_data['checkbox'])) {
+        $checkboxes = $this->request->getRequestParam('checkbox', [], DataType::INT, true);
+        if (! empty($checkboxes)) {
             // if array has more than one element than success message should be plural
-            $success = count($this->_req_data['checkbox']) > 1 ? 2 : 1;
+            $success = count($checkboxes) > 1 ? 2 : 1;
             // cycle thru checkboxes
-            while (list( $PER_ID, $value ) = each($this->_req_data['checkbox'])) {
+            foreach ($checkboxes as $PER_ID) {
                 $updated = $trash ? $PERM->delete_by_ID($PER_ID) : $PERM->restore_by_ID($PER_ID);
-                if (!$updated) {
+                if (! $updated) {
                     $success = 0;
                 }
             }
         } else {
             // grab single id and delete
-            $PER_ID = absint($this->_req_data['PER_ID']);
+            $PER_ID = $this->request->getRequestParam('PER_ID', 0, DataType::INT);
             // get person
-            $person = $PERM->get_one_by_ID($PER_ID);
+            $person  = $PERM->get_one_by_ID($PER_ID);
             $updated = $trash ? $person->delete() : $person->restore();
-            $updated = $person->save();
-            if (! $updated) {
+            $saved   = $person->save();
+            if (! $updated && ! $saved) {
                 $success = 0;
             }
         }
 
-        $what = $success > 1 ? __('People', 'event_espresso') : __('Person', 'event_espresso');
-        $action_desc = $trash ? __('moved to the trash', 'event_espresso') : __('restored', 'event_espresso');
-        $this->_redirect_after_action($success, $what, $action_desc, array( 'action' => 'default' ));
+        $what        = $success > 1
+            ? esc_html__('People', 'event_espresso')
+            : esc_html__('Person', 'event_espresso');
+        $action_desc = $trash
+            ? esc_html__('moved to the trash', 'event_espresso')
+            : esc_html__('restored', 'event_espresso');
+        $this->_redirect_after_action($success, $what, $action_desc, ['action' => 'default']);
     }
 
 
-
     /**
-     * Delete's permanently people (or person).
-     *
-     * @since 1.0.0
+     * Deletes permanently people (or person).
      *
      * @return void
+     * @throws EE_Error
+     * @throws ReflectionException
+     * @since 1.0.0
      */
     protected function _delete_permanently_people()
     {
-        $PERM = EE_Registry::instance()->load_model('Person');
-        $PPST = EE_Registry::instance()->load_Model('Person_Post');
-        $total_deleted = 0;
+        $PERM              = EE_Registry::instance()->load_model('Person');
+        $PPST              = EE_Registry::instance()->load_Model('Person_Post');
+        $total_deleted     = 0;
         $total_not_deleted = 0;
 
-        if (!empty($this->_req_data['checkbox']) && is_array($this->_req_data['checkbox'])) {
-            $count = count($this->_req_data['checkbox']);
-            while (list( $PER_ID, $value ) = each($this->_req_data['checkbox'])) {
+        $checkboxes = $this->request->getRequestParam('checkbox', [], DataType::INT, true);
+        if (! empty($checkboxes)) {
+            // cycle thru checkboxes
+            foreach ($checkboxes as $PER_ID) {
                 // first delete any relationships with other posts for this id.
-                $PPST->delete(array( array( 'PER_ID' => $PER_ID ) ));
+                $PPST->delete([['PER_ID' => $PER_ID]]);
 
                 // delete any term_taxonomy_relationships (gonna use wp core functions cause it's likely a bit faster)
-                wp_delete_object_term_relationships($PER_ID, array( 'espresso_people_type', 'espresso_people_categories' ));
+                wp_delete_object_term_relationships($PER_ID, ['espresso_people_type', 'espresso_people_categories']);
 
                 // now should be able to delete permanently with no issues.
                 $deleted = $PERM->delete_permanently_by_ID($PER_ID, false);
@@ -946,17 +1106,25 @@ class People_Admin_Page extends EE_Admin_Page_CPT
                 }
             }
         } else {
-            $PER_ID = isset($this->_req_data['PER_ID']) ? absint($this->_req_data['PER_ID']) : 0;
+            $PER_ID = $this->request->getRequestParam('PER_ID', 0, DataType::INT);
             if (empty($PER_ID)) {
-                EE_Error::add_error(__('Unable to delete permanently the selected Person because no ID was given.', 'event_espresso'), __FILE__, __FUNCTION__, __LINE__);
+                EE_Error::add_error(
+                    esc_html__(
+                        'Unable to delete permanently the selected Person because no ID was given.',
+                        'event_espresso'
+                    ),
+                    __FILE__,
+                    __FUNCTION__,
+                    __LINE__
+                );
                 $total_not_deleted++;
             }
 
             // first delete any relationships with other posts for this id.
-            $PPST->delete(array( array( 'PER_ID' => $PER_ID ) ));
+            $PPST->delete([['PER_ID' => $PER_ID]]);
 
             // delete any term_taxonomy_relationships (gonna use wp core functions cause it's likely a bit faster)
-            wp_delete_object_term_relationships($PER_ID, array( 'espresso_people_type', 'espresso_people_categories' ));
+            wp_delete_object_term_relationships($PER_ID, ['espresso_people_type', 'espresso_people_categories']);
 
             $deleted = $PERM->delete_permanently_by_ID($PER_ID, false);
             if ($deleted) {
@@ -967,13 +1135,36 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         }
 
         if ($total_deleted > 0) {
-            EE_Error::add_success(sprintf(_n('1 Person successfully deleted.', '%s People successfully deleted.', $total_deleted, 'event_espresso'), $total_deleted));
+            EE_Error::add_success(
+                sprintf(
+                    _n(
+                        '1 Person successfully deleted.',
+                        '%s People successfully deleted.',
+                        $total_deleted,
+                        'event_espresso'
+                    ),
+                    $total_deleted
+                )
+            );
         }
 
         if ($total_not_deleted > 0) {
-            EE_Error::add_error(sprintf(_n('1 Person not deleted.', '%d People not deleted', $total_not_deleted, 'event_espresso'), $total_not_deleted), __FILE__, __FUNCTION__, __LINE__);
+            EE_Error::add_error(
+                sprintf(
+                    _n(
+                        '1 Person not deleted.',
+                        '%d People not deleted',
+                        $total_not_deleted,
+                        'event_espresso'
+                    ),
+                    $total_not_deleted
+                ),
+                __FILE__,
+                __FUNCTION__,
+                __LINE__
+            );
         }
-        $this->_redirect_after_action(false, '', '', array( 'action' => 'default' ), true);
+        $this->_redirect_after_action($total_deleted > 0, '', '', ['action' => 'default'], true);
     }
 
 
@@ -991,99 +1182,96 @@ class People_Admin_Page extends EE_Admin_Page_CPT
      */
     private function _set_term_object($taxonomy = 'espresso_people_categories')
     {
-        if (isset($this->_term_object->id) && !empty($this->_term_object->id)) {
+        if (isset($this->_term_object->id) && ! empty($this->_term_object->id)) {
             return; // already have the term object so get out.
         }
 
         // set default term object
         $this->_set_empty_term_object();
 
-        if ($taxonomy == 'espresso_people_categories') {
-            $id = ! empty($this->_req_data['PER_CAT_ID']) ? $this->_req_data['PER_CAT_ID'] : 0;
-        } else {
-            $id = ! empty($this->_req_data['PER_TYPE_ID']) ? $this->_req_data['PER_TYPE_ID'] : 0;
-        }
+        $term_id = $taxonomy == 'espresso_people_categories'
+            ? $this->request->getRequestParam('PER_CAT_ID', 0, DataType::INT)
+            : $this->request->getRequestParam('PER_TYPE_ID', 0, DataType::INT);
 
         // only set if we've got an id
-        if (empty($id)) {
+        if (! $term_id) {
             return;
         }
 
-        $term_id = absint($id);
-
         $term = get_term($term_id, $taxonomy);
-
-        if (!empty($term)) {
-            $this->_term_object->category_name = $term->name;
+        if (! empty($term)) {
+            $this->_term_object->category_name       = $term->name;
             $this->_term_object->category_identifier = $term->slug;
-            $this->_term_object->category_desc = $term->description;
-            $this->_term_object->id = $term->term_id;
-            $this->_term_object->parent = $term->parent;
+            $this->_term_object->category_desc       = $term->description;
+            $this->_term_object->id                  = $term->term_id;
+            $this->_term_object->parent              = $term->parent;
         }
     }
-
-
 
 
     private function _set_empty_term_object()
     {
-        $this->_term_object = new stdClass();
-        $this->_term_object->category_name = $this->_term_object->category_identifier = $this->_term_object->category_desc  = '';
-        $this->_term_object->id = $this->_term_object->parent = 0;
+        $this->_term_object                      = new stdClass();
+        $this->_term_object->category_name       = '';
+        $this->_term_object->category_identifier = '';
+        $this->_term_object->category_desc       = '';
+        $this->_term_object->id                  = 0;
+        $this->_term_object->parent              = 0;
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _category_list_table()
     {
         do_action('AHEE_log', __FILE__, __FUNCTION__, '');
-        $this->_search_btn_label = __('Categories', 'event_espresso');
+        $this->_search_btn_label = esc_html__('Categories', 'event_espresso');
         $this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
-            'add_category',
-            'add_category',
-            array(),
-            'add-new-h2'
-        );
+                'add_category',
+                'add_category',
+                [],
+                'add-new-h2'
+            );
         $this->display_admin_list_table_page_with_sidebar();
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _type_list_table()
     {
-        do_action('AHEE_log', __FILE__, __FUNCTION__, '');
-        $this->_search_btn_label = __('Types', 'event_espresso');
+        $this->_search_btn_label = esc_html__('Types', 'event_espresso');
         $this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
-            'add_type',
-            'add_type',
-            array(),
-            'add-new-h2'
-        );
+                'add_type',
+                'add_type',
+                [],
+                'add-new-h2'
+            );
         $this->display_admin_list_table_page_with_sidebar();
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _output_details($view, $taxonomy = 'espresso_people_categories')
     {
-        // load formatter helper
-        EE_Registry::instance()->load_helper('Formatter');
-        // load field generator helper
-        EE_Registry::instance()->load_helper('Form_Fields');
-
         $slug = $taxonomy == 'espresso_people_categories' ? 'category' : 'type';
 
         $route = $view == 'edit' ? 'update_' . $slug : 'insert_' . $slug;
         $this->_set_add_edit_form_tags($route);
 
         $this->_set_term_object($taxonomy);
-        $id = !empty($this->_term_object->id) ? $this->_term_object->id : '';
-
-        $delete_action = 'delete_' . $slug;
+        $id = ! empty($this->_term_object->id) ? $this->_term_object->id : '';
 
         // custom redirect
-        $redirect = EE_Admin_Page::add_query_args_and_nonce(array('action' => $slug . '_list'), $this->_admin_base_url);
+        $redirect = EE_Admin_Page::add_query_args_and_nonce(['action' => $slug . '_list'], $this->_admin_base_url);
 
         $id_ident = $taxonomy == 'espresso_people_categories' ? 'PER_CAT_ID' : 'PER_TYPE_ID';
 
-        $this->_set_publish_post_box_vars($id_ident, $id, $delete_action, $redirect);
+        $this->_set_publish_post_box_vars($id_ident, $id, "delete_$slug", $redirect, true);
 
         // take care of contents
         $this->_template_args['admin_page_content'] = $this->_term_object_details_content($taxonomy);
@@ -1091,67 +1279,102 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _category_details($view)
     {
         $this->_output_details($view);
     }
 
+
+    /**
+     * @throws EE_Error
+     */
     protected function _type_details($view)
     {
         $this->_output_details($view, 'espresso_people_type');
     }
 
 
-    protected function _term_object_details_content($taxonomy = 'espresso_people_categories')
+    protected function _term_object_details_content($taxonomy = 'espresso_people_categories'): string
     {
-        $editor_args['category_desc'] = array(
-            'type' => 'wp_editor',
-            'value' => EEH_Formatter::admin_format_content($this->_term_object->category_desc),
-            'class' => 'my_editor_custom',
-            'wpeditor_args' => array('media_buttons' => false )
-        );
-        $_wp_editor = $this->_generate_admin_form_fields($editor_args, 'array');
+        $editor_args['category_desc'] = [
+            'type'          => 'wp_editor',
+            'value'         => EEH_Formatter::admin_format_content($this->_term_object->category_desc),
+            'class'         => 'my_editor_custom',
+            'wpeditor_args' => ['media_buttons' => false],
+        ];
+        $_wp_editor                   = $this->_generate_admin_form_fields($editor_args, 'array');
 
-        $all_terms = get_terms(array( $taxonomy ), array( 'hide_empty' => 0, 'exclude' => array( $this->_term_object->id ) ));
+        $all_terms = get_terms([$taxonomy], ['hide_empty' => 0, 'exclude' => [$this->_term_object->id]]);
 
         // setup category select for term parents.
-        $category_select_values[] = array(
-            'text' => __('No Parent', 'event_espresso'),
-            'id' => 0
-            );
+        $category_select_values[] = [
+            'text' => esc_html__('No Parent', 'event_espresso'),
+            'id'   => 0,
+        ];
         foreach ($all_terms as $term) {
-            $category_select_values[] = array(
+            $category_select_values[] = [
                 'text' => $term->name,
-                'id' => $term->term_id
-                );
+                'id'   => $term->term_id,
+            ];
         }
 
-        $category_select = EEH_Form_Fields::select_input('category_parent', $category_select_values, $this->_term_object->parent);
+        $category_select =
+            EEH_Form_Fields::select_input('category_parent', $category_select_values, $this->_term_object->parent);
 
-        $template_args = array(
-            'category' => $this->_term_object,
-            'category_select' => $category_select,
+        $template_args = [
+            'category'                 => $this->_term_object,
+            'category_select'          => $category_select,
             'unique_id_info_help_link' => $this->_get_help_tab_link('unique_id_info'),
-            'category_desc_editor' =>  $_wp_editor['category_desc']['field'],
-            'disable' => '',
-            'disabled_message' => false,
-            'term_name_label' => $taxonomy == 'espresso_people_categories' ? __('Category Name', 'event_espresso') : __('Type Name', 'event_espresso'),
-            'term_id_description' => $taxonomy == 'espresso_people_categories' ? __('This is a default category so you can edit the label and the description but not the slug', 'event_espresso') : __('This is a default type so you can edit the label and the description but not the slug', 'event_espresso'),
-            'term_parent_label' => $taxonomy == 'espresso_people_categories'  ? __('Category Parent', 'event_espresso') : __('Type Parent', 'event_espresso'),
-            'term_parent_description' => $taxonomy == 'espresso_people_categories' ? __('Categories are hierarchical.  You can change the parent for this category here.', 'event_espresso') : __('People Types are hierarchical.  You can change the parent for this type here.', 'event_espresso'),
-            'term_description_label' => $taxonomy == 'espresso_people_categories' ? __('Category Description', 'event_espresso') : __('Type Description', 'event_espresso')
-            );
-        $template = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'people_term_details.template.php';
+            'category_desc_editor'     => $_wp_editor['category_desc']['field'],
+            'disable'                  => '',
+            'disabled_message'         => false,
+            'term_name_label'          => $taxonomy == 'espresso_people_categories'
+                ? esc_html__('Category Name', 'event_espresso')
+                : esc_html__('Type Name', 'event_espresso'),
+            'term_id_description'      => $taxonomy == 'espresso_people_categories'
+                ? esc_html__(
+                    'This is a default category so you can edit the label and the description but not the slug',
+                    'event_espresso'
+                )
+                : esc_html__(
+                    'This is a default type so you can edit the label and the description but not the slug',
+                    'event_espresso'
+                ),
+            'term_parent_label'        => $taxonomy == 'espresso_people_categories'
+                ? esc_html__('Category Parent', 'event_espresso')
+                : esc_html__('Type Parent', 'event_espresso'),
+            'term_parent_description'  => $taxonomy == 'espresso_people_categories'
+                ? esc_html__(
+                    'Categories are hierarchical.  You can change the parent for this category here.',
+                    'event_espresso'
+                )
+                : esc_html__(
+                    'People Types are hierarchical.  You can change the parent for this type here.',
+                    'event_espresso'
+                ),
+            'term_description_label'   => $taxonomy == 'espresso_people_categories'
+                ? esc_html__('Category Description', 'event_espresso')
+                : esc_html__('Type Description', 'event_espresso'),
+        ];
+        $template      = EEA_PEOPLE_ADDON_ADMIN_TEMPLATE_PATH . 'people_term_details.template.php';
         return EEH_Template::display_template($template, $template_args, true);
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _delete_terms($taxonomy = 'espresso_people_categories')
     {
         if ($taxonomy == 'espresso_people_categories') {
-            $term_ids = isset($this->_req_data['PER_CAT_ID']) ? (array) $this->_req_data['PER_CAT_ID'] : (array) $this->_req_data['category_id'];
+            $term_ids = $this->request->getRequestParam('PER_CAT_ID', [], DataType::INT, true);
+            $term_ids = $this->request->getRequestParam('category_id', $term_ids, DataType::INT, true);
         } else {
-            $term_ids = isset($this->_req_data['PER_TYPE_ID']) ? (array) $this->_req_data['PER_TYPE_ID'] : (array) $this->_req_data['type_id'];
+            $term_ids = $this->request->getRequestParam('PER_TYPE_ID', [], DataType::INT, true);
+            $term_ids = $this->request->getRequestParam('type_id', $term_ids, DataType::INT, true);
         }
 
         foreach ($term_ids as $term_id) {
@@ -1159,93 +1382,121 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         }
 
         // doesn't matter what page we're coming from... we're going to the same place after delete.
-        $query_args = array(
-            'action' => $taxonomy == 'espresso_people_categories' ? 'category_list' : 'type_list'
-            );
+        $query_args = [
+            'action' => $taxonomy == 'espresso_people_categories' ? 'category_list' : 'type_list',
+        ];
         $this->_redirect_after_action(0, '', '', $query_args);
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _delete_categories()
     {
         $this->_delete_terms();
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _delete_types()
     {
         $this->_delete_terms('espresso_people_type');
     }
 
 
-
     protected function _delete_term($taxonomy, $term_id)
     {
-        global $wpdb;
-        $term_id = absint($term_id);
-        wp_delete_term($term_id, $taxonomy);
+        wp_delete_term(absint($term_id), $taxonomy);
     }
 
 
-
-
+    /**
+     * @throws EE_Error
+     */
     protected function _insert_or_update_term($new_term, $taxonomy = 'espresso_people_categories')
     {
-        $term_id = $new_term ? $this->_insert_term(false, $taxonomy) : $this->_insert_term(true, $taxonomy);
-        $success = 0; // we already have a success message so lets not send another.
-        $id_ident = $taxonomy == 'espresso_people_categories' ? 'PER_CAT_ID' : 'PER_TYPE_ID';
-        $slug = $taxonomy == 'espresso_people_categories' ? 'category' : 'type';
-        $query_args = array(
-            'action' => 'edit_' . $slug,
-            $id_ident => $term_id
-        );
+        $term_id    = $new_term ? $this->_insert_term(false, $taxonomy) : $this->_insert_term(true, $taxonomy);
+        $success    = 0; // we already have a success message so lets not send another.
+        $id_ident   = $taxonomy == 'espresso_people_categories' ? 'PER_CAT_ID' : 'PER_TYPE_ID';
+        $slug       = $taxonomy == 'espresso_people_categories' ? 'category' : 'type';
+        $query_args = [
+            'action'  => 'edit_' . $slug,
+            $id_ident => $term_id,
+        ];
         $this->_redirect_after_action($success, '', '', $query_args, true);
     }
 
 
-
+    /**
+     * @throws EE_Error
+     */
     protected function _insert_or_update_category($new_category)
     {
         $this->_insert_or_update_term($new_category);
     }
 
 
+    /**
+     * @throws EE_Error
+     */
     protected function _insert_or_update_type($new_type)
     {
         $this->_insert_or_update_term($new_type, 'espresso_people_type');
     }
 
 
-
     private function _insert_term($update = false, $taxonomy = 'espresso_people_categories')
     {
         if ($taxonomy == 'espresso_people_categories') {
-            $term_id = $update ? $this->_req_data['PER_CAT_ID'] : '';
+            $term_id = $update ? $this->request->getRequestParam('type_id', 0, DataType::INT) : 0;
         } else {
-            $term_id = $update ? $this->_req_data['PER_TYPE_ID'] : '';
+            $term_id = $update ? $this->request->getRequestParam('PER_TYPE_ID', 0, DataType::INT) : 0;
         }
-        $category_name= isset($this->_req_data['category_name']) ? $this->_req_data['category_name'] : '';
-        $category_desc= isset($this->_req_data['category_desc']) ? $this->_req_data['category_desc'] : '';
-        $category_parent = isset($this->_req_data['category_parent']) ? $this->_req_data['category_parent'] : 0;
+        $category_name   = $this->request->getRequestParam('category_name');
+        $category_desc   = $this->request->getRequestParam('category_desc', '', DataType::HTML);
+        $category_parent = $this->request->getRequestParam('category_parent', 0, DataType::INT);
 
-        $term_args=array(
-            'name'=>$category_name,
-            'description'=>$category_desc,
-            'parent'=>$category_parent
-        );
+        $term_args = [
+            'name'        => $category_name,
+            'description' => $category_desc,
+            'parent'      => $category_parent,
+        ];
         // was the category_identifier input disabled?
-        if (isset($this->_req_data['category_identifier'])) {
-            $term_args['slug'] = $this->_req_data['category_identifier'];
+        $category_id = $this->request->getRequestParam('category_identifier');
+        if ($category_id) {
+            $term_args['slug'] = $category_id;
         }
 
-        $insert_ids = $update ? wp_update_term($term_id, $taxonomy, $term_args) : wp_insert_term($category_name, $taxonomy, $term_args);
+        $insert_ids = $update
+            ? wp_update_term($term_id, $taxonomy, $term_args)
+            : wp_insert_term(
+                $category_name,
+                $taxonomy,
+                $term_args
+            );
 
-        if (!is_array($insert_ids)) {
-            $msg = $taxonomy == 'espresso_people_categories' ? __('An error occurred and the category has not been saved to the database.', 'event_espresso') : __('An error occurred and the people type has not been saved to the database.', 'event_espresso');
+        if (! is_array($insert_ids)) {
+            $msg = $taxonomy == 'espresso_people_categories'
+                ? esc_html__(
+                    'An error occurred and the category has not been saved to the database.',
+                    'event_espresso'
+                )
+                : esc_html__(
+                    'An error occurred and the people type has not been saved to the database.',
+                    'event_espresso'
+                );
             EE_Error::add_error($msg, __FILE__, __FUNCTION__, __LINE__);
         } else {
             $term_id = $insert_ids['term_id'];
-            $msg = $taxonomy == 'espresso_people_categories' ? sprintf(__('The category %s was successfuly saved', 'event_espresso'), $category_name) : sprintf(__('The people type %s was successfuly saved', 'event_espresso'), $category_name);
+            $msg     = $taxonomy == 'espresso_people_categories'
+                ? sprintf(
+                    esc_html__('The category %s was successfully saved', 'event_espresso'),
+                    $category_name
+                )
+                : sprintf(__('The people type %s was successfully saved', 'event_espresso'), $category_name);
             EE_Error::add_success($msg);
         }
 
@@ -1253,36 +1504,76 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     }
 
 
-
-
-    public function get_terms($taxonomy = 'espresso_people_categories', $per_page = 10, $current_page = 1, $count = false)
-    {
-        global $wpdb;
-
+    /**
+     * @throws EE_Error
+     * @throws ReflectionException
+     */
+    public function get_terms(
+        $taxonomy = 'espresso_people_categories',
+        $per_page = 10,
+        $current_page = 1,
+        $count = false
+    ) {
         // testing term stuff
-        $orderby = isset($this->_req_data['orderby']) ? $this->_req_data['orderby'] : 'Term.term_id';
-        $order = isset($this->_req_data['order']) ? $this->_req_data['order'] : 'DESC';
-        $limit = ($current_page-1)*$per_page;
+        $orderby      = $this->request->getRequestParam('orderby', 'Term.term_id');
+        $order        = $this->request->getRequestParam('order', 'DESC');
+        $current_page = $this->request->getRequestParam('paged', $current_page, DataType::INT);
+        $per_page     = $per_page ?? 10;
+        $per_page     = $this->request->getRequestParam('paged', $per_page, DataType::INT);
+        $limit        = ($current_page - 1) * $per_page;
+        $where        = ['taxonomy' => $taxonomy];
 
-        $where = array( 'taxonomy' => $taxonomy );
-
-        if (isset($this->_req_data['s'])) {
-            $sstr = '%' . $this->_req_data['s'] . '%';
-            $where['OR'] = array(
-                'Term.name' => array( 'LIKE', $sstr),
-                'description' => array( 'LIKE', $sstr )
-                );
+        $search_term = $this->request->getRequestParam('s');
+        if ($search_term) {
+            $search_term = "%$search_term%";
+            $where['OR'] = [
+                'Term.name'   => ['LIKE', $search_term],
+                'description' => ['LIKE', $search_term],
+            ];
         }
 
-        $query_params = array(
-            $where ,
-            'order_by' => array( $orderby => $order ),
-            'limit' => $limit . ',' . $per_page,
-            'force_join' => array('Term')
-            );
+        $query_params = [
+            $where,
+            'order_by'   => [$orderby => $order],
+            'limit'      => $limit . ',' . $per_page,
+            'force_join' => ['Term'],
+        ];
 
-        $terms = $count ? EEM_Term_Taxonomy::instance()->count($query_params, 'term_id') :EEM_Term_Taxonomy::instance()->get_all($query_params);
+        return $count
+            ? EEM_Term_Taxonomy::instance()->count($query_params, 'term_id')
+            : EEM_Term_Taxonomy::instance()->get_all($query_params);
+    }
 
-        return $terms;
+
+    /**
+     * @param string                 $box_id
+     * @param string                 $title
+     * @param callable|string|null   $callback
+     * @param string|array|WP_Screen $screen
+     * @param string                 $context
+     * @param string                 $priority
+     * @param array|null             $callback_args
+     */
+    protected function addMetaBox(
+        string $box_id,
+        string $title,
+        $callback,
+        $screen,
+        string $context = 'normal',
+        string $priority = 'default',
+        ?array $callback_args = null
+    ) {
+        if (! (is_callable($callback) || ! function_exists($callback))) {
+            return;
+        }
+
+        add_meta_box($box_id, $title, $callback, $screen, $context, $priority, $callback_args);
+        add_filter(
+            "postbox_classes_{$this->_wp_page_slug}_{$box_id}",
+            function ($classes) {
+                $classes[] = 'ee-admin-container';
+                return $classes;
+            }
+        );
     }
 }

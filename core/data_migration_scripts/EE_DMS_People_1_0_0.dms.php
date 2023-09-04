@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains the Dat Migration Script for People addon version 1.0.0
  *
@@ -20,7 +21,6 @@
  */
 class EE_DMS_People_1_0_0 extends EE_Data_Migration_Script_Base
 {
-
     public function __construct()
     {
         $this->_pretty_name = __("Data Migration to People Addon 1.0.0", "event_espresso");

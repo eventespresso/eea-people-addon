@@ -23,7 +23,7 @@ class EE_Person extends EE_CPT_Base implements AddressInterface
      * @throws ReflectionException
      * @since 1.0.0
      */
-    protected function __construct($fieldValues = null, $bydb = false, $timezone = null)
+    protected function __construct($fieldValues = null, $bydb = false, $timezone = '')
     {
         if (! isset($fieldValues['PER_full_name'])) {
             $fname                        = $fieldValues['PER_fname'] ?? '';
@@ -235,7 +235,8 @@ class EE_Person extends EE_CPT_Base implements AddressInterface
      */
     public function full_name($apply_html_entities = false): string
     {
-        $full_name = $this->fname() . ' ' . $this->lname();
+        $full_name = (string) $this->get('PER_full_name');
+        $full_name = $full_name ?: $this->fname() . ' ' . $this->lname();
         return $apply_html_entities
             ? htmlentities($full_name, ENT_QUOTES, 'UTF-8')
             : $full_name;
@@ -406,7 +407,7 @@ class EE_Person extends EE_CPT_Base implements AddressInterface
 
 
     /**
-     * @return EE_Country
+     * @return EE_Country|null
      * @throws EE_Error
      * @throws ReflectionException
      */

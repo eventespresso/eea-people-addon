@@ -1,4 +1,5 @@
 <?php
+
 /**
  * espresso_events_Registration_Form_Hooks
  * Hooks various messages logic so that it runs on indicated Events Admin Pages.
@@ -13,7 +14,6 @@
  */
 class espresso_events_People_Hooks extends EE_Admin_Hooks
 {
-
     /**
      * Just a property for caching all EE_Person objects retrieved from the DB
      *
@@ -267,7 +267,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks
                 $new_rel = EE_Person_Post::new_instance($values_to_save);
                 $new_rel->save();
                 $saved_people[ $type_id ][] = (int) $person_value['PER_ID'];
-                $order_count ++;
+                $order_count++;
             }
 
             // now let's grab the changes between the tow and we'll know that's what got removed.
@@ -329,7 +329,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks
         EE_Registry::instance()->load_helper('Template');
         EE_Registry::instance()->load_helper('URL');
 
-        $type_order_query= array( 'order_by' => 'Person_Post.PER_OBJ_order' );
+        $type_order_query = array( 'order_by' => 'Person_Post.PER_OBJ_order' );
 
         $template_args = array(
             'people_type' => $people_type,

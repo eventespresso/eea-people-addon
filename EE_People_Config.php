@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Class EE_People_Config
@@ -14,7 +15,6 @@
 
 class EE_People_Config extends EE_Config_Base
 {
-
     public $event_single_display_order_people;
     public $event_archive_display_order_people;
 

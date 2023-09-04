@@ -14,7 +14,6 @@
  */
 class EEH_People_View extends EEH_Base
 {
-
     /**
      * caches EE_Person object
      *

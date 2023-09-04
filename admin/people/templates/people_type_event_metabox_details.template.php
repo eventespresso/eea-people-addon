@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This is a template for people metabox content on the EE cpt page.
  *
@@ -9,6 +10,7 @@
  * @type $assigned_people EE_Person[]  Currently assigned persons for this display.
  * @type $create_person_link string     URL to create a new person.
  */
+
 ?>
 <div id="cpt_to_people_container_<?php echo $people_type->get('term_taxonomy_id'); ?>">
     <p class="description"><?php echo $people_type->get('description'); ?></p>
@@ -28,7 +30,7 @@
             $order_count = 0;
             $row_count = 0;
             foreach ($assigned_people as $assigned_person) :
-            ?>
+                ?>
             <tr>
                 <td>
                     <label class="selectit">
@@ -50,7 +52,7 @@
                 if (in_array($person->ID(), $assigned_people_ids)) {
                     continue;
                 }
-            ?>
+                ?>
             <tr>
                 <td>
                     <label class="selectit">

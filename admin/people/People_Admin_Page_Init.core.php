@@ -14,7 +14,6 @@
  */
 class People_Admin_Page_Init extends EE_Admin_Page_CPT_Init
 {
-
     /**
      *  constructor
      * @since 1.0.0

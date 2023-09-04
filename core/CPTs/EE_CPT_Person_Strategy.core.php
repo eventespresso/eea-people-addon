@@ -1,4 +1,5 @@
 <?php
+
  /**
  *
  * EE_CPT_Person_Strategy
@@ -13,7 +14,6 @@
  */
 class EE_CPT_Person_Strategy
 {
-
     /**
      * $CPT - the current page, if it utilizes CPTs
      *  @var    object

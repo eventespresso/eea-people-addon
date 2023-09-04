@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Template for the person_to_cpt details metabox.
  * Template args:
  * @type array $row_data    an array of formatted data for each row containing the cpt_type, cpt_obj (EE_Base_CPT ),
  *                      and ct_obj (an array of Term_Taxonomy objects)
  */
+
 ?>
 <table class="person-to-cpt-details-table">
     <thead>

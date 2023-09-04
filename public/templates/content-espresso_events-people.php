@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for when people are displayed with events (is_single());
  * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.

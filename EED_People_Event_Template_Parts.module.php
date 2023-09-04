@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class EED_People_Event_Template_Parts
  *
@@ -10,7 +11,6 @@
  */
 class EED_People_Event_Template_Parts extends EED_Module
 {
-
     public static $templates_path;
 
 

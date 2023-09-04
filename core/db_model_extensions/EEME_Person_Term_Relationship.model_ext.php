@@ -17,7 +17,7 @@ class EEME_Person_Term_Relationship extends EEME_Base
     public function __construct()
     {
         $this->_model_name_extended = 'Term_Relationship';
-        $this->_extra_relations = array('Person'=>new EE_Belongs_To_Relation() );
+        $this->_extra_relations = array('Person' => new EE_Belongs_To_Relation() );
         parent::__construct();
     }
 

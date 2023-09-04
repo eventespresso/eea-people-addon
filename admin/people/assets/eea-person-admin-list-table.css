@@ -28,38 +28,47 @@
     color: #000;
 }
 
-.person-to-cpt-people-type-list li {
+.person-to-cpt-people-type-list li.ee-status-outline {
     display: inline-block;
-    margin-right: 3px;
-    background-color: #666;
-    color: #fff;
-    padding: 2px 5px;
-    font-size: .8em;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
+    margin-inline-end: var(--ee-margin-nano);
+    padding: 0;
+    font-size: var(--ee-font-size-tiny);
+    border-radius: var(--ee-border-radius-small);
 }
 
-.person-to-cpt-people-type-list li:hover {
-    color: #666;
-    background-color: #aaa;
+.espresso-admin.wp-core-ui .wp-list-table a.ee-event-filter-link:hover {
+    border-color: transparent !important;
+    color: var(--ee-color-white);
 }
 
 .person-type-count {
-    margin: 4px;
-    margin-left: 8px;
-    padding: 0 6px;
-    font-size: .8em;
-    color: #666;
-    display: inline-block;
-    background-color: white;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    -ms-border-radius: 15px;
-    -o-border-radius: 15px;
-    border-radius: 15px;
+    align-items: center;
+    background-color: var(--ee-link-color);
+    border-radius: var(--ee-border-radius-full);
+    box-sizing: border-box;
+    color: var(--ee-color-white);
+    display: inline-flex;
+    font-size: var(--ee-font-size-micro);
+    --ee-font-size-default: var(--ee-base-ui-scale); /* 16px */
+    height: var(--ee-font-size-default);
+    justify-content: center;
+    line-height: 1;
+    margin: 0;
+    margin-inline-start: var(--ee-margin-tiny);
+    min-width: var(--ee-font-size-default);
+    --ee-ptc-padding: calc(.2 * var(--ee-base-ui-scale));
+    padding: calc(var(--ee-ptc-padding) + 1px) var(--ee-ptc-padding) var(--ee-ptc-padding) ;
+}
+
+
+
+.espresso-admin.wp-core-ui .wp-list-table li.ee-status-outline:hover {
+    background-color: var(--ee-link-color);
+}
+
+.espresso-admin.wp-core-ui .wp-list-table li.ee-status-outline:hover .person-type-count {
+    background-color: var(--ee-color-white);
+    color: var(--ee-link-color);
 }
 
 @media screen and ( max-width: 782px ) {

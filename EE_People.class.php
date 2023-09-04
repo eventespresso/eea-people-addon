@@ -20,10 +20,6 @@ define('EEA_PEOPLE_ADDON_ADMIN', EEA_PEOPLE_ADDON_PATH . 'admin' . DS . 'people'
  */
 class EE_People extends EE_Addon
 {
-
-
-
-
     public static function register_addon()
     {
         $people_capabilities = array(

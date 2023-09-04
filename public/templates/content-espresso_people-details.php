@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template file to add extra content to a single person display
  * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.
@@ -8,6 +9,7 @@
  * @subpackage  template
  * @author      Darren Ethier
  */
+
 global $post;
 $events = EEH_People_View::get_events_for_person();
 ?>

@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * People Model class
  * Model class for the People CPT
  *
@@ -12,7 +11,6 @@
  */
 class EEM_Person extends EEM_CPT_Base
 {
-
     /**
      * private instance of the EEM_Person object
      *
@@ -21,26 +19,24 @@ class EEM_Person extends EEM_CPT_Base
     private static $_instance;
 
 
-
     /**
      * EEM_Person constructor.
      *
-     * @param null $timezone
+     * @param string|null $timezone
      * @throws EE_Error
-     * @throws InvalidArgumentException
      */
-    public function __construct($timezone = null)
+    public function __construct(?string $timezone = '')
     {
-        $this->_tables = array(
+        $this->_tables                            = [
             'Person_CPT'  => new EE_Primary_Table('posts', 'ID'),
             'Person_Meta' => new EE_Secondary_Table(
                 'esp_attendee_meta',
                 'ATTM_ID',
                 'ATT_ID'
             ),
-        );
-        $this->_fields = array(
-            'Person_CPT'  => array(
+        ];
+        $this->_fields                            = [
+            'Person_CPT'  => [
                 'PER_ID'        => new EE_Primary_Key_Int_Field(
                     'ID',
                     esc_html__('Person ID', 'event_espresso')
@@ -97,8 +93,8 @@ class EEM_Person extends EEM_CPT_Base
                     false,
                     'publish'
                 ),
-            ),
-            'Person_Meta' => array(
+            ],
+            'Person_Meta' => [
                 'PERM_ID'      => new EE_DB_Only_Int_Field(
                     'ATTM_ID',
                     esc_html__('Person Meta Row ID', 'event_espresso'),
@@ -171,9 +167,9 @@ class EEM_Person extends EEM_CPT_Base
                     true,
                     ''
                 ),
-            ),
-        );
-        $this->_model_relations = array(
+            ],
+        ];
+        $this->_model_relations                   = [
             'Event'       => new EE_HABTM_Relation('Person_Post'),
             // note this will use the same people_to_post table
             // that will eventually be shared with People_To_Venue,
@@ -181,12 +177,11 @@ class EEM_Person extends EEM_CPT_Base
             'Person_Post' => new EE_Has_Many_Relation(),
             'State'       => new EE_Belongs_To_Relation(),
             'Country'     => new EE_Belongs_To_Relation(),
-        );
+        ];
         $this->_default_where_conditions_strategy = new EE_CPT_Where_Conditions('espresso_people', 'PERM_ID');
-        $this->_caps_slug= 'peoples';
+        $this->_caps_slug                         = 'peoples';
         parent::__construct($timezone);
     }
-
 
 
     /**
@@ -196,9 +191,9 @@ class EEM_Person extends EEM_CPT_Base
      * @return EEM_Person instance
      * @throws InvalidArgumentException
      * @throws EE_Error
-     *@since 1.0.0
+     * @since 1.0.0
      */
-    public static function instance($timezone = null)
+    public static function instance($timezone = '')
     {
         // check if instance of EEM_Person already exists
         if (! self::$_instance instanceof EEM_Person) {
@@ -212,7 +207,6 @@ class EEM_Person extends EEM_CPT_Base
     }
 
 
-
     /**
      * resets the model and returns it
      *
@@ -221,12 +215,11 @@ class EEM_Person extends EEM_CPT_Base
      * @throws EE_Error
      * @throws InvalidArgumentException
      */
-    public static function reset($timezone = null)
+    public static function reset($timezone = '')
     {
         self::$_instance = null;
         return self::instance($timezone);
     }
-
 
 
     /**
@@ -241,8 +234,8 @@ class EEM_Person extends EEM_CPT_Base
     public function get_people_for_event_and_type($post_id, $type_id)
     {
         $where['Person_Post.OBJ_ID'] = $post_id;
-        $where['Person_Post.PT_ID'] = $type_id;
-        $query = array($where, 'order_by' => array('Person_Post.PER_OBJ_order' => 'ASC'));
+        $where['Person_Post.PT_ID']  = $type_id;
+        $query                       = [$where, 'order_by' => ['Person_Post.PER_OBJ_order' => 'ASC']];
         return $this->get_all($query);
     }
 }

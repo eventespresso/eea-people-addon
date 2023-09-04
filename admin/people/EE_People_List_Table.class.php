@@ -14,8 +14,6 @@
  */
 class EE_People_List_Table extends EE_Admin_List_Table
 {
-
-
     protected function _setup_data()
     {
         $this->_data = $this->_view != 'trash' ? $this->_admin_page->get_people($this->_per_page) : $this->_admin_page->get_people($this->_per_page, false, true);
@@ -110,30 +108,32 @@ class EE_People_List_Table extends EE_Admin_List_Table
         $actions = array();
         // edit person link
         if (EE_Registry::instance()->CAP->current_user_can('ee_edit_people', 'eea-people-addon_edit_people', $item->ID())) {
-            $edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
-            $actions['edit'] = '<a href="'.$edit_lnk_url.'" title="' . __('Edit Person', 'event_espresso') . '">' . __('Edit', 'event_espresso') . '</a>';
+            $edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action' => 'edit', 'post' => $item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
+            $actions['edit'] = '<a href="' . $edit_lnk_url . '" title="' . __('Edit Person', 'event_espresso') . '">' . __('Edit', 'event_espresso') . '</a>';
         }
 
         if ($this->_view == 'publish'  || $this->_view == 'all' || $this->_view == 'draft') {
             // trash person link
             if (EE_Registry::instance()->CAP->current_user_can('ee_delete_people', 'eea-people-addon_trash_people', $item->ID())) {
-                $trash_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action'=>'trash_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
-                $actions['trash'] = '<a href="'.$trash_lnk_url.'" title="' . __('Move Person to Trash', 'event_espresso') . '">' . __('Trash', 'event_espresso') . '</a>';
+                $trash_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action' => 'trash_person', 'PER_ID' => $item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
+                $actions['trash'] = '<a href="' . $trash_lnk_url . '" title="' . __('Move Person to Trash', 'event_espresso') . '">' . __('Trash', 'event_espresso') . '</a>';
             }
         } else {
             if (EE_Registry::instance()->CAP->current_user_can('ee_delete_people', 'eea-people-addon_restore_people', $item->ID())) {
                 // restore person link
-                $restore_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action'=>'restore_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
-                $actions['restore'] = '<a href="'.$restore_lnk_url.'" title="' . __('Restore Person', 'event_espresso') . '">' . __('Restore', 'event_espresso') . '</a>';
-                $delete_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action'=>'delete_person', 'PER_ID'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
-                $actions['delete'] =  '<a href="'.$delete_lnk_url.'" title="' . __('Delete Permanently This Person.', 'event_espresso') . '">' . __('Delete Permanently', 'event_espresso') . '</a>';
+                $restore_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action' => 'restore_person', 'PER_ID' => $item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
+                $actions['restore'] = '<a href="' . $restore_lnk_url . '" title="' . __('Restore Person', 'event_espresso') . '">' . __('Restore', 'event_espresso') . '</a>';
+                $delete_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action' => 'delete_person', 'PER_ID' => $item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
+                $actions['delete'] =  '<a href="' . $delete_lnk_url . '" title="' . __('Delete Permanently This Person.', 'event_espresso') . '">' . __('Delete Permanently', 'event_espresso') . '</a>';
             }
         }
 
-        $edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action'=>'edit', 'post'=>$item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
-        $name_link = EE_Registry::instance()->CAP->current_user_can('ee_edit_people', 'eea-people-addon_edit_people', $item->ID()) ?  '<a href="'.$edit_lnk_url.'" title="' . __('Edit Person', 'event_espresso') . '">' . $item->full_name() . '</a>' : $item->full_name();
-        $name_link .= '<br>' . '<a href="mailto:' . $item->email() .'">' . $item->email() . '</a>';
-        $name_link .= $item->phone() ? '<br>' . sprintf(__('Phone: %s', 'event_espresso'), $item->phone()) : '';
+        $edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array( 'action' => 'edit', 'post' => $item->ID() ), EEA_PEOPLE_ADDON_ADMIN_URL);
+        $name_link = EE_Registry::instance()->CAP->current_user_can('ee_edit_people', 'eea-people-addon_edit_people', $item->ID()) ?  '<a href="' . $edit_lnk_url . '" title="' . __('Edit Person', 'event_espresso') . '">' . $item->full_name() . '</a>' : $item->full_name();
+        $email_addy = $item->email();
+        $name_link .= $email_addy ? '<br>' . '<a href="mailto:' . $email_addy . '">' . $email_addy . '</a>' : '';
+        $phone_nmbr = $item->phone();
+        $name_link .= $phone_nmbr ? '<br>' . sprintf(__('Phone: %s', 'event_espresso'), $phone_nmbr) : '';
 
         // Return the name contents
         return sprintf('%1$s %2$s', $name_link, $this->row_actions($actions));
@@ -173,7 +173,8 @@ class EE_People_List_Table extends EE_Admin_List_Table
         );
 
         // loop through the types and setup the pills and the links
-        $content = '<ul class="person-to-cpt-people-type-list">';
+        $content = '
+        <ul class="person-to-cpt-people-type-list">';
         foreach ($event_types as $type) {
             $name = $type->get_first_related('Term')->get('name');
             $count = EEM_Person_Post::instance()->count(
@@ -194,9 +195,15 @@ class EE_People_List_Table extends EE_Admin_List_Table
                 ),
                 admin_url('admin.php')
             );
-            $content .= '<li><a href="' . $event_filter_link . '">' . $name . '<span class="person-type-count">' . $count . '</span></a></li>';
+            $content .= '
+            <li class="ee-status-outline ee-status-outline--info">
+                <a href="' . $event_filter_link . '" class="ee-event-filter-link ee-link">
+                    ' . $name . '<span class="person-type-count">' . $count . '</span>
+                </a>
+            </li>';
         }
-        $content .= '</ul>';
+        $content .= '
+        </ul>';
         echo $content;
     }
 }

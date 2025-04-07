@@ -1,12 +1,12 @@
 <?php
 
 /*
-  Plugin Name: Event Espresso - People (EE 4.5+)
-  Plugin URI: http://www.eventespresso.com
+  Plugin Name: Event Espresso - People Manager
+  Plugin URI: https://www.eventespresso.com
   Description: The Event Espresso People Addon adds a people manager for your events. Compatible with Event Espresso 4.5 or higher
-  Version: 1.0.11.rc.000
+  Version: 1.0.11.rc.012
   Author: Event Espresso
-  Author URI: http://www.eventespresso.com
+  Author URI: https://www.eventespresso.com
   Copyright 2014 Event Espresso (email : support@eventespresso.com)
 
   This program is free software; you can redistribute it and/or modify
@@ -31,13 +31,14 @@
  * @ package		Event Espresso
  * @ author		Event Espresso
  * @ copyright	(c) 2008-2014 Event Espresso  All Rights Reserved.
- * @ license		http://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
- * @ link			http://www.eventespresso.com
+ * @ license		https://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
+ * @ link			https://www.eventespresso.com
  * @ version	 	EE4
  *
  * ------------------------------------------------------------------------
  */
-define('EEA_PEOPLE_ADDON_VERSION', '1.0.11.rc.000');
+define('EEA_PEOPLE_ADDON_VERSION', '1.0.11.rc.012');
+define('EEA_PEOPLE_ADDON_CORE_VERSION_REQUIRED', '4.9.26.rc.000');
 define('EEA_PEOPLE_ADDON_PLUGIN_FILE', __FILE__);
 function load_espresso_eea_people_addon()
 {

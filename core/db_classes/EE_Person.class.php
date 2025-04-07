@@ -9,7 +9,7 @@ use EventEspresso\core\services\address\AddressInterface;
  * @package     EE Person Addon
  * @subpackage  models
  * @author      Darren Ethier
- * @method EE_Country|EE_State get_first_related($relationName, $query_params = [])
+ * @method EE_Country|EE_State get_first_related(string $relation_name, array $query_params = [])
  */
 class EE_Person extends EE_CPT_Base implements AddressInterface
 {
@@ -259,7 +259,7 @@ class EE_Person extends EE_CPT_Base implements AddressInterface
      *
      * @return array numerically indexed, with each part of the address that is known.
      * Eg, if the user only responded to state and country,
-     * it would be array(0=>'Alabama',1=>'USA')
+     * it would be an array like: [ 0=>'Alabama', 1=>'USA' ]
      * @throws EE_Error
      * @throws ReflectionException
      */

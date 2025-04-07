@@ -8,15 +8,11 @@
  * @package        EE People Addon
  * @subpackage     models
  * @author         Darren Ethier
+ * @method EE_Person[] get_all(array $query_params = [])
  */
 class EEM_Person extends EEM_CPT_Base
 {
-    /**
-     * private instance of the EEM_Person object
-     *
-     * @var EEM_Person $_instance
-     */
-    private static $_instance;
+    protected static ?EEM_Person $_instance = null;
 
 
     /**
@@ -24,6 +20,7 @@ class EEM_Person extends EEM_CPT_Base
      *
      * @param string|null $timezone
      * @throws EE_Error
+     * @throws Exception
      */
     public function __construct(?string $timezone = '')
     {
@@ -177,48 +174,12 @@ class EEM_Person extends EEM_CPT_Base
             'Person_Post' => new EE_Has_Many_Relation(),
             'State'       => new EE_Belongs_To_Relation(),
             'Country'     => new EE_Belongs_To_Relation(),
+            'Term_Relationship' => new EE_Has_Many_Relation(),
+            'Term_Taxonomy'     => new EE_HABTM_Relation('Term_Relationship'),
         ];
         $this->_default_where_conditions_strategy = new EE_CPT_Where_Conditions('espresso_people', 'PERM_ID');
         $this->_caps_slug                         = 'peoples';
         parent::__construct($timezone);
-    }
-
-
-    /**
-     * This function is a singleton method used to instantiate the EEM_Person object
-     *
-     * @param string|null $timezone
-     * @return EEM_Person instance
-     * @throws InvalidArgumentException
-     * @throws EE_Error
-     * @since 1.0.0
-     */
-    public static function instance($timezone = '')
-    {
-        // check if instance of EEM_Person already exists
-        if (! self::$_instance instanceof EEM_Person) {
-            // instantiate Espresso_model
-            self::$_instance = new self($timezone);
-        }
-        // we might have a timezone set, let set_timezone decide what to do with it
-        self::$_instance->set_timezone($timezone);
-        // EEM_Person object
-        return self::$_instance;
-    }
-
-
-    /**
-     * resets the model and returns it
-     *
-     * @param string|null $timezone
-     * @return EEM_Person
-     * @throws EE_Error
-     * @throws InvalidArgumentException
-     */
-    public static function reset($timezone = '')
-    {
-        self::$_instance = null;
-        return self::instance($timezone);
     }
 
 
@@ -228,14 +189,21 @@ class EEM_Person extends EEM_CPT_Base
      *
      * @param int $post_id CPT post id.
      * @param int $type_id Term_Taxonomy id.
-     * @return EE_Base_Class[]|EE_Person[]
+     * @return EE_Person[]
      * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function get_people_for_event_and_type($post_id, $type_id)
+    public function get_people_for_event_and_type(int $post_id, int $type_id): array
     {
-        $where['Person_Post.OBJ_ID'] = $post_id;
-        $where['Person_Post.PT_ID']  = $type_id;
-        $query                       = [$where, 'order_by' => ['Person_Post.PER_OBJ_order' => 'ASC']];
-        return $this->get_all($query);
+        return $this->get_all(
+            [
+                // where params
+                [
+                    'Person_Post.OBJ_ID' => $post_id,
+                    'Person_Post.PT_ID' => $type_id,
+                ],
+                'order_by' => ['Person_Post.PER_OBJ_order' => 'ASC']
+            ]
+        );
     }
 }

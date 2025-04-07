@@ -134,7 +134,7 @@ class espresso_events_People_Hooks extends EE_Admin_Hooks
                     'Person_Post.OBJ_ID' => $event->ID()
                 ),
             ),
-            null,
+            '',
             true
         );
 

@@ -22,34 +22,38 @@ class EEM_Person_Post extends EEM_Base
             'Person_Post' => [
                 'PTP_ID'        => new EE_Primary_Key_Int_Field(
                     'PTP_ID',
-                    __('Person to Event Link ID', 'event_espresso')
+                    esc_html__('Person to Event Link ID', 'event_espresso')
                 ),
                 'PER_ID'        => new EE_Foreign_Key_Int_Field(
                     'PER_ID',
-                    __('Person Primary ID', 'event_espresso'),
+                    esc_html__('Person Primary ID', 'event_espresso'),
                     false,
                     0,
                     'Person'
                 ),
                 'OBJ_ID'        => new EE_Foreign_Key_Int_Field(
-                    'OBJ_ID', __('Event ID', 'event_espresso'), false, 0, ['Event']
+                    'OBJ_ID',
+                    esc_html__('Event ID', 'event_espresso'),
+                    false,
+                    0,
+                    ['Event']
                 ),
                 'OBJ_type'      => new EE_Any_Foreign_Model_Name_Field(
                     'OBJ_type',
-                    __('Model Person Related to', 'event_espresso'),
+                    esc_html__('Model Person Related to', 'event_espresso'),
                     false,
                     'Event',
                     ['Event']
                 ),
                 'PER_OBJ_order' => new EE_Integer_Field(
                     'P2P_Order',
-                    __('Person to Event Order', 'event_espresso'),
+                    esc_html__('Person to Event Order', 'event_espresso'),
                     false,
                     0
                 ),
                 'PT_ID'         => new EE_Foreign_Key_Int_Field(
                     'PT_ID',
-                    __('People Type ID', 'event_espresso'),
+                    esc_html__('People Type ID', 'event_espresso'),
                     false,
                     0,
                     'Term_Taxonomy'
@@ -65,7 +69,11 @@ class EEM_Person_Post extends EEM_Base
     }
 
 
-    public function get_all_people_ids_for_post_and_type($post_id, $type_id)
+    /**
+     * @throws ReflectionException
+     * @throws EE_Error
+     */
+    public function get_all_people_ids_for_post_and_type($post_id, $type_id): array
     {
         $_where = [
             'OBJ_ID' => $post_id,

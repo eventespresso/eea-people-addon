@@ -9,38 +9,23 @@
  * @package     EE People Addon
  * @subpackage  strategies
  * @author      Darren Ethier
- *
- * ------------------------------------------------------------------------
  */
 class EE_CPT_Person_Strategy
 {
     /**
-     * $CPT - the current page, if it utilizes CPTs
-     *  @var    object
-     *  @access     protected
+     * CPT details from CustomPostTypeDefinitions for specific post type
      */
-    protected $CPT = null;
+    protected array $CPT;
 
 
 
     /**
-     *    class constructor
-     *
-     * @access  public
      * @param WP_Query $wp_query
-     * @param array $CPT
-     * @return  \EE_CPT_Person_Strategy
+     * @param array    $CPT
      */
-    public function __construct($wp_query, $CPT = array())
+    public function __construct(WP_Query $wp_query, array $CPT = [])
     {
-
-        if ($wp_query instanceof WP_Query) {
-            $WP_Query = $wp_query;
-            $this->CPT = $CPT;
-        } else {
-            $WP_Query = isset($wp_query['WP_Query']) ? $wp_query['WP_Query'] : null;
-            $this->CPT = isset($wp_query['CPT']) ? $wp_query['CPT'] : null;
-        }
+        $this->CPT = $CPT;
 
         // !!!!!!!!!!  IMPORTANT !!!!!!!!!!!!
         // here's the list of available filters in the WP_Query object
@@ -54,10 +39,8 @@ class EE_CPT_Person_Strategy
         // 'posts_fields'
         // 'posts_join'
         $this->_add_filters();
-        if ($WP_Query instanceof WP_Query) {
-            $WP_Query->is_espresso_people_single = is_single() ? true : false;
-            $WP_Query->is_espresso_people_archive = is_archive() ? true : false;
-        }
+        $wp_query->is_espresso_people_single = is_single();
+        $wp_query->is_espresso_people_archive = is_archive();
     }
 
 
@@ -85,17 +68,14 @@ class EE_CPT_Person_Strategy
     }
 
 
-
-
     /**
-     *    the_posts
-     *
-     * @access    public
-     * @param          $posts
+     * @param array    $posts
      * @param WP_Query $wp_query
      * @return    array
+     * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function the_posts($posts, WP_Query $wp_query)
+    public function the_posts(array $posts, WP_Query $wp_query): array
     {
         if (isset($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] == 'espresso_people') {
             // automagically load the EEH_Event_View helper so that it's functions are available

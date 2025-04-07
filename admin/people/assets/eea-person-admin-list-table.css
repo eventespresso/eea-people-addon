@@ -20,28 +20,34 @@
 }
 
 .person-to-cpt-people-type-list a {
-    text-decoration: none;
     color: #fff;
+    line-height: 1;
+    text-decoration: none;
+    transition: all 250ms ease-in-out;
 }
 
-.person-to-cpt-people-type-list a:hover {
+.espresso-admin.wp-core-ui .wp-list-table .person-to-cpt-people-type-list li.ee-status-outline:hover a{
     color: #000;
 }
 
 .person-to-cpt-people-type-list li.ee-status-outline {
-    display: inline-block;
-    margin-inline-end: var(--ee-margin-nano);
-    padding: 0;
-    font-size: var(--ee-font-size-tiny);
+    align-items: center;
     border-radius: var(--ee-border-radius-small);
+    display: inline-flex;
+    font-size: var(--ee-font-size-smaller);
+    margin-inline-end: var(--ee-margin-nano);
+    padding: var(--ee-padding-pico) var(--ee-padding-nano);
+    transition: all 250ms ease-in-out;
 }
 
-.espresso-admin.wp-core-ui .wp-list-table a.ee-event-filter-link:hover {
+.espresso-admin.wp-core-ui .wp-list-table .person-to-cpt-people-type-list li.ee-status-outline:hover a.ee-event-filter-link {
     border-color: transparent !important;
     color: var(--ee-color-white);
 }
 
 .person-type-count {
+    --ee-font-size-default: var(--ee-base-ui-scale); /* 16px */
+    --ee-ptc-padding: calc(.2 * var(--ee-base-ui-scale));
     align-items: center;
     background-color: var(--ee-link-color);
     border-radius: var(--ee-border-radius-full);
@@ -49,24 +55,23 @@
     color: var(--ee-color-white);
     display: inline-flex;
     font-size: var(--ee-font-size-micro);
-    --ee-font-size-default: var(--ee-base-ui-scale); /* 16px */
     height: var(--ee-font-size-default);
     justify-content: center;
     line-height: 1;
     margin: 0;
     margin-inline-start: var(--ee-margin-tiny);
     min-width: var(--ee-font-size-default);
-    --ee-ptc-padding: calc(.2 * var(--ee-base-ui-scale));
     padding: calc(var(--ee-ptc-padding) + 1px) var(--ee-ptc-padding) var(--ee-ptc-padding) ;
+    transition: all 250ms ease-in-out;
 }
 
 
 
-.espresso-admin.wp-core-ui .wp-list-table li.ee-status-outline:hover {
+.espresso-admin.wp-core-ui .wp-list-table .person-to-cpt-people-type-list li.ee-status-outline:hover {
     background-color: var(--ee-link-color);
 }
 
-.espresso-admin.wp-core-ui .wp-list-table li.ee-status-outline:hover .person-type-count {
+.espresso-admin.wp-core-ui .wp-list-table .person-to-cpt-people-type-list li.ee-status-outline:hover .person-type-count {
     background-color: var(--ee-color-white);
     color: var(--ee-link-color);
 }

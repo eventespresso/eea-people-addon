@@ -9,8 +9,6 @@
  * @package     EE People Addon
  * @subpackage  models
  * @author      Darren Ethier
- *
- * ------------------------------------------------------------------------
  */
 class EEME_Person_Term_Taxonomy extends EEME_Base
 {

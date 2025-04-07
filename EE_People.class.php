@@ -7,13 +7,10 @@ define('EEA_PEOPLE_ADDON_URL', plugin_dir_url(__FILE__));
 define('EEA_PEOPLE_ADDON_ADMIN', EEA_PEOPLE_ADDON_PATH . 'admin' . DS . 'people' . DS);
 
 
-
 /**
- *
  * Main class setting up addon that hooks into EE_Plugin_API (EE_Addon)
  *
- * @since 1.0.0
- *
+ * @since       1.0.0
  * @package     EE People Addon
  * @subpackage  plugin api
  * @author      Darren Ethier
@@ -22,7 +19,7 @@ class EE_People extends EE_Addon
 {
     public static function register_addon()
     {
-        $people_capabilities = array(
+        $people_capabilities = [
             'ee_edit_people',
             'ee_read_people',
             'ee_read_peoples',
@@ -46,87 +43,97 @@ class EE_People extends EE_Addon
             'ee_edit_people_category',
             'ee_delete_people_category',
             'ee_assign_people_category',
-        );
+        ];
 
         // register addon via Plugin API
         EE_Register_Addon::register(
             'People',
-            array(
+            [
+                'plugin_slug'           => 'eea-people',
                 'version'               => EEA_PEOPLE_ADDON_VERSION,
-                'min_core_version'      => '4.9.26.rc.000',
+                'min_core_version'      => EEA_PEOPLE_ADDON_CORE_VERSION_REQUIRED,
                 'main_file_path'        => EEA_PEOPLE_ADDON_PLUGIN_FILE,
                 'admin_path'            => EEA_PEOPLE_ADDON_ADMIN,
                 'admin_callback'        => 'additional_admin_hooks',
                 'config_class'          => 'EE_People_Config',
                 'config_name'           => 'EE_People',
-                'autoloader_paths'      => array(
+                'autoloader_paths'      => [
                     'EE_People'              => EEA_PEOPLE_ADDON_PATH . 'EE_People.class.php',
                     'EE_People_Config'       => EEA_PEOPLE_ADDON_PATH . 'EE_People_Config.php',
                     'People_Admin_Page'      => EEA_PEOPLE_ADDON_ADMIN . 'People_Admin_Page.core.php',
                     'People_Admin_Page_Init' => EEA_PEOPLE_ADDON_ADMIN . 'People_Admin_Page_Init.core.php',
-                ),
-                'dms_paths'             => array(EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'data_migration_scripts' . DS),
-                'module_paths'          => array(
+                ],
+                'dms_paths'             => [EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'data_migration_scripts' . DS],
+                'module_paths'          => [
                     EEA_PEOPLE_ADDON_PATH . 'EED_People_Single.module.php',
                     EEA_PEOPLE_ADDON_PATH . 'EED_People_Event_Template_Parts.module.php',
-                ),
+                ],
                 // 'shortcode_paths'     => array( EEA_PEOPLE_ADDON_PATH . 'EES_Espresso_People.shortcode.php' ),
                 // 'widget_paths'        => array( EEA_PEOPLE_ADDON_PATH . 'EEW_eea-people-addon.widget.php' ),
-                // if plugin update engine is being used for auto-updates. not needed if PUE is not being used.
-                'pue_options'           => array(
+                'license'               => [
+                    'beta'             => false,
+                    'main_file_path'   => EEA_PEOPLE_ADDON_PLUGIN_FILE,
+                    'min_core_version' => EEA_PEOPLE_ADDON_CORE_VERSION_REQUIRED,
+                    'plugin_id'        => 0,
+                    'plugin_name'      => 'People Manager',
+                    'plugin_slug'      => 'eea-people',
+                    'version'          => EEA_PEOPLE_ADDON_VERSION,
+                    'wp_override'      => false,
+                ],
+                'pue_options'           => [
                     'pue_plugin_slug' => 'eea-people-addon',
                     'plugin_basename' => EEA_PEOPLE_ADDON_BASENAME,
                     'checkPeriod'     => '24',
                     'use_wp_update'   => false,
-                ),
-                'capabilities'          => array(
+                ],
+                'capabilities'          => [
                     'administrator'           => $people_capabilities,
                     'ee_events_administrator' => $people_capabilities,
-                ),
-                'capability_maps'       => array(
-                    'EE_Meta_Capability_Map_Edit'   => array(
+                ],
+                'capability_maps'       => [
+                    'EE_Meta_Capability_Map_Edit'   => [
                         'ee_edit_people',
-                        array(
+                        [
                             'Person',
                             'ee_edit_published_peoples',
                             'ee_edit_others_peoples',
                             'ee_edit_private_peoples',
-                        ),
-                    ),
-                    'EE_Meta_Capability_Map_Read'   => array(
+                        ],
+                    ],
+                    'EE_Meta_Capability_Map_Read'   => [
                         'ee_read_people',
-                        array(
+                        [
                             'Person',
                             '',
                             'ee_read_others_peoples',
                             'ee_read_private_peoples',
-                        ),
-                    ),
-                    'EE_Meta_Capability_Map_Delete' => array(
+                        ],
+                    ],
+                    'EE_Meta_Capability_Map_Delete' => [
                         'ee_delete_people',
-                        array(
+                        [
                             'Person',
                             'ee_delete_published_peoples',
                             'ee_delete_others_peoples',
                             'ee_delete_private_peoples',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
                 'class_paths'           => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_classes',
                 'model_paths'           => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_models',
                 'model_extension_paths' => EEA_PEOPLE_ADDON_PATH . 'core' . DS . 'db_model_extensions',
-                'custom_post_types'     => array(
-                    'espresso_people' => array(
+                'custom_post_types'     => [
+                    'espresso_people' => [
                         'singular_name' => __('Person', 'event_espresso'),
                         'plural_name'   => __('People', 'event_espresso'),
                         'singular_slug' => __('person', 'event_espresso'),
                         'plural_slug'   => __('people', 'event_espresso'),
                         'class_name'    => 'EE_Person',
-                        'args'          => array(
+                        'args'          => [
                             'public'            => true,
                             'show_in_nav_menus' => true,
                             'capability_type'   => 'people',
-                            'capabilities'      => array(
+                            'capabilities'      => [
                                 'edit_post'              => 'ee_edit_people',
                                 'read_post'              => 'ee_read_people',
                                 'delete_post'            => 'ee_delete_people',
@@ -140,12 +147,12 @@ class EE_People extends EE_Addon
                                 'delete_others_posts'    => 'ee_delete_others_peoples',
                                 'edit_private_posts'     => 'ee_edit_private_peoples',
                                 'edit_published_posts'   => 'ee_edit_published_peoples',
-                            ),
-                            'taxonomies'        => array(
+                            ],
+                            'taxonomies'        => [
                                 'espresso_people_type',
                                 'espresso_people_categories',
-                            ),
-                            'supports'          => array(
+                            ],
+                            'supports'          => [
                                 'title',
                                 'editor',
                                 'thumbnail',
@@ -153,55 +160,54 @@ class EE_People extends EE_Addon
                                 'custom-fields',
                                 'comments',
                                 'author',
-                            ),
-                        ),
-                    ),
-                ),
-                'custom_taxonomies'     => array(
-                    'espresso_people_type'       => array(
+                            ],
+                        ],
+                    ],
+                ],
+                'custom_taxonomies'     => [
+                    'espresso_people_type'       => [
                         'singular_name' => __('People Type', 'event_espresso'),
                         'plural_name'   => __('People Types', 'event_espresso'),
-                        'args'          => array(
+                        'args'          => [
                             'public'            => true,
                             'show_in_nav_menus' => true,
-                            'labels'            => array(
+                            'labels'            => [
                                 'name'              => __('People Types', 'event_espresso'),
                                 'singular_name'     => __('People Type', 'event_espresso'),
                                 'add_new_item'      => __('Add New People Type', 'event_espresso'),
                                 'new_item_name'     => __('New People Type Name', 'event_espresso'),
                                 'parent_item'       => __('Parent People Type', 'event_espresso'),
                                 'parent_item_colon' => __('Parent People Type:', 'event_espresso'),
-                            ),
-                            'capabilities'      => array(
+                            ],
+                            'capabilities'      => [
                                 'manage_terms' => 'ee_manage_people_types',
                                 'edit_terms'   => 'ee_edit_people_type',
                                 'delete_terms' => 'ee_delete_people_type',
                                 'assign_terms' => 'ee_assign_people_type',
-                            ),
-                            'meta_box_cb'       => array(__CLASS__, 'people_type_metabox_content'),
-                            'rewrite'           => array('slug' => __('people-type', 'event_espresso')),
-                        ),
-                    ),
-                    'espresso_people_categories' => array(
+                            ],
+                            'meta_box_cb'       => [__CLASS__, 'people_type_metabox_content'],
+                            'rewrite'           => ['slug' => __('people-type', 'event_espresso')],
+                        ],
+                    ],
+                    'espresso_people_categories' => [
                         'singular_name' => __('People Category', 'event_espresso'),
                         'plural_name'   => __('People Categories', 'event_espresso'),
-                        'args'          => array(
+                        'args'          => [
                             'public'            => true,
                             'show_in_nav_menus' => true,
-                            'capabilities'      => array(
+                            'capabilities'      => [
                                 'manage_terms' => 'ee_manage_people_categories',
                                 'edit_terms'   => 'ee_edit_people_category',
                                 'delete_terms' => 'ee_delete_people_category',
                                 'assign_terms' => 'ee_assign_people_category',
-                            ),
-                            'rewrite'           => array('slug' => __('people-category', 'event_espresso')),
-                        ),
-                    ),
-                ),
-            )
+                            ],
+                            'rewrite'           => ['slug' => __('people-category', 'event_espresso')],
+                        ],
+                    ],
+                ],
+            ]
         );
     }
-
 
 
     /**
@@ -215,41 +221,41 @@ class EE_People extends EE_Addon
         // running this hook well after any other plugins have possibly deregistered the addon.
         add_action(
             'AHEE__EE_System___detect_if_activation_or_upgrade__begin',
-            array($this, 'load_early_hooks_when_registered'),
+            [$this, 'load_early_hooks_when_registered'],
             1000
         );
     }
 
 
-
     /**
      * Callback for 'AHEE__EE_System__load_espresso_addons' hook registered in constructor.
-     * This is to ensure that we load things necessary really early, but after this addon has been registered.  That way
-     * It can be determined whether the addon was registered successfully or not (and not deregistered) before executing.
+     * This is to ensure that we load things necessary really early, but after this addon has been registered.  That
+     * way
+     * It can be determined whether the addon was registered successfully or not (and not deregistered) before
+     * executing.
      *
      * @throws \EE_Error
      */
     public function load_early_hooks_when_registered()
     {
-
         if (! isset(EE_Registry::instance()->addons->EE_People)) {
             return; // get out because the addon is not registered.
         }
 
         // filter extra paths
-        add_filter('FHEE__EE_Registry__load_core__core_paths', array( $this, 'add_extra_core_paths' ), 10);
-        add_filter('FHEE__EE_Registry__load_helper__helper_paths', array( $this, 'add_extra_helper_paths' ), 10);
+        add_filter('FHEE__EE_Registry__load_core__core_paths', [$this, 'add_extra_core_paths'], 10);
+        add_filter('FHEE__EE_Registry__load_helper__helper_paths', [$this, 'add_extra_helper_paths'], 10);
         // add our templates folder to the EEH_Template::locate_template() paths checked.
         add_filter(
             'FHEE__EEH_Template__locate_template__template_folder_paths',
-            array( $this, 'add_template_folder_to_paths' ),
+            [$this, 'add_template_folder_to_paths'],
             10
         );
 
         // make sure people addon nav menu metabox gets activated on fresh installs of wp
         add_filter(
             'FHEE__EE_Admin__enable_hidden_ee_nav_menu_boxes__initial_meta_boxes',
-            array( $this, 'activate_people_nav_menu_options' ),
+            [$this, 'activate_people_nav_menu_options'],
             10
         );
     }
@@ -269,24 +275,24 @@ class EE_People extends EE_Addon
     }
 
 
-
     /**
      * Callback for the 'espresso_people_type' taxonomy metabox content.
      *
      * @param WP_Post $post
-     * @param array       $box  metabox args
-     *
+     * @param array   $box metabox args
      * @return void
      */
     public static function people_type_metabox_content($post, $box)
     {
         ?>
         <div class="metabox-help-description">
-            <p class="description"><?php _e('When you assign a person to a people type here, it just indicates that this person fulfills that role in your organization and this person will be listed on the archive page for that person type.', 'event_espresso'); ?></p>
+            <p class="description"><?php _e(
+                'When you assign a person to a people type here, it just indicates that this person fulfills that role in your organization and this person will be listed on the archive page for that person type.',
+                'event_espresso'
+            ); ?></p>
         </div>
         <?php post_categories_meta_box($post, $box);
     }
-
 
 
     /**
@@ -294,22 +300,26 @@ class EE_People extends EE_Addon
      *
      * @access  public
      * @return  void
-     * @throws \EE_Error
      */
     public function additional_admin_hooks()
     {
         // is admin and not in M-Mode ?
-        if (is_admin() && ! EE_Maintenance_Mode::instance()->level()) {
+        if (
+            is_admin()
+            && (
+                class_exists('EventEspresso\core\domain\services\database\MaintenanceStatus')
+                && EventEspresso\core\domain\services\database\MaintenanceStatus::isDisabled()
+            ) || ! EE_Maintenance_Mode::instance()->level()
+        ) {
             add_filter('plugin_action_links', array( $this, 'plugin_actions' ), 10, 2);
         }
     }
 
 
-
     /**
      * plugin_actions
-     *
      * Add a settings link to the Plugins page, so people can go straight from the plugin page to the settings page.
+     *
      * @param $links
      * @param $file
      * @return array
@@ -318,19 +328,21 @@ class EE_People extends EE_Addon
     {
         if ($file === EEA_PEOPLE_ADDON_BASENAME) {
             // before other links
-            array_unshift($links, '<a href="admin.php?page=espresso_people">' . __('Settings', 'event_espresso') . '</a>');
+            array_unshift(
+                $links,
+                '<a href="admin.php?page=espresso_people">' . esc_html__('Settings', 'event_espresso') . '</a>'
+            );
         }
         return $links;
     }
 
 
-
     /**
      * Add our cpt strategy path to the core paths array.
      *
-     * @since 1.0.0
      * @param array $core_paths incoming array of paths
      * @return array
+     * @since 1.0.0
      */
     public function add_extra_core_paths($core_paths)
     {
@@ -342,9 +354,9 @@ class EE_People extends EE_Addon
     /**
      * Adds extra helper paths for when EE_Registry::instance()->load_helper() is called.
      *
-     * @since 1.0.0
      * @param array $helper_paths
      * @return array
+     * @since 1.0.0
      */
     public function add_extra_helper_paths($helper_paths)
     {
@@ -357,10 +369,9 @@ class EE_People extends EE_Addon
      * Registers the folder for core people templates to be included with the template path locator.
      * Note: To customize, just copy the template from /public/templates/* and put in your theme folder.
      *
-     * @since 1.0.0
-     *
      * @param array $template_paths incoming paths
      * @return array
+     * @since 1.0.0
      */
     public function add_template_folder_to_paths($template_paths)
     {

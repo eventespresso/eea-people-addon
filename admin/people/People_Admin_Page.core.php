@@ -1,5 +1,6 @@
 <?php
 
+use EventEspresso\core\domain\services\assets\CoreAssetManager;
 use EventEspresso\core\services\request\DataType;
 
 /**
@@ -27,6 +28,22 @@ class People_Admin_Page extends EE_Admin_Page_CPT
      */
     protected ?WP_Term $_term_object = null;
 
+    private EEM_Person $person_model;
+
+    private EEM_Person_Post $person_post_model;
+
+
+    /**
+     * @throws ReflectionException
+     * @throws EE_Error
+     */
+    public function __construct($routing = true)
+    {
+        $this->person_model      = EEM_Person::instance();
+        $this->person_post_model = EEM_Person_Post::instance();
+        parent::__construct($routing);
+    }
+
 
     protected function _init_page_props()
     {
@@ -51,7 +68,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         $this->_cpt_edit_routes = [
             'espresso_people' => 'edit',
         ];
-        add_action('edit_form_after_title', [$this, 'after_title_form_fields'], 10);
+        add_action('edit_form_after_title', [$this, 'after_title_form_fields']);
         add_filter('FHEE__EE_Admin_Page_CPT___edit_cpt_item__create_new_action', [$this, 'map_cpt_route'], 10, 2);
     }
 
@@ -419,32 +436,52 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
     public function load_scripts_styles_edit()
     {
-        wp_register_style(
+        $asset_version = wp_get_environment_type() === 'production' ? EEA_PEOPLE_ADDON_VERSION : time();
+        wp_enqueue_style(
             'eea-person-admin-css',
             EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.css',
             ['ee-admin-css'],
-            EEA_PEOPLE_ADDON_VERSION
+            $asset_version
         );
-        wp_register_script(
+        wp_enqueue_script(
             'eea-person-admin-js',
             EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin.js',
             ['post'],
-            EEA_PEOPLE_ADDON_VERSION
+            $asset_version
         );
-        wp_enqueue_style('eea-person-admin-css');
-        wp_enqueue_script('eea-person-admin-js');
     }
 
 
     public function load_scripts_styles_default()
     {
-        wp_register_style(
+        wp_enqueue_style(
             'eea-person-admin-list-table-css',
             EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin-list-table.css',
             ['ee-admin-css'],
-            EEA_PEOPLE_ADDON_VERSION
+            wp_get_environment_type() === 'production' ? EEA_PEOPLE_ADDON_VERSION : time()
         );
-        wp_enqueue_style('eea-person-admin-list-table-css');
+    }
+
+
+    public function load_scripts_styles_category_list()
+    {
+        wp_enqueue_script(
+            'eea-person-admin-list-table-js',
+            EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin-list-table.js',
+            [CoreAssetManager::JS_HANDLE_CORE],
+            wp_get_environment_type() === 'production' ? EEA_PEOPLE_ADDON_VERSION : time()
+        );
+    }
+
+
+    public function load_scripts_styles_type_list()
+    {
+        wp_enqueue_script(
+            'eea-person-admin-list-table-js',
+            EEA_PEOPLE_ADDON_ADMIN_ASSETS_URL . 'eea-person-admin-list-table.js',
+            [CoreAssetManager::JS_HANDLE_CORE],
+            wp_get_environment_type() === 'production' ? EEA_PEOPLE_ADDON_VERSION : time()
+        );
     }
 
 
@@ -573,11 +610,11 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     {
         $this->_search_btn_label = esc_html__('People', 'event_espresso');
         $this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
-                'create_new',
-                'add-person',
-                [],
-                'add-new-h2'
-            );
+            'create_new',
+            'add-person',
+            [],
+            'add-new-h2'
+        );
 
         $EVT_ID = $this->request->getRequestParam('EVT_ID', 0, DataType::INT);
         if ($EVT_ID) {
@@ -586,9 +623,9 @@ class People_Admin_Page extends EE_Admin_Page_CPT
                 $this->_template_args['before_list_table'] = '
                     <h2>
                         ' . sprintf(
-                        esc_html__('Showing people assigned to the event: %s', 'event_espresso'),
-                        $event->name()
-                    ) . '
+                    esc_html__('Showing people assigned to the event: %s', 'event_espresso'),
+                    $event->name()
+                ) . '
                     </h2>';
             }
         }
@@ -607,7 +644,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
      * @param int  $per_page number of people per page
      * @param bool $count    whether to return count or data.
      * @param bool $trash    whether to just return trashed or not.
-     * @return EE_People[]|int
+     * @return EE_Person[]|int
      * @throws EE_Error
      * @throws ReflectionException
      */
@@ -616,10 +653,10 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         $orderby      = $this->request->getRequestParam('orderby', 'PER_lname');
         $sort         = $this->request->getRequestParam('order', 'ASC');
         $current_page = $this->request->getRequestParam('paged', 1, DataType::INT);
-        $per_page     = $per_page ?? 10;
+        $per_page     = $per_page ?: 10;
         $per_page     = $this->request->getRequestParam('paged', $per_page, DataType::INT);
 
-        $_where = [];
+        $where = [];
 
         // determine what post status our condition will have for the query.
         $status = $this->request->getRequestParam('status');
@@ -630,31 +667,42 @@ class People_Admin_Page extends EE_Admin_Page_CPT
                 break;
 
             case 'draft':
-                $_where['status'] = ['IN', ['draft', 'auto-draft']];
+                $where['status'] = ['IN', ['draft', 'auto-draft']];
                 break;
 
             default:
-                $_where['status'] = $status;
+                $where['status'] = $status;
         }
 
         // possible conditions for capability checks
         if (! EE_Registry::instance()->CAP->current_user_can('ee_read_private_peoples', 'get_people')) {
-            $_where['status**'] = ['!=', 'private'];
+            $where['status**'] = ['!=', 'private'];
         }
 
         if (! EE_Registry::instance()->CAP->current_user_can('ee_read_others_peoples', 'get_people')) {
-            $_where['PER_wp_user'] = get_current_user_id();
+            $where['PER_wp_user'] = get_current_user_id();
         }
 
         $EVT_ID = $this->request->getRequestParam('EVT_ID', 0, DataType::INT);
         if ($EVT_ID) {
-            $_where['Person_Post.OBJ_ID'] = $EVT_ID;
+            $where['Person_Post.OBJ_ID'] = $EVT_ID;
+        }
+
+        $people_type = $this->request->getRequestParam('type', '');
+        if ($people_type) {
+            $where['Term_Relationship.Term_Taxonomy.Term.slug'] = $people_type;
+        }
+
+        $people_category = $this->request->getRequestParam('category', '');
+        if ($people_category) {
+            $where['Term_Taxonomy.taxonomy']  = 'espresso_people_categories';
+            $where['Term_Taxonomy.Term.slug'] = $people_category;
         }
 
         $search_term = $this->request->getRequestParam('s');
         if ($search_term) {
-            $search_term  = "%$search_term%";
-            $_where['OR'] = [
+            $search_term = "%$search_term%";
+            $where['OR'] = [
                 'Event.EVT_name'       => ['LIKE', $search_term],
                 'Event.EVT_desc'       => ['LIKE', $search_term],
                 'Event.EVT_short_desc' => ['LIKE', $search_term],
@@ -674,15 +722,15 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         $offset = ($current_page - 1) * $per_page;
         $limit  = $count ? null : [$offset, $per_page];
 
-        $person_model = EE_Registry::instance()->load_model('Person');
+
         if ($trash) {
             $people = $count
-                ? $person_model->count_deleted([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit])
-                : $person_model->get_all_deleted([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit]);
+                ? $this->person_model->count_deleted([$where, 'order_by' => [$orderby => $sort], 'limit' => $limit])
+                : $this->person_model->get_all_deleted([$where, 'order_by' => [$orderby => $sort], 'limit' => $limit]);
         } else {
             $people = $count
-                ? $person_model->count([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit])
-                : $person_model->get_all([$_where, 'order_by' => [$orderby => $sort], 'limit' => $limit]);
+                ? $this->person_model->count([$where, 'order_by' => [$orderby => $sort], 'limit' => $limit])
+                : $this->person_model->get_all([$where, 'order_by' => [$orderby => $sort], 'limit' => $limit]);
         }
 
         return $people;
@@ -701,7 +749,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
      */
     protected function _insert_update_cpt_item($post_id, $post)
     {
-        $person = EEM_Person::instance()->get_one_by_ID($post_id);
+        $person = $this->person_model->get_one_by_ID($post_id);
 
         // for people updates
         if ($post->post_type != 'espresso_people' || ! $person instanceof EE_Person) {
@@ -947,7 +995,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     public function person_to_cpt_details(WP_Post $post)
     {
         // get all relationships for the given person
-        $person_relationships = EEM_Person_Post::instance()->get_all([['PER_ID' => $post->ID]]);
+        $person_relationships = $this->person_post_model->get_all([['PER_ID' => $post->ID]]);
 
         // let's setup the row data for the rows.
         $row_data = [];
@@ -1035,7 +1083,6 @@ class People_Admin_Page extends EE_Admin_Page_CPT
      */
     protected function _trash_or_restore_people(bool $trash = true)
     {
-        $PERM    = EE_Registry::instance()->load_model('Person');
         $success = 1;
 
         // Checkboxes
@@ -1045,14 +1092,16 @@ class People_Admin_Page extends EE_Admin_Page_CPT
             $success = count($checkboxes) > 1 ? 2 : 1;
             // cycle thru checkboxes
             foreach ($checkboxes as $PER_ID) {
-                $updated = $trash ? $PERM->delete_by_ID($PER_ID) : $PERM->restore_by_ID($PER_ID);
+                $updated = $trash
+                    ? $this->person_model->delete_by_ID($PER_ID)
+                    : $this->person_model->restore_by_ID($PER_ID);
                 if (! $updated) {
                     $success = 0;
                 }
             }
         } else {
             // get person
-            $person  = $PERM->get_one_by_ID($this->PER_ID);
+            $person  = $this->person_model->get_one_by_ID($this->PER_ID);
             $updated = $trash ? $person->delete() : $person->restore();
             $saved   = $person->save();
             if (! $updated && ! $saved) {
@@ -1080,8 +1129,6 @@ class People_Admin_Page extends EE_Admin_Page_CPT
      */
     protected function _delete_permanently_people()
     {
-        $PERM              = EE_Registry::instance()->load_model('Person');
-        $PPST              = EE_Registry::instance()->load_Model('Person_Post');
         $total_deleted     = 0;
         $total_not_deleted = 0;
 
@@ -1090,13 +1137,13 @@ class People_Admin_Page extends EE_Admin_Page_CPT
             // cycle thru checkboxes
             foreach ($checkboxes as $PER_ID) {
                 // first delete any relationships with other posts for this id.
-                $PPST->delete([['PER_ID' => $PER_ID]]);
+                $this->person_post_model->delete([['PER_ID' => $PER_ID]]);
 
                 // delete any term_taxonomy_relationships (gonna use wp core functions cause it's likely a bit faster)
                 wp_delete_object_term_relationships($PER_ID, ['espresso_people_type', 'espresso_people_categories']);
 
                 // now should be able to delete permanently with no issues.
-                $deleted = $PERM->delete_permanently_by_ID($PER_ID, false);
+                $deleted = $this->person_model->delete_permanently_by_ID($PER_ID, false);
                 if ($deleted) {
                     $total_deleted++;
                 } else {
@@ -1118,12 +1165,12 @@ class People_Admin_Page extends EE_Admin_Page_CPT
             }
 
             // first delete any relationships with other posts for this id.
-            $PPST->delete([['PER_ID' => $this->PER_ID]]);
+            $this->person_post_model->delete([['PER_ID' => $this->PER_ID]]);
 
             // delete any term_taxonomy_relationships (gonna use wp core functions cause it's likely a bit faster)
             wp_delete_object_term_relationships($this->PER_ID, ['espresso_people_type', 'espresso_people_categories']);
 
-            $deleted = $PERM->delete_permanently_by_ID($this->PER_ID, false);
+            $deleted = $this->person_model->delete_permanently_by_ID($this->PER_ID, false);
             if ($deleted) {
                 $total_deleted++;
             } else {
@@ -1230,11 +1277,11 @@ class People_Admin_Page extends EE_Admin_Page_CPT
         do_action('AHEE_log', __FILE__, __FUNCTION__, '');
         $this->_search_btn_label = esc_html__('Categories', 'event_espresso');
         $this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
-                'add_category',
-                'add_category',
-                [],
-                'add-new-h2'
-            );
+            'add_category',
+            'add_category',
+            [],
+            'add-new-h2'
+        );
         $this->display_admin_list_table_page_with_sidebar();
     }
 
@@ -1246,11 +1293,11 @@ class People_Admin_Page extends EE_Admin_Page_CPT
     {
         $this->_search_btn_label = esc_html__('Types', 'event_espresso');
         $this->_admin_page_title .= ' ' . $this->get_action_link_or_button(
-                'add_type',
-                'add_type',
-                [],
-                'add-new-h2'
-            );
+            'add_type',
+            'add_type',
+            [],
+            'add-new-h2'
+        );
         $this->display_admin_list_table_page_with_sidebar();
     }
 
@@ -1273,7 +1320,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
         $id_ident = $taxonomy == 'espresso_people_categories' ? 'PER_CAT_ID' : 'PER_TYPE_ID';
 
-        $this->_set_publish_post_box_vars($id_ident, $id, "delete_$slug", $redirect, true);
+        $this->_set_publish_post_box_vars($id_ident, $id, "delete_$slug", $redirect);
 
         // take care of contents
         $this->_template_args['admin_page_content'] = $this->_term_object_details_content($taxonomy);
@@ -1580,7 +1627,7 @@ class People_Admin_Page extends EE_Admin_Page_CPT
 
         add_meta_box($box_id, $title, $callback, $screen, $context, $priority, $callback_args);
         add_filter(
-            "postbox_classes_{$this->_wp_page_slug}_{$box_id}",
+            "postbox_classes_{$this->_wp_page_slug}_$box_id",
             function ($classes) {
                 $classes[] = 'ee-admin-container';
                 return $classes;

@@ -33,7 +33,7 @@ class EED_People_Single extends EED_Module
       */
     public static function set_hooks()
     {
-        EE_Config::register_route('person', 'People_Single', 'run');
+        EED_Module::registerRoute('person', 'People_Single', 'run');
         EED_People_Single::$templates_path = EEA_PEOPLE_ADDON_PATH . 'public' . DS . 'templates' . DS;
     }
 
